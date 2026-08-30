@@ -39,8 +39,17 @@ h2 { margin: 0; font-size: 1.45rem; }
 .text-button { border-color: transparent; color: var(--coral-dark); padding-left: 0; }
 .primary-button { min-height: 48px; padding: 10px 16px; border: 0; background: var(--coral); color: white; font-weight: bold; }
 .primary-button:active, .day-button:active { background: var(--coral-dark); }
-.details { margin-top: 13px; border-top: 1px solid var(--line); padding-top: 10px; color: #33454d; font-size: .88rem; line-height: 1.5; white-space: pre-line; }
+.details { margin-top: 13px; border-top: 1px solid var(--line); padding-top: 10px; color: #33454d; font-size: .88rem; line-height: 1.5; }
 .details summary { color: var(--coral-dark); cursor: pointer; font-weight: bold; }
+.detail-section { margin-top: 14px; }
+.detail-section h4 { margin: 0 0 7px; color: var(--ink); font-size: .84rem; }
+.detail-section p { margin: 0; }
+.detail-section ul { margin: 0; padding-left: 19px; }
+.detail-section li + li { margin-top: 8px; }
+.technical-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin: 0; }
+.technical-grid > div { min-width: 0; padding: 8px; background: rgba(184,203,177,.25); border-left: 3px solid var(--sage); }
+.technical-grid dt { color: var(--muted); font-size: .75rem; font-weight: bold; }
+.technical-grid dd { margin: 3px 0 0; font-size: .82rem; }
 .record-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
 label { display: grid; gap: 5px; font-size: .82rem; font-weight: bold; }
 input, textarea, select { width: 100%; min-height: 42px; border: 1px solid var(--line); border-radius: 0; background: #fff; padding: 8px; color: var(--ink); }
@@ -74,4 +83,5 @@ dialog::backdrop { background: rgba(29,42,49,.55); }
 .icon-button { width: 44px; height: 44px; border: 0; background: transparent; font-size: 1.8rem; color: var(--ink); }
 #toast { position: fixed; left: 50%; bottom: 94px; transform: translateX(-50%); max-width: 90vw; padding: 10px 14px; background: var(--ink); color: white; opacity: 0; pointer-events: none; transition: opacity .2s; font-size: .88rem; }
 #toast.visible { opacity: 1; }
+@media (max-width: 420px) { .technical-grid { grid-template-columns: 1fr; } }
 @media (min-width: 680px) { .app-header { padding-left: max(20px, calc((100vw - 640px) / 2)); } .bottom-nav { left: 50%; transform: translateX(-50%); max-width: 680px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); } }

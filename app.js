@@ -11,6 +11,15 @@ let workout = {};
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 function uid() { return `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
 function escapeHtml(value = "") { return String(value).replace(/[&<>"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character]); }
+function formatInline(value = "") { return escapeHtml(value).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"); }
+function markdownList(markdown) {
+  const items = markdown.split("\n").map((line) => line.match(/^\s*[-*]\s+(.+)/)?.[1]).filter(Boolean);
+  return items.length ? `<ul>${items.map((item) => `<li>${formatInline(item)}</li>`).join("")}</ul>` : `<p>${formatInline(markdown)}</p>`;
+}
+function technicalDetails(markdown) {
+  const rows = markdown.split("\n").filter((line) => /^\|/.test(line) && !/^\|\s*:?-+/.test(line)).map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim())).filter((cells) => cells.length === 2 && cells[0] !== "Parámetro");
+  return rows.length ? `<dl class="technical-grid">${rows.map(([term, description]) => `<div><dt>${formatInline(term)}</dt><dd>${formatInline(description)}</dd></div>`).join("")}</dl>` : markdownList(markdown);
+}
 function getExercise(id) { return data.exercises.find((exercise) => exercise.id === id); }
 function toast(message) { const node = document.querySelector("#toast"); node.textContent = message; node.classList.add("visible"); setTimeout(() => node.classList.remove("visible"), 2500); }
 
@@ -48,7 +57,7 @@ async function initialise() {
 }
 
 function daySwitcher() { return `<div class="day-switcher">${DAYS.map((day) => `<button class="day-button ${day === activeDay ? "active" : ""}" data-day="${day}">${day.replace("DÍA ", "Día ")}</button>`).join("")}</div>`; }
-function exerciseDetails(exercise) { return `<details class="details"><summary>Ver técnica y detalles</summary><strong>Ejecución</strong>\n${escapeHtml(exercise.instructions)}${exercise.technical ? `\n\n<strong>Detalles técnicos</strong>\n${escapeHtml(exercise.technical)}` : ""}${exercise.errors ? `\n\n<strong>Errores a evitar</strong>\n${escapeHtml(exercise.errors)}` : ""}</details>`; }
+function exerciseDetails(exercise) { return `<details class="details"><summary>Ver técnica y detalles</summary><section class="detail-section"><h4>Ejecución</h4>${markdownList(exercise.instructions)}</section>${exercise.technical ? `<section class="detail-section"><h4>Detalles técnicos</h4>${technicalDetails(exercise.technical)}</section>` : ""}${exercise.errors ? `<section class="detail-section"><h4>Errores a evitar</h4>${markdownList(exercise.errors)}</section>` : ""}</details>`; }
 
 function renderTrain() {
   const plan = data.plans[activeDay];
