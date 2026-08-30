@@ -1,0 +1,15 @@
+En powershell:
+
+netsh interface portproxy add v4tov4 `
+  listenaddress=192.168.1.102 listenport=8080 `
+  connectaddress=127.0.0.1 connectport=8080
+
+New-NetFirewallRule -DisplayName "Ritmo 8080" `
+  -Direction Inbound -Protocol TCP -LocalPort 8080 -Action Allow
+
+
+netsh interface portproxy show all
+
+Eliminar la regla:
+
+netsh interface portproxy delete v4tov4 listenaddress=192.168.1.102 listenport=8080

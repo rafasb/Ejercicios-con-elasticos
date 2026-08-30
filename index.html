@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#d9543d" />
+    <meta name="description" content="Planifica y registra tus entrenamientos con bandas." />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Ritmo</title>
+  </head>
+  <body>
+    <header class="app-header">
+      <p class="eyebrow">ENTRENAMIENTO CON BANDAS</p>
+      <h1>Ritmo</h1>
+      <p id="header-copy">Tu ciclo semanal, listo para moverse.</p>
+    </header>
+
+    <main id="app" tabindex="-1"></main>
+
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <button class="nav-button active" data-view="train" aria-label="Entrenar"><span aria-hidden="true">◉</span>Entrenar</button>
+      <button class="nav-button" data-view="plan" aria-label="Planificar"><span aria-hidden="true">▦</span>Plan</button>
+      <button class="nav-button" data-view="history" aria-label="Historial"><span aria-hidden="true">◷</span>Historial</button>
+      <button class="nav-button" data-view="exercises" aria-label="Ejercicios"><span aria-hidden="true">◎</span>Ejercicios</button>
+    </nav>
+
+    <dialog id="exercise-dialog">
+      <form method="dialog" id="exercise-form">
+        <div class="dialog-heading"><h2>Nuevo ejercicio</h2><button class="icon-button" value="cancel" aria-label="Cerrar">×</button></div>
+        <label>Nombre<input name="name" required maxlength="70" /></label>
+        <label>Grupo muscular<input name="muscle" required maxlength="50" placeholder="Ej.: Espalda" /></label>
+        <label>Resumen<textarea name="summary" required rows="2" maxlength="200"></textarea></label>
+        <label>Cómo hacerlo<textarea name="instructions" required rows="5"></textarea></label>
+        <button class="primary-button" value="default">Guardar ejercicio</button>
+      </form>
+    </dialog>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
