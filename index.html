@@ -46,6 +46,35 @@
         <button id="exercise-submit" class="primary-button" type="submit">Añadir ejercicio</button>
       </form>
     </dialog>
+    
+      <dialog id="guide-dialog" aria-labelledby="guide-exercise-name">
+        <section class="guide-dialog-content">
+          <div class="dialog-heading"><div><p class="eyebrow">GUÍA DE EJERCICIO</p><h2 id="guide-exercise-name"></h2></div><button class="icon-button" type="button" data-action="stop-guide" aria-label="Cerrar guía">×</button></div>
+          <p id="guide-phase" class="guide-phase" aria-live="assertive"></p>
+          <p id="guide-countdown" class="guide-countdown" aria-live="off">10</p>
+          <p id="guide-cycle" class="guide-cycle"></p>
+          <button class="outline-button guide-stop-button" type="button" data-action="stop-guide">Terminar guía</button>
+        </section>
+      </dialog>
+
+      <dialog id="guide-settings-dialog" aria-labelledby="guide-settings-title">
+        <form id="guide-settings-form">
+          <div class="dialog-heading"><h2 id="guide-settings-title">Ajustar guía</h2><button class="icon-button" type="button" data-action="close-guide-settings" aria-label="Cerrar">×</button></div>
+          <fieldset>
+            <legend>Duración de las fases</legend>
+            <div class="guide-settings-grid">
+              <label>Preparación (segundos)<input name="preparation" type="number" min="1" max="120" required /></label>
+              <label>Tensión (segundos)<input name="tension" type="number" min="1" max="60" required /></label>
+              <label>Distensión (segundos)<input name="distension" type="number" min="1" max="60" required /></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Sonido</legend>
+            <label>Volumen <output id="guide-volume-value" for="guide-volume"></output><input id="guide-volume" name="volume" type="range" min="0" max="1" step="0.1" /></label>
+          </fieldset>
+          <button class="primary-button" type="submit">Guardar ajustes</button>
+        </form>
+      </dialog>
 
     <div id="toast" role="status" aria-live="polite"></div>
     <script src="app.js"></script>

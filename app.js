@@ -1,13 +1,25 @@
 const STORAGE_KEY = "ritmo-data-v1";
 const DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
+const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, volume: .6 };
 const app = document.querySelector("#app");
 const dialog = document.querySelector("#exercise-dialog");
 const form = document.querySelector("#exercise-form");
+const guideDialog = document.querySelector("#guide-dialog");
+const guideExerciseName = document.querySelector("#guide-exercise-name");
+const guidePhase = document.querySelector("#guide-phase");
+const guideCountdown = document.querySelector("#guide-countdown");
+const guideCycle = document.querySelector("#guide-cycle");
+const guideSettingsDialog = document.querySelector("#guide-settings-dialog");
+const guideSettingsForm = document.querySelector("#guide-settings-form");
+const guideVolumeValue = document.querySelector("#guide-volume-value");
 let activeView = "train";
 let activeDay = DAYS[0];
-let data = { exercises: [], plans: {}, history: [] };
+let data = { exercises: [], plans: {}, history: [], guide: { ...DEFAULT_GUIDE_SETTINGS } };
 let workout = {};
 let editingExerciseId = null;
+let guideTimer = null;
+let guideState = null;
+let audioContext = null;
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 function uid() { return `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
@@ -33,6 +45,76 @@ function technicalForStorage(value) {
 }
 function getExercise(id) { return data.exercises.find((exercise) => exercise.id === id); }
 function toast(message) { const node = document.querySelector("#toast"); node.textContent = message; node.classList.add("visible"); setTimeout(() => node.classList.remove("visible"), 2500); }
+function repetitionsToCycles(value) { return Math.max(1, Number.parseInt(value, 10) || 1); }
+function updateVolumeLabel(value) { guideVolumeValue.value = `${Math.round(Number(value) * 100)} %`; guideVolumeValue.textContent = guideVolumeValue.value; }
+function openGuideSettings() {
+  guideSettingsForm.elements.preparation.value = data.guide.preparation;
+  guideSettingsForm.elements.tension.value = data.guide.tension;
+  guideSettingsForm.elements.distension.value = data.guide.distension;
+  guideSettingsForm.elements.volume.value = data.guide.volume;
+  updateVolumeLabel(data.guide.volume);
+  guideSettingsDialog.showModal();
+}
+function playCue(frequency) {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  audioContext ||= new AudioContext();
+  audioContext.resume();
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  oscillator.frequency.value = frequency;
+  gain.gain.setValueAtTime(data.guide.volume, audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + .18);
+  oscillator.connect(gain).connect(audioContext.destination);
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + .18);
+}
+function updateGuide(phase, seconds, cycle) {
+  guidePhase.textContent = phase;
+  guideCountdown.textContent = seconds;
+  guideCycle.textContent = cycle ? `Ciclo ${cycle} de ${guideState.cycles}` : `Preparación: ${guideState.cycles} ciclos`;
+}
+function runGuidePhase(phase, seconds, cycle, frequency, next) {
+  clearInterval(guideTimer);
+  updateGuide(phase, seconds, cycle);
+  playCue(frequency);
+  let remaining = seconds;
+  guideTimer = setInterval(() => {
+    remaining -= 1;
+    updateGuide(phase, remaining, cycle);
+    if (remaining !== 0) return;
+    clearInterval(guideTimer);
+    next();
+  }, 1000);
+}
+function finishGuide() {
+  clearInterval(guideTimer);
+  guideTimer = null;
+  guideState = null;
+  if (guideDialog.open) guideDialog.close();
+  toast("Guía completada.");
+}
+function runTensionCycle() {
+  const cycle = guideState.cycle;
+  runGuidePhase("Tensión", data.guide.tension, cycle, 660, () => {
+    runGuidePhase("Distensión", data.guide.distension, cycle, 392, () => {
+      if (cycle === guideState.cycles) finishGuide();
+      else { guideState.cycle += 1; runTensionCycle(); }
+    });
+  });
+}
+function startGuide(exercise, repetitions) {
+  guideState = { cycles: repetitionsToCycles(repetitions), cycle: 1 };
+  guideExerciseName.textContent = exercise.name;
+  guideDialog.showModal();
+  runGuidePhase("Preparación", data.guide.preparation, 0, 523, runTensionCycle);
+}
+function stopGuide() {
+  clearInterval(guideTimer);
+  guideTimer = null;
+  guideState = null;
+  if (guideDialog.open) guideDialog.close();
+}
 function openExerciseForm(exercise) {
   editingExerciseId = exercise?.id || null;
   form.reset();
@@ -76,6 +158,7 @@ async function initialise() {
     });
     save();
   }
+  data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...data.guide };
   DAYS.forEach((day) => { data.plans[day] ||= []; });
   render();
 }
@@ -89,7 +172,7 @@ function renderTrain() {
   return `${daySwitcher()}<div class="session-heading"><div><h2>${activeDay.replace("DÍA ", "Día ")}</h2><p>Registra cada ejercicio antes de finalizar.</p></div><span class="target">${plan.length} ejercicios</span></div><section class="exercise-list">${plan.map((item, index) => {
     const exercise = getExercise(item.exerciseId); if (!exercise) return "";
     const entry = workout[item.exerciseId] || { reps: item.reps, resistance: item.resistance, rating: "aceptable" };
-    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions">${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
+    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-repetitions="${escapeHtml(item.reps)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button>${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
   }).join("")}</section><button class="primary-button sticky-action" data-action="finish">Finalizar ${activeDay.replace("DÍA ", "Día ")}</button>`;
 }
 
@@ -104,7 +187,7 @@ function renderHistory() {
   return `<div class="session-heading"><div><h2>Historial</h2><p>Usa una sesión como punto de partida para el próximo ciclo.</p></div></div>${data.history.map((session, index) => `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`).join("")}`;
 }
 
-function renderExercises() { return `<div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
+function renderExercises() { return `<div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><div class="heading-actions"><button class="outline-button" data-action="guide-settings">Ajustar guía</button><button class="primary-button" data-action="new-exercise">Añadir</button></div></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
 function render() {
   const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
   app.innerHTML = views[activeView]();
@@ -120,6 +203,10 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "new-exercise") openExerciseForm();
   if (action.dataset.action === "edit-exercise") openExerciseForm(getExercise(action.dataset.exerciseId));
   if (action.dataset.action === "close-dialog") dialog.close();
+  if (action.dataset.action === "start-guide") startGuide(getExercise(action.dataset.exerciseId), action.dataset.repetitions);
+  if (action.dataset.action === "stop-guide") stopGuide();
+  if (action.dataset.action === "guide-settings") openGuideSettings();
+  if (action.dataset.action === "close-guide-settings") guideSettingsDialog.close();
   if (action.dataset.action === "add-plan") { data.plans[activeDay].push({ exerciseId: data.exercises[0].id, sets: "3", reps: "12", resistance: "Media" }); save(); render(); }
   if (action.dataset.action === "remove-plan") { data.plans[activeDay].splice(Number(action.closest("[data-plan-index]").dataset.planIndex), 1); save(); render(); }
   if (action.dataset.action === "finish") {
@@ -129,9 +216,19 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "reuse") { const session = data.history[Number(action.dataset.historyIndex)]; data.plans[session.day] = session.entries.map((entry) => ({ exerciseId: entry.exerciseId, sets: "3", reps: entry.reps, resistance: entry.resistance })); save(); activeDay = session.day; activeView = "plan"; toast("Resultados aplicados al plan."); render(); }
 });
 
+guideDialog.addEventListener("close", () => { clearInterval(guideTimer); guideTimer = null; guideState = null; });
+
 document.addEventListener("input", (event) => {
   const card = event.target.closest("[data-workout-id]"); if (card && event.target.dataset.record) { const entry = workout[card.dataset.workoutId] ||= {}; entry[event.target.dataset.record] = event.target.value; }
   const row = event.target.closest("[data-plan-index]"); if (row && event.target.dataset.plan) { data.plans[activeDay][Number(row.dataset.planIndex)][event.target.dataset.plan] = event.target.value; save(); }
+  if (event.target === guideSettingsForm.elements.volume) updateVolumeLabel(event.target.value);
+});
+
+guideSettingsForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const fields = new FormData(guideSettingsForm);
+  data.guide = { preparation: Number(fields.get("preparation")), tension: Number(fields.get("tension")), distension: Number(fields.get("distension")), volume: Number(fields.get("volume")) };
+  save(); guideSettingsDialog.close(); toast("Ajustes de guía guardados.");
 });
 
 form.addEventListener("submit", (event) => {
