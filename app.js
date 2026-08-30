@@ -7,6 +7,7 @@ let activeView = "train";
 let activeDay = DAYS[0];
 let data = { exercises: [], plans: {}, history: [] };
 let workout = {};
+let editingExerciseId = null;
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 function uid() { return `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
@@ -20,8 +21,31 @@ function technicalDetails(markdown) {
   const rows = markdown.split("\n").filter((line) => /^\|/.test(line) && !/^\|\s*:?-+/.test(line)).map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim())).filter((cells) => cells.length === 2 && cells[0] !== "Parámetro");
   return rows.length ? `<dl class="technical-grid">${rows.map(([term, description]) => `<div><dt>${formatInline(term)}</dt><dd>${formatInline(description)}</dd></div>`).join("")}</dl>` : markdownList(markdown);
 }
+function listForStorage(value) { return value.split("\n").map((line) => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean).map((line) => `- ${line}`).join("\n"); }
+function listForForm(value = "") { return value.split("\n").map((line) => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean).join("\n"); }
+function technicalForForm(value = "") { return value.split("\n").filter((line) => /^\|/.test(line) && !/^\|\s*:?-+/.test(line)).map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim())).filter((cells) => cells.length === 2 && cells[0] !== "Parámetro").map(([term, description]) => `${term.replace(/\*\*/g, "")}: ${description.replace(/\*\*/g, "")}`).join("\n"); }
+function technicalForStorage(value) {
+  const rows = value.split("\n").map((line) => {
+    const separator = line.indexOf(":");
+    return separator === -1 ? [] : [line.slice(0, separator).trim(), line.slice(separator + 1).trim()];
+  }).filter(([term, description]) => term && description);
+  return rows.length ? `| Parámetro | Detalle recomendado |\n| :--- | :--- |\n${rows.map(([term, description]) => `| **${term}** | ${description} |`).join("\n")}` : "";
+}
 function getExercise(id) { return data.exercises.find((exercise) => exercise.id === id); }
 function toast(message) { const node = document.querySelector("#toast"); node.textContent = message; node.classList.add("visible"); setTimeout(() => node.classList.remove("visible"), 2500); }
+function openExerciseForm(exercise) {
+  editingExerciseId = exercise?.id || null;
+  form.reset();
+  form.elements.name.value = exercise?.name || "";
+  form.elements.muscle.value = exercise?.muscle || "";
+  form.elements.summary.value = exercise?.summary || "";
+  form.elements.instructions.value = listForForm(exercise?.instructions);
+  form.elements.technical.value = technicalForForm(exercise?.technical);
+  form.elements.errors.value = listForForm(exercise?.errors);
+  document.querySelector("#exercise-dialog-title").textContent = exercise ? "Editar ejercicio" : "Nuevo ejercicio";
+  document.querySelector("#exercise-submit").textContent = exercise ? "Guardar cambios" : "Añadir ejercicio";
+  dialog.showModal();
+}
 
 function parseRoutine(markdown) {
   const exercises = [];
@@ -80,7 +104,7 @@ function renderHistory() {
   return `<div class="session-heading"><div><h2>Historial</h2><p>Usa una sesión como punto de partida para el próximo ciclo.</p></div></div>${data.history.map((session, index) => `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`).join("")}`;
 }
 
-function renderExercises() { return `<div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}</article>`).join("")}`; }
+function renderExercises() { return `<div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
 function render() {
   const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
   app.innerHTML = views[activeView]();
@@ -93,7 +117,9 @@ document.addEventListener("click", (event) => {
   const dayButton = event.target.closest("[data-day]"); if (dayButton) { activeDay = dayButton.dataset.day; render(); return; }
   const rating = event.target.closest("[data-rating]"); if (rating) { const card = rating.closest("[data-workout-id]"); const id = card.dataset.workoutId; workout[id] ||= {}; workout[id].rating = rating.dataset.rating; render(); return; }
   const action = event.target.closest("[data-action]"); if (!action) return;
-  if (action.dataset.action === "new-exercise") dialog.showModal();
+  if (action.dataset.action === "new-exercise") openExerciseForm();
+  if (action.dataset.action === "edit-exercise") openExerciseForm(getExercise(action.dataset.exerciseId));
+  if (action.dataset.action === "close-dialog") dialog.close();
   if (action.dataset.action === "add-plan") { data.plans[activeDay].push({ exerciseId: data.exercises[0].id, sets: "3", reps: "12", resistance: "Media" }); save(); render(); }
   if (action.dataset.action === "remove-plan") { data.plans[activeDay].splice(Number(action.closest("[data-plan-index]").dataset.planIndex), 1); save(); render(); }
   if (action.dataset.action === "finish") {
@@ -108,6 +134,13 @@ document.addEventListener("input", (event) => {
   const row = event.target.closest("[data-plan-index]"); if (row && event.target.dataset.plan) { data.plans[activeDay][Number(row.dataset.planIndex)][event.target.dataset.plan] = event.target.value; save(); }
 });
 
-form.addEventListener("submit", (event) => { event.preventDefault(); const fields = new FormData(form); data.exercises.push({ id: uid(), name: fields.get("name"), muscle: fields.get("muscle"), summary: fields.get("summary"), instructions: fields.get("instructions"), technical: "", errors: "", day: "" }); save(); form.reset(); dialog.close(); toast("Ejercicio añadido al catálogo."); render(); });
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const fields = new FormData(form);
+  const exercise = { id: editingExerciseId || uid(), name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), technical: technicalForStorage(fields.get("technical")), errors: listForStorage(fields.get("errors")), day: editingExerciseId ? getExercise(editingExerciseId).day : "" };
+  const index = data.exercises.findIndex((item) => item.id === editingExerciseId);
+  if (index === -1) data.exercises.push(exercise); else data.exercises[index] = exercise;
+  save(); form.reset(); dialog.close(); toast(index === -1 ? "Ejercicio añadido al catálogo." : "Cambios guardados."); render();
+});
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js"));
 initialise().catch(() => { app.innerHTML = `<div class="empty-state"><h2>No se pudo cargar la rutina</h2><p>Abre la aplicación desde el servidor de Docker para inicializarla.</p></div>`; });

@@ -27,12 +27,23 @@
 
     <dialog id="exercise-dialog">
       <form method="dialog" id="exercise-form">
-        <div class="dialog-heading"><h2>Nuevo ejercicio</h2><button class="icon-button" value="cancel" aria-label="Cerrar">×</button></div>
-        <label>Nombre<input name="name" required maxlength="70" /></label>
-        <label>Grupo muscular<input name="muscle" required maxlength="50" placeholder="Ej.: Espalda" /></label>
-        <label>Resumen<textarea name="summary" required rows="2" maxlength="200"></textarea></label>
-        <label>Cómo hacerlo<textarea name="instructions" required rows="5"></textarea></label>
-        <button class="primary-button" value="default">Guardar ejercicio</button>
+        <div class="dialog-heading"><h2 id="exercise-dialog-title">Nuevo ejercicio</h2><button class="icon-button" type="button" data-action="close-dialog" aria-label="Cerrar">×</button></div>
+        <fieldset>
+          <legend>Información básica</legend>
+          <label>Nombre<input name="name" required maxlength="70" /></label>
+          <label>Grupo muscular<input name="muscle" required maxlength="50" placeholder="Ej.: Espalda" /></label>
+          <label>Resumen<textarea name="summary" required rows="3" maxlength="200" placeholder="Idea principal y colocación inicial."></textarea></label>
+        </fieldset>
+        <fieldset>
+          <legend>Guía de ejecución</legend>
+          <label>Pasos<textarea name="instructions" required rows="6" placeholder="Un paso por línea.&#10;Posición inicial: ...&#10;Movimiento: ..."></textarea></label>
+        </fieldset>
+        <fieldset>
+          <legend>Técnica y seguridad</legend>
+          <label>Detalles técnicos<textarea name="technical" rows="5" placeholder="Un dato por línea.&#10;Músculos principales: ...&#10;Series y repeticiones: ..."></textarea></label>
+          <label>Errores a evitar<textarea name="errors" rows="5" placeholder="Un error por línea.&#10;Arquear la espalda: ..."></textarea></label>
+        </fieldset>
+        <button id="exercise-submit" class="primary-button" type="submit">Añadir ejercicio</button>
       </form>
     </dialog>
 

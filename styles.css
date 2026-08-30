@@ -70,6 +70,7 @@ textarea { resize: vertical; }
 .result-line { display: flex; justify-content: space-between; gap: 8px; font-size: .88rem; padding: 4px 0; }
 .badge { text-transform: capitalize; font-size: .72rem; font-family: "Courier New", monospace; padding: 2px 5px; background: var(--yellow); }
 .catalogue-card { border-bottom: 1px solid var(--line); padding: 14px 0; }
+.catalogue-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .catalogue-card h3 { margin: 0; font-size: 1rem; }
 .catalogue-card p { margin: 5px 0; color: var(--muted); font-size: .87rem; }
 .bottom-nav { position: fixed; z-index: 2; bottom: 0; left: 0; right: 0; display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border-top: 1px solid var(--line); }
@@ -80,6 +81,10 @@ dialog { width: min(92vw, 480px); border: 0; padding: 0; background: var(--surfa
 dialog::backdrop { background: rgba(29,42,49,.55); }
 #exercise-form { display: grid; gap: 14px; padding: 18px; }
 .dialog-heading { display: flex; justify-content: space-between; align-items: center; }
+.dialog-heading h2 { font-size: 1.25rem; }
+#exercise-form fieldset { display: grid; gap: 11px; margin: 0; padding: 12px; border: 1px solid var(--line); }
+#exercise-form legend { padding: 0 5px; color: var(--coral-dark); font-size: .78rem; font-weight: bold; }
+#exercise-form textarea { line-height: 1.4; }
 .icon-button { width: 44px; height: 44px; border: 0; background: transparent; font-size: 1.8rem; color: var(--ink); }
 #toast { position: fixed; left: 50%; bottom: 94px; transform: translateX(-50%); max-width: 90vw; padding: 10px 14px; background: var(--ink); color: white; opacity: 0; pointer-events: none; transition: opacity .2s; font-size: .88rem; }
 #toast.visible { opacity: 1; }
