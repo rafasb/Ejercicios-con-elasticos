@@ -7,7 +7,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/hSUR7rYXGIo?si=UyobAFw5DRGzQ96k
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, con los pies abiertos al ancho de los hombros (o ligeramente más) y las puntas mirando sensiblemente hacia afuera. La miniband debe quedar ubicada 2-3 cm por encima de las rodillas.
@@ -37,7 +37,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/TNRRMkzwKIY?si=5AzEI2AEhI0GFT9n
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda de resistencia en el marco de la puerta a la altura del pecho. Da la espalda a la puerta y toma una manija con cada mano. Da un paso hacia adelante (posición de zancada o pies al ancho de hombros) hasta notar tensión constante en las bandas.
@@ -68,7 +68,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/N28Hpdezg7Q?si=0kQu346EgbXOrJER
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, coloca la miniband alrededor de los tobillos. Separa los pies a la anchura de las caderas para que la banda mantenga una tensión inicial constante. Flexiona ligeramente las rodillas y la cadera (media sentadilla) y mantén el abdomen activado y la mirada al frente.
@@ -99,7 +99,8 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/3GMddm9m-0A?si=QkjfLYoYSuFQy6vV
+>https://youtube.com/shorts/jRjgQOmivTY?si=zWFvHQL_pCeQCxyk
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda de resistencia en el marco de la puerta a la altura del pecho. Da la espalda a la puerta y toma una manija con cada mano. Da un paso al frente (posición de zancada para mayor estabilidad) hasta que la banda quede tensa con los brazos abiertos hacia los lados.
@@ -130,7 +131,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/UTkKdH4XDKk?si=Cm88_BFe4ZEXUv5r
 
 #### Ejecución paso a paso
 - **Anclaje y posición inicial:** Ancla la banda de resistencia en la parte inferior de la puerta (a ras de suelo). Túmbate boca arriba (decúbito supino) mirando en dirección al anclaje. Toma una manija con cada mano y estira los brazos verticalmente hacia el techo (a 90° respecto al torso), generando tensión constante en la goma.
@@ -163,7 +164,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/FeLf5KZBICo?si=twLujHDXiiJeEhok
 
 #### Ejecución paso a paso
 - **Posición inicial:** Siéntate en el suelo de cara a la puerta con las piernas extendidas al frente (o con una ligera flexión en las rodillas si sientes mucha tensión en los isquiotibiales). Toma una manija con cada mano, mantén los brazos estirados y aléjate lo suficiente como para notar tensión en la banda desde el inicio.
@@ -194,7 +195,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/VJXjl6ur6zI?si=g62N2Mhm8ISiSv6m
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, coloca el centro de la banda de resistencia debajo de la planta de un solo pie para ajustar la resistencia (un pie adelante para un inicio más accesible, o posición de zancada para mayor estabilidad). Toma los agarres con las palmas mirando hacia adelante (o neutras) y eleva las manos a la altura de los hombros/orejas.
@@ -225,7 +226,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/02BZGVLCVNw?si=pR5ZKuF-8kM6-2FM
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, pisa el centro de la banda de resistencia con un pie (o ambos al ancho de caderas si buscas mayor resistencia). Sostén los agarres a los lados del cuerpo con las palmas mirando hacia adentro y una ligera semiflexión en los codos que mantendrás fija durante todo el ejercicio.
@@ -256,7 +257,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/p7tWqclgxmw?si=7gNXD5tvK7iYSFO0
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, pisa el centro de la banda de resistencia con ambos pies abiertos a la anchura de las caderas. Toma los agarres con las palmas mirando hacia al frente (agarre supino) y los brazos extendidos a los lados del cuerpo, manteniendo una ligera tensión inicial en la goma.
@@ -287,7 +288,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/h6gNPrqtQ4k?si=At1D4sDv7zZa_2ma
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, adopta una posición en zancada corta y pisa firmemente un extremo de la banda de resistencia con el talón de la pierna trasera. Lleva la manija/agarre por detrás de la espalda y sube el codo de modo que apunte hacia arriba, al lado de tu cabeza, manteniendo el brazo flexionado por detrás de la nuca y con una ligera tensión inicial constante en la goma.
@@ -320,7 +321,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/wMZgm4Brcw0?si=ZiVzCOUeqt2Nv-yz
 
 #### Ejecución paso a paso
 - **Posición inicial:** Colócate en posición de cuadrupedia (cuatro puntos) sobre una esterilla, apoyando las palmas de las manos alineadas directamente bajo los hombros y las rodillas bajo las caderas. Coloca una miniband alrededor de la planta de los pies (o empeines).
@@ -382,7 +383,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/IoWia647VZY?si=N2BBkgzBiOdvXjwL
 
 #### Ejecución paso a paso
 - **Posición inicial:** Acuéstate boca arriba (decúbito supino) sobre la esterilla con las rodillas flexionadas y los pies apoyados completamente en el suelo, separados a la anchura de las caderas. Coloca la miniband situada un par de dedos por encima de las rodillas.
@@ -413,7 +414,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/seKy6d7-WoI?si=WaqxECM-3sxBnbVd
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda en la parte superior de la puerta. Ponte de lado a la puerta a una distancia adecuada, sepárate manteniendo los pies más anchos que la anchura de los hombros y sujeta el agarre/manija con ambas manos extendidas hacia el punto de anclaje.
@@ -444,7 +445,7 @@
 
 #### Vídeos
 
->
+>https://youtube.com/shorts/DuMzURVKYRM?si=gtQNSsXudujxMvdJ
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca una miniband alrededor de tus muñecas. Adopta la posición de plancha alta apoyando las palmas de las manos en el suelo alineadas con los hombros y la punta de los pies (o apoyando las rodillas si eres principiante).
