@@ -12,6 +12,9 @@ const guideCycle = document.querySelector("#guide-cycle");
 const guideSettingsDialog = document.querySelector("#guide-settings-dialog");
 const guideSettingsForm = document.querySelector("#guide-settings-form");
 const guideVolumeValue = document.querySelector("#guide-volume-value");
+const videosDialog = document.querySelector("#videos-dialog");
+const videosExerciseName = document.querySelector("#videos-exercise-name");
+const videosList = document.querySelector("#videos-list");
 let activeView = "train";
 let activeDay = DAYS[0];
 let data = { exercises: [], plans: {}, history: [], guide: { ...DEFAULT_GUIDE_SETTINGS } };
@@ -43,6 +46,7 @@ function technicalForStorage(value) {
   }).filter(([term, description]) => term && description);
   return rows.length ? `| Parámetro | Detalle recomendado |\n| :--- | :--- |\n${rows.map(([term, description]) => `| **${term}** | ${description} |`).join("\n")}` : "";
 }
+function videosForStorage(value = "") { return value.split("\n").map((line) => line.trim()).filter((line) => /^https?:\/\//i.test(line)); }
 function getExercise(id) { return data.exercises.find((exercise) => exercise.id === id); }
 function toast(message) { const node = document.querySelector("#toast"); node.textContent = message; node.classList.add("visible"); setTimeout(() => node.classList.remove("visible"), 2500); }
 function repetitionsToCycles(value) { return Math.max(1, Number.parseInt(value, 10) || 1); }
@@ -115,6 +119,14 @@ function stopGuide() {
   guideState = null;
   if (guideDialog.open) guideDialog.close();
 }
+function openVideos(exercise) {
+  const videos = exercise.videos || [];
+  videosExerciseName.textContent = exercise.name;
+  videosList.innerHTML = videos.length
+    ? videos.map((url, index) => `<li><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Vídeo ${index + 1}</a></li>`).join("")
+    : "<li>No hay vídeos disponibles para este ejercicio.</li>";
+  videosDialog.showModal();
+}
 function openExerciseForm(exercise) {
   editingExerciseId = exercise?.id || null;
   form.reset();
@@ -124,6 +136,7 @@ function openExerciseForm(exercise) {
   form.elements.instructions.value = listForForm(exercise?.instructions);
   form.elements.technical.value = technicalForForm(exercise?.technical);
   form.elements.errors.value = listForForm(exercise?.errors);
+  form.elements.videos.value = (exercise?.videos || []).join("\n");
   document.querySelector("#exercise-dialog-title").textContent = exercise ? "Editar ejercicio" : "Nuevo ejercicio";
   document.querySelector("#exercise-submit").textContent = exercise ? "Guardar cambios" : "Añadir ejercicio";
   dialog.showModal();
@@ -142,7 +155,8 @@ function parseRoutine(markdown) {
     const execution = (section.match(/#### Ejecución paso a paso\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
     const technical = (section.match(/#### Detalles técnicos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
     const errors = (section.match(/#### Errores comunes a evitar\n([\s\S]*?)$/) || ["", ""])[1].trim();
-    exercises.push({ id: `seed-${exercises.length + 1}`, name: heading[1].trim(), muscle: heading[2] || "General", summary, instructions: execution, technical, errors, day });
+    const videos = [...((section.match(/#### Vídeos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].matchAll(/https?:\/\/[^\s)>]+/g))].map(([url]) => url);
+    exercises.push({ id: `seed-${exercises.length + 1}`, name: heading[1].trim(), muscle: heading[2] || "General", summary, instructions: execution, technical, errors, videos, day });
   });
   return exercises;
 }
@@ -158,6 +172,16 @@ async function initialise() {
     });
     save();
   }
+  try {
+    const response = await fetch("rutina_entrenamiento_bandas.md");
+    const sourceExercises = parseRoutine(await response.text());
+    let updatedVideos = false;
+    data.exercises.forEach((exercise) => {
+      const source = sourceExercises.find((item) => item.id === exercise.id || item.name === exercise.name);
+      if (!Array.isArray(exercise.videos)) { exercise.videos = source?.videos || []; updatedVideos = true; }
+    });
+    if (updatedVideos) save();
+  } catch {}
   data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...data.guide };
   DAYS.forEach((day) => { data.plans[day] ||= []; });
   render();
@@ -172,7 +196,7 @@ function renderTrain() {
   return `${daySwitcher()}<div class="session-heading"><div><h2>${activeDay.replace("DÍA ", "Día ")}</h2><p>Registra cada ejercicio antes de finalizar.</p></div><span class="target">${plan.length} ejercicios</span></div><section class="exercise-list">${plan.map((item, index) => {
     const exercise = getExercise(item.exerciseId); if (!exercise) return "";
     const entry = workout[item.exerciseId] || { reps: item.reps, resistance: item.resistance, rating: "aceptable" };
-    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-repetitions="${escapeHtml(item.reps)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button>${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
+    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-repetitions="${escapeHtml(item.reps)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button>${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
   }).join("")}</section><button class="primary-button sticky-action" data-action="finish">Finalizar ${activeDay.replace("DÍA ", "Día ")}</button>`;
 }
 
@@ -187,7 +211,7 @@ function renderHistory() {
   return `<div class="session-heading"><div><h2>Historial</h2><p>Usa una sesión como punto de partida para el próximo ciclo.</p></div></div>${data.history.map((session, index) => `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`).join("")}`;
 }
 
-function renderExercises() { return `<div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><div class="heading-actions"><button class="outline-button" data-action="guide-settings">Ajustar guía</button><button class="primary-button" data-action="new-exercise">Añadir</button></div></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
+function renderExercises() { return `<div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><div class="heading-actions"><button class="outline-button" data-action="guide-settings">Ajustar guía</button><button class="primary-button" data-action="new-exercise">Añadir</button></div></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
 function render() {
   const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
   app.innerHTML = views[activeView]();
@@ -205,6 +229,8 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "close-dialog") dialog.close();
   if (action.dataset.action === "start-guide") startGuide(getExercise(action.dataset.exerciseId), action.dataset.repetitions);
   if (action.dataset.action === "stop-guide") stopGuide();
+  if (action.dataset.action === "show-videos") openVideos(getExercise(action.dataset.exerciseId));
+  if (action.dataset.action === "close-videos") videosDialog.close();
   if (action.dataset.action === "guide-settings") openGuideSettings();
   if (action.dataset.action === "close-guide-settings") guideSettingsDialog.close();
   if (action.dataset.action === "add-plan") { data.plans[activeDay].push({ exerciseId: data.exercises[0].id, sets: "3", reps: "12", resistance: "Media" }); save(); render(); }
@@ -234,7 +260,7 @@ guideSettingsForm.addEventListener("submit", (event) => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const fields = new FormData(form);
-  const exercise = { id: editingExerciseId || uid(), name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), technical: technicalForStorage(fields.get("technical")), errors: listForStorage(fields.get("errors")), day: editingExerciseId ? getExercise(editingExerciseId).day : "" };
+  const exercise = { id: editingExerciseId || uid(), name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), technical: technicalForStorage(fields.get("technical")), errors: listForStorage(fields.get("errors")), videos: videosForStorage(fields.get("videos")), day: editingExerciseId ? getExercise(editingExerciseId).day : "" };
   const index = data.exercises.findIndex((item) => item.id === editingExerciseId);
   if (index === -1) data.exercises.push(exercise); else data.exercises[index] = exercise;
   save(); form.reset(); dialog.close(); toast(index === -1 ? "Ejercicio añadido al catálogo." : "Cambios guardados."); render();

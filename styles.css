@@ -93,6 +93,10 @@ dialog::backdrop { background: rgba(29,42,49,.55); }
 .guide-countdown { margin: 0; color: var(--coral); font-family: "Courier New", monospace; font-size: clamp(7rem, 34vw, 11rem); font-weight: bold; line-height: .85; }
 .guide-cycle { margin: 0; color: var(--muted); font-family: "Courier New", monospace; font-size: .9rem; font-weight: bold; }
 .guide-stop-button { width: 100%; }
+.videos-dialog-content { display: grid; gap: 18px; padding: 18px; border-top: 6px solid var(--yellow); }
+.videos-dialog-content .eyebrow { margin: 0 0 4px; color: var(--coral-dark) !important; }
+.videos-list { display: grid; gap: 9px; margin: 0; padding-left: 20px; line-height: 1.45; }
+.videos-list a { color: var(--coral-dark); font-weight: bold; overflow-wrap: anywhere; }
 #exercise-form fieldset { display: grid; gap: 11px; margin: 0; padding: 12px; border: 1px solid var(--line); }
 #exercise-form legend { padding: 0 5px; color: var(--coral-dark); font-size: .78rem; font-weight: bold; }
 #exercise-form textarea { line-height: 1.4; }

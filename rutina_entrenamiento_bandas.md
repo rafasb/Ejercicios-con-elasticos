@@ -5,6 +5,10 @@
 ### 1. Sentadillas con miniband (Cuádriceps/Glúteos)
 *Coloca la miniband justo por arriba de las rodillas. Empuja las rodillas hacia afuera al bajar para activar el glúteo medio.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, con los pies abiertos al ancho de los hombros (o ligeramente más) y las puntas mirando sensiblemente hacia afuera. La miniband debe quedar ubicada 2-3 cm por encima de las rodillas.
 - **Fase concéntrica y bajada:** Inicia el movimiento llevando la cadera hacia atrás y abajo (como si te fueras a sentar). Mantén una tensión constante sobre la banda empujando las rodillas hacia afuera para evitar que se colapsen hacia adentro (valgo de rodilla).
@@ -30,6 +34,10 @@
 
 ### 2. Press de pecho en puerta (Pectorales)
 *Coloca el anclaje a la altura del pecho. Da la espalda a la puerta, da un paso al frente para tensar la banda y empuja las manijas hacia adelante.*
+
+#### Vídeos
+
+>
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda de resistencia en el marco de la puerta a la altura del pecho. Da la espalda a la puerta y toma una manija con cada mano. Da un paso hacia adelante (posición de zancada o pies al ancho de hombros) hasta notar tensión constante en las bandas.
@@ -58,6 +66,10 @@
 ### 3. Pasos laterales con miniband (Glúteos)
 *Pon la miniband en los tobillos. Da 10 pasos a la derecha y 10 a la izquierda manteniendo una ligera flexión de rodillas.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, coloca la miniband alrededor de los tobillos. Separa los pies a la anchura de las caderas para que la banda mantenga una tensión inicial constante. Flexiona ligeramente las rodillas y la cadera (media sentadilla) y mantén el abdomen activado y la mirada al frente.
 - **Desplazamiento:** Da un paso lateral controlado hacia la derecha con la pierna derecha, sintiendo cómo se incrementa la resistencia del elástico.
@@ -85,6 +97,10 @@
 ### 4. Aperturas de pecho en puerta (Pectorales)
 *Con el anclaje a la altura del pecho, abre los brazos como si fueras a dar un abrazo y júntalos al frente manteniendo los codos casi estirados.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda de resistencia en el marco de la puerta a la altura del pecho. Da la espalda a la puerta y toma una manija con cada mano. Da un paso al frente (posición de zancada para mayor estabilidad) hasta que la banda quede tensa con los brazos abiertos hacia los lados.
 - **Alineación de brazos:** Abre los brazos lateralmente a la altura del pecho, manteniendo una semiflexión constante en los codos (casi estirados, pero sin bloquear la articulación).
@@ -111,6 +127,10 @@
 
 ### 5. Bicho muerto con banda (Abdominales)
 *Ancla la banda abajo en la puerta. Tírate boca arriba, sujeta las manijas con los brazos estirados hacia el techo (generando tensión) y desciende una pierna de forma alterna sin despegar la espalda del suelo.*
+
+#### Vídeos
+
+>
 
 #### Ejecución paso a paso
 - **Anclaje y posición inicial:** Ancla la banda de resistencia en la parte inferior de la puerta (a ras de suelo). Túmbate boca arriba (decúbito supino) mirando en dirección al anclaje. Toma una manija con cada mano y estira los brazos verticalmente hacia el techo (a 90° respecto al torso), generando tensión constante en la goma.
@@ -141,6 +161,10 @@
 ### 1. Remo sentado a la puerta (Espalda/Bíceps)
 *Coloca el anclaje a la altura del ombligo. Siéntate en el suelo frente a la puerta con las piernas estiradas y tira de los agarres hacia tus costillas.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** Siéntate en el suelo de cara a la puerta con las piernas extendidas al frente (o con una ligera flexión en las rodillas si sientes mucha tensión en los isquiotibiales). Toma una manija con cada mano, mantén los brazos estirados y aléjate lo suficiente como para notar tensión en la banda desde el inicio.
 - **Postura corporal:** Erguir el torso por completo, sacando pecho y manteniendo la espalda recta con los hombros relajados (sin encogerlos hacia las orejas) y el abdomen activado.
@@ -167,6 +191,10 @@
 
 ### 2. Press de hombros de pie (Hombros)
 *Pisa la banda con agarres con un solo pie (para menor resistencia inicial) y empuja las manos hacia el techo desde la altura de las orejas.*
+
+#### Vídeos
+
+>
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, coloca el centro de la banda de resistencia debajo de la planta de un solo pie para ajustar la resistencia (un pie adelante para un inicio más accesible, o posición de zancada para mayor estabilidad). Toma los agarres con las palmas mirando hacia adelante (o neutras) y eleva las manos a la altura de los hombros/orejas.
@@ -195,6 +223,10 @@
 ### 3. Elevaciones laterales (Hombros)
 *Pisa la banda y sube los brazos hacia los lados hasta la altura de tus hombros. Controla la bajada para que la banda no te gane.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, pisa el centro de la banda de resistencia con un pie (o ambos al ancho de caderas si buscas mayor resistencia). Sostén los agarres a los lados del cuerpo con las palmas mirando hacia adentro y una ligera semiflexión en los codos que mantendrás fija durante todo el ejercicio.
 - **Postura corporal:** Mantén el pecho erguido, los hombros abajo y atrás (sin encogerlos) y el abdomen activado para estabilizar el torso.
@@ -222,6 +254,10 @@
 ### 4. Curl de bíceps (Brazos)
 *Pisa la banda con ambos pies y flexiona los codos llevando las manos a los hombros. Mantén los codos pegados a las costillas.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, pisa el centro de la banda de resistencia con ambos pies abiertos a la anchura de las caderas. Toma los agarres con las palmas mirando hacia al frente (agarre supino) y los brazos extendidos a los lados del cuerpo, manteniendo una ligera tensión inicial en la goma.
 - **Postura y alineación:** Mantén el pecho erguido, las escápulas retraídas, el abdomen activado y los codos pegados a los costados.
@@ -248,6 +284,10 @@
 
 ### 5. Extensión de tríceps sobre la cabeza (Brazos)
 *Pisa un extremo de la banda con el talón trasero, lleva la manija por detrás de tu espalda y estira el brazo hacia el techo.*
+
+#### Vídeos
+
+>
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, adopta una posición en zancada corta y pisa firmemente un extremo de la banda de resistencia con el talón de la pierna trasera. Lleva la manija/agarre por detrás de la espalda y sube el codo de modo que apunte hacia arriba, al lado de tu cabeza, manteniendo el brazo flexionado por detrás de la nuca y con una ligera tensión inicial constante en la goma.
@@ -278,6 +318,10 @@
 ### 1. Patada de Glúteo en Cuadrupedia
 *Coloca la miniband alrededor de las plantas o empeines de ambos pies y empuja un talón hacia el techo en posición de cuadrupedia.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** Colócate en posición de cuadrupedia (cuatro puntos) sobre una esterilla, apoyando las palmas de las manos alineadas directamente bajo los hombros y las rodillas bajo las caderas. Coloca una miniband alrededor de la planta de los pies (o empeines).
 - **Postura y alineación:** Mantén la columna en posición neutra, la mirada dirigida hacia el suelo (sin forzar el cuello) y el abdomen contraído para evitar que la zona lumbar se arquee durante el movimiento.
@@ -304,6 +348,10 @@
 
 ### 2. Buenos Días con Banda
 *Pisa el centro de la banda con ambos pies, pasa los tubos por detrás de los hombros e inclina el torso flexionando la cadera.*
+
+#### Vídeos
+
+>https://youtu.be/CTRaCzE8pWU?si=rdK2lmRdUCxVT4qA
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, pisa el centro de la banda elástica con ambos pies separados a la anchura de las caderas. Pasa los tubos por detrás de tus hombros y sujeta firmemente las manijas/agarres a la altura de la parte superior del pecho.
@@ -332,6 +380,10 @@
 ### 3. Puente de Glúteos con Miniband
 *Coloca la miniband por encima de las rodillas, apoya los pies en el suelo boca arriba y eleva la cadera contrayendo glúteos.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** Acuéstate boca arriba (decúbito supino) sobre la esterilla con las rodillas flexionadas y los pies apoyados completamente en el suelo, separados a la anchura de las caderas. Coloca la miniband situada un par de dedos por encima de las rodillas.
 - **Postura y alineación:** Mantén los brazos extendidos a los lados del cuerpo con las palmas apoyadas en el suelo. Genera una constante presión de las rodillas hacia afuera para mantener la banda bajo tensión continua.
@@ -359,6 +411,10 @@
 ### 4. Leñador en Puerta (Woodchopper)
 *Ancla la banda en la parte superior de la puerta, ponte de lado y tira en diagonal hacia abajo rotando el torso.*
 
+#### Vídeos
+
+>
+
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda en la parte superior de la puerta. Ponte de lado a la puerta a una distancia adecuada, sepárate manteniendo los pies más anchos que la anchura de los hombros y sujeta el agarre/manija con ambas manos extendidas hacia el punto de anclaje.
 - **Postura y alineación:** Mantén una ligera flexión de rodillas, el pecho erguido y los brazos casi estirados (con codos ligeramente desbloqueados).
@@ -385,6 +441,10 @@
 
 ### 5. Plancha Frontal con Toque de Manos
 *Coloca la miniband en las muñecas, ponte en posición de plancha alta y realiza toques alternos manteniendo la cadera estable.*
+
+#### Vídeos
+
+>
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca una miniband alrededor de tus muñecas. Adopta la posición de plancha alta apoyando las palmas de las manos en el suelo alineadas con los hombros y la punta de los pies (o apoyando las rodillas si eres principiante).
