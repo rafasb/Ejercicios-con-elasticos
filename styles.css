@@ -27,6 +27,7 @@ main { max-width: 680px; margin: auto; padding: 20px 16px; }
 .day-button.active { background: var(--coral); border-color: var(--coral); color: white; }
 .session-heading { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin: 4px 0 14px; }
 .heading-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.exercise-tools { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 18px; }
 h2 { margin: 0; font-size: 1.45rem; }
 .session-heading p, .empty-state p { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
 .exercise-list { display: grid; gap: 10px; }

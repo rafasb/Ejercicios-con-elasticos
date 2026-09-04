@@ -42,4 +42,4 @@ Abre [http://localhost:4173](http://localhost:4173).
 
 ## Datos
 
-Los datos se almacenan únicamente en el `localStorage` del navegador. Al borrar los datos del sitio se eliminarán los ejercicios personalizados, planes e historial guardados.
+Los datos se almacenan en el `localStorage` del navegador. Desde la pestaña **Ejercicios** puedes descargar un Backup en formato JSON y recuperarlo con Restore. El backup contiene el plan y el historial; los ejercicios personalizados y los ajustes de guía no se incluyen.

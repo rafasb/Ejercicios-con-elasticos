@@ -2,6 +2,7 @@ const STORAGE_KEY = "ritmo-data-v1";
 const DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
 const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, volume: .6 };
 const app = document.querySelector("#app");
+const restoreInput = document.querySelector("#restore-input");
 const dialog = document.querySelector("#exercise-dialog");
 const form = document.querySelector("#exercise-form");
 const guideDialog = document.querySelector("#guide-dialog");
@@ -25,6 +26,37 @@ let guideState = null;
 let audioContext = null;
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+function downloadBackup() {
+  const backup = { version: 1, exportedAt: new Date().toISOString(), plans: data.plans, history: data.history };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `ritmo-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+  toast("Backup descargado.");
+}
+function isValidBackup(backup) {
+  return backup && typeof backup === "object" && !Array.isArray(backup) &&
+    backup.plans && typeof backup.plans === "object" && !Array.isArray(backup.plans) &&
+    Array.isArray(backup.history) &&
+    DAYS.every((day) => Array.isArray(backup.plans[day]));
+}
+async function restoreBackup(file) {
+  try {
+    const backup = JSON.parse(await file.text());
+    if (!isValidBackup(backup)) throw new Error("invalid backup");
+    data.plans = backup.plans;
+    data.history = backup.history;
+    save();
+    render();
+    toast("Plan e historial restaurados.");
+  } catch {
+    toast("El archivo no es un backup válido de Ritmo.");
+  } finally {
+    restoreInput.value = "";
+  }
+}
 function uid() { return `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
 function escapeHtml(value = "") { return String(value).replace(/[&<>"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character]); }
 function formatInline(value = "") { return escapeHtml(value).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"); }
@@ -211,7 +243,7 @@ function renderHistory() {
   return `<div class="session-heading"><div><h2>Historial</h2><p>Usa una sesión como punto de partida para el próximo ciclo.</p></div></div>${data.history.map((session, index) => `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`).join("")}`;
 }
 
-function renderExercises() { return `<div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><div class="heading-actions"><button class="outline-button" data-action="guide-settings">Ajustar guía</button><button class="primary-button" data-action="new-exercise">Añadir</button></div></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
+function renderExercises() { return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
 function render() {
   const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
   app.innerHTML = views[activeView]();
@@ -231,6 +263,8 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "stop-guide") stopGuide();
   if (action.dataset.action === "show-videos") openVideos(getExercise(action.dataset.exerciseId));
   if (action.dataset.action === "close-videos") videosDialog.close();
+  if (action.dataset.action === "backup") downloadBackup();
+  if (action.dataset.action === "restore") restoreInput.click();
   if (action.dataset.action === "guide-settings") openGuideSettings();
   if (action.dataset.action === "close-guide-settings") guideSettingsDialog.close();
   if (action.dataset.action === "add-plan") { data.plans[activeDay].push({ exerciseId: data.exercises[0].id, sets: "3", reps: "12", resistance: "Media" }); save(); render(); }
@@ -240,6 +274,11 @@ document.addEventListener("click", (event) => {
     data.history.unshift({ date: new Date().toISOString(), day: activeDay, entries }); save(); workout = {}; toast("Sesión guardada en el historial."); render();
   }
   if (action.dataset.action === "reuse") { const session = data.history[Number(action.dataset.historyIndex)]; data.plans[session.day] = session.entries.map((entry) => ({ exerciseId: entry.exerciseId, sets: "3", reps: entry.reps, resistance: entry.resistance })); save(); activeDay = session.day; activeView = "plan"; toast("Resultados aplicados al plan."); render(); }
+});
+
+restoreInput.addEventListener("change", () => {
+  const [file] = restoreInput.files;
+  if (file) restoreBackup(file);
 });
 
 guideDialog.addEventListener("close", () => { clearInterval(guideTimer); guideTimer = null; guideState = null; });
