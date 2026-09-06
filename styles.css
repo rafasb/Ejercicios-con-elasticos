@@ -67,10 +67,13 @@ textarea { resize: vertical; }
 .guide-play { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 8px 11px; border: 1px solid var(--coral); background: #fff2e7; color: var(--coral-dark); font-size: .86rem; font-weight: bold; }
 .guide-play span { font-size: .8rem; }
 .sticky-action { position: sticky; bottom: 10px; margin-top: 18px; width: 100%; box-shadow: 0 5px 0 var(--coral-dark); }
-.plan-row { display: grid; grid-template-columns: 1fr 68px 78px 30px; gap: 7px; align-items: end; border-bottom: 1px solid var(--line); padding: 12px 0; }
+.plan-row { display: grid; grid-template-columns: 68px 1fr 30px; gap: 7px; align-items: end; border-bottom: 1px solid var(--line); padding: 12px 0; }
 .plan-row select, .plan-row input { min-width: 0; }
 .plan-row label { overflow: hidden; }
-.plan-row label:first-child { font-size: .78rem; }
+.plan-row label:first-child { grid-column: 1 / -1; font-size: .78rem; }
+.plan-repetitions { grid-column: 2 / -1; }
+.plan-resistance { grid-column: 1 / 3; }
+.plan-row .remove-button { grid-column: 3; }
 .remove-button { height: 42px; border: 0; background: transparent; color: var(--coral-dark); font-size: 1.5rem; }
 .empty-state { border: 1px dashed #a8aaa1; padding: 28px 18px; text-align: center; background: rgba(255,253,248,.65); }
 .history-item { border-bottom: 1px solid var(--line); padding: 14px 0; }
