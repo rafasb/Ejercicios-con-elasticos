@@ -111,5 +111,10 @@ dialog::backdrop { background: rgba(29,42,49,.55); }
 .icon-button { width: 44px; height: 44px; border: 0; background: transparent; font-size: 1.8rem; color: var(--ink); }
 #toast { position: fixed; left: 50%; bottom: 94px; transform: translateX(-50%); max-width: 90vw; padding: 10px 14px; background: var(--ink); color: white; opacity: 0; pointer-events: none; transition: opacity .2s; font-size: .88rem; }
 #toast.visible { opacity: 1; }
-@media (max-width: 420px) { .technical-grid, .guide-settings-grid, .cycle-settings { grid-template-columns: 1fr; } }
+@media (max-width: 420px) {
+  .technical-grid, .guide-settings-grid, .cycle-settings { grid-template-columns: 1fr; }
+  .exercise-actions { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .exercise-actions .guide-play, .exercise-actions [data-action="show-videos"] { grid-column: span 3; }
+  .exercise-actions .rating { grid-column: span 2; min-width: 0; }
+}
 @media (min-width: 680px) { .app-header { padding-left: max(20px, calc((100vw - 640px) / 2)); } .bottom-nav { left: 50%; transform: translateX(-50%); max-width: 680px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); } }
