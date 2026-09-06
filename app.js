@@ -254,7 +254,7 @@ function render() {
 document.addEventListener("click", (event) => {
   const viewButton = event.target.closest("[data-view]"); if (viewButton) { activeView = viewButton.dataset.view; render(); return; }
   const dayButton = event.target.closest("[data-day]"); if (dayButton) { activeDay = dayButton.dataset.day; render(); return; }
-  const rating = event.target.closest("[data-rating]"); if (rating) { const card = rating.closest("[data-workout-id]"); const id = card.dataset.workoutId; workout[id] ||= {}; workout[id].rating = rating.dataset.rating; render(); return; }
+  const rating = event.target.closest("[data-rating]"); if (rating) { const card = rating.closest("[data-workout-id]"); const id = card.dataset.workoutId; const planItem = data.plans[activeDay].find((item) => item.exerciseId === id); workout[id] ||= { reps: planItem.reps, resistance: planItem.resistance }; workout[id].rating = rating.dataset.rating; render(); return; }
   const action = event.target.closest("[data-action]"); if (!action) return;
   if (action.dataset.action === "new-exercise") openExerciseForm();
   if (action.dataset.action === "edit-exercise") openExerciseForm(getExercise(action.dataset.exerciseId));
