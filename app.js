@@ -1,5 +1,7 @@
 const STORAGE_KEY = "ritmo-data-v1";
-const DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
+const MIN_DAYS = 3;
+const MAX_DAYS = 7;
+const DEFAULT_DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
 const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, rest: 120, volume: .6 };
 const app = document.querySelector("#app");
 const restoreInput = document.querySelector("#restore-input");
@@ -17,8 +19,8 @@ const videosDialog = document.querySelector("#videos-dialog");
 const videosExerciseName = document.querySelector("#videos-exercise-name");
 const videosList = document.querySelector("#videos-list");
 let activeView = "train";
-let activeDay = DAYS[0];
-let data = { exercises: [], plans: {}, history: [], guide: { ...DEFAULT_GUIDE_SETTINGS } };
+let activeDay = DEFAULT_DAYS[0];
+let data = { days: [...DEFAULT_DAYS], exercises: [], plans: {}, history: [], guide: { ...DEFAULT_GUIDE_SETTINGS } };
 let workout = {};
 let editingExerciseId = null;
 let guideTimer = null;
@@ -26,8 +28,22 @@ let guideState = null;
 let audioContext = null;
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+function createDays(count = MIN_DAYS) {
+  const total = Math.min(MAX_DAYS, Math.max(MIN_DAYS, Number.parseInt(count, 10) || MIN_DAYS));
+  return Array.from({ length: total }, (_, index) => `DÍA ${index + 1}`);
+}
+function configuredDays() { return data.days; }
+function setDayCount(count) {
+  const days = createDays(count);
+  configuredDays().filter((day) => !days.includes(day)).forEach((day) => delete data.plans[day]);
+  days.forEach((day) => { data.plans[day] ||= []; });
+  data.days = days;
+  if (!days.includes(activeDay)) activeDay = days[0];
+  workout = {};
+  save();
+}
 function downloadBackup() {
-  const backup = { version: 1, exportedAt: new Date().toISOString(), plans: data.plans, history: data.history, guide: data.guide };
+  const backup = { version: 2, exportedAt: new Date().toISOString(), days: data.days, plans: data.plans, history: data.history, guide: data.guide };
   const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
   const link = document.createElement("a");
   link.href = url;
@@ -37,18 +53,21 @@ function downloadBackup() {
   toast("Backup descargado.");
 }
 function isValidBackup(backup) {
+  const days = createDays(Array.isArray(backup?.days) ? backup.days.length : MIN_DAYS);
   return backup && typeof backup === "object" && !Array.isArray(backup) &&
     backup.plans && typeof backup.plans === "object" && !Array.isArray(backup.plans) &&
     Array.isArray(backup.history) &&
-    DAYS.every((day) => Array.isArray(backup.plans[day]));
+    days.every((day) => Array.isArray(backup.plans[day]));
 }
 async function restoreBackup(file) {
   try {
     const backup = JSON.parse(await file.text());
     if (!isValidBackup(backup)) throw new Error("invalid backup");
+    data.days = createDays(Array.isArray(backup.days) ? backup.days.length : MIN_DAYS);
     data.plans = backup.plans;
     data.history = backup.history;
     if (backup.guide && typeof backup.guide === "object" && !Array.isArray(backup.guide)) data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...backup.guide };
+    if (!data.days.includes(activeDay)) activeDay = data.days[0];
     save();
     render();
     toast("Plan, historial y guía restaurados.");
@@ -197,11 +216,11 @@ function parseRoutine(markdown) {
 
 async function initialise() {
   const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) { data = JSON.parse(stored); }
+  if (stored) { data = { ...data, ...JSON.parse(stored) }; }
   else {
     const response = await fetch("rutina_entrenamiento_bandas.md");
     data.exercises = parseRoutine(await response.text());
-    DAYS.forEach((day) => {
+    configuredDays().forEach((day) => {
       data.plans[day] = data.exercises.filter((exercise) => exercise.day === day).map((exercise) => ({ exerciseId: exercise.id, sets: "3", reps: "12", resistance: "Media" }));
     });
     save();
@@ -217,11 +236,15 @@ async function initialise() {
     if (updatedVideos) save();
   } catch {}
   data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...data.guide };
-  DAYS.forEach((day) => { data.plans[day] ||= []; });
+  data.days = createDays(Array.isArray(data.days) ? data.days.length : MIN_DAYS);
+  data.plans ||= {};
+  configuredDays().forEach((day) => { data.plans[day] ||= []; });
+  if (!configuredDays().includes(activeDay)) activeDay = configuredDays()[0];
+  save();
   render();
 }
 
-function daySwitcher() { return `<div class="day-switcher">${DAYS.map((day) => `<button class="day-button ${day === activeDay ? "active" : ""}" data-day="${day}">${day.replace("DÍA ", "Día ")}</button>`).join("")}</div>`; }
+function daySwitcher() { return `<div class="day-switcher">${configuredDays().map((day) => `<button class="day-button ${day === activeDay ? "active" : ""}" data-day="${day}">${day.replace("DÍA ", "Día ")}</button>`).join("")}</div>`; }
 function exerciseDetails(exercise) { return `<details class="details"><summary>Ver técnica y detalles</summary><section class="detail-section"><h4>Ejecución</h4>${markdownList(exercise.instructions)}</section>${exercise.technical ? `<section class="detail-section"><h4>Detalles técnicos</h4>${technicalDetails(exercise.technical)}</section>` : ""}${exercise.errors ? `<section class="detail-section"><h4>Errores a evitar</h4>${markdownList(exercise.errors)}</section>` : ""}</details>`; }
 
 function renderTrain() {
@@ -245,7 +268,7 @@ function renderHistory() {
   return `<div class="session-heading"><div><h2>Historial</h2><p>Usa una sesión como punto de partida para el próximo ciclo.</p></div></div>${data.history.map((session, index) => `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${escapeHtml(session.weekday || new Date(session.date).toLocaleDateString("es-ES", { weekday: "long" }))} · ${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`).join("")}`;
 }
 
-function renderExercises() { return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
+function renderExercises() { return `<section class="cycle-settings" aria-labelledby="cycle-settings-title"><div><h2 id="cycle-settings-title">Ciclo semanal</h2><p>Configura los días que quieres entrenar cada semana.</p></div><label>Días de entrenamiento<input type="number" min="${MIN_DAYS}" max="${MAX_DAYS}" value="${configuredDays().length}" inputmode="numeric" data-setting="day-count"></label></section><div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
 function render() {
   const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
   app.innerHTML = views[activeView]();
@@ -291,6 +314,14 @@ document.addEventListener("input", (event) => {
   const card = event.target.closest("[data-workout-id]"); if (card && event.target.dataset.record) { const entry = workout[card.dataset.workoutId] ||= {}; entry[event.target.dataset.record] = event.target.value; }
   const row = event.target.closest("[data-plan-index]"); if (row && event.target.dataset.plan) { data.plans[activeDay][Number(row.dataset.planIndex)][event.target.dataset.plan] = event.target.value; save(); }
   if (event.target === guideSettingsForm.elements.volume) updateVolumeLabel(event.target.value);
+});
+
+document.addEventListener("change", (event) => {
+  if (event.target.dataset.setting !== "day-count") return;
+  const previousCount = configuredDays().length;
+  setDayCount(event.target.value);
+  if (configuredDays().length !== previousCount) toast(`Ciclo semanal ajustado a ${configuredDays().length} días.`);
+  render();
 });
 
 guideSettingsForm.addEventListener("submit", (event) => {

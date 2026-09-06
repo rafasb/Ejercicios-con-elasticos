@@ -11,7 +11,7 @@ Seguir estas indicaciones puede ser dañino para la salud. No deben interpretars
 ## Funcionalidades
 
 - Catálogo inicial de ejercicios con indicaciones técnicas desplegables.
-- Plan semanal editable de tres sesiones.
+- Plan semanal editable de 3 a 7 sesiones.
 - Registro de repeticiones, resistencia/peso y valoración tras cada sesión.
 - Historial reutilizable para ajustar sesiones posteriores.
 - Persistencia local en el navegador y funcionamiento PWA sin conexión tras la primera carga.
@@ -42,4 +42,4 @@ Abre [http://localhost:4173](http://localhost:4173).
 
 ## Datos
 
-Los datos se almacenan en el `localStorage` del navegador. Desde la pestaña **Ejercicios** puedes descargar un Backup en formato JSON y recuperarlo con Restore. El backup contiene registros independientes para el plan, el historial y los ajustes de la guía; los ejercicios personalizados no se incluyen.
+Los datos se almacenan en el `localStorage` del navegador. Desde la pestaña **Ejercicios** puedes elegir entre 3 y 7 días de entrenamiento semanales, descargar un Backup en formato JSON y recuperarlo con Restore. Al reducir el número de días, se eliminan los planes de los últimos días, pero se conserva el historial. El backup contiene la configuración semanal, el plan, el historial y los ajustes de la guía; los ejercicios personalizados no se incluyen.

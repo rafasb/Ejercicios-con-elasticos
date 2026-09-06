@@ -8,7 +8,7 @@ Crear una aplicación web progresiva (PWA) para entrenar con bandas de resistenc
 
 - Catálogo inicial cargado desde la rutina de bandas: ejercicios de los días 1, 2 y 3 con resumen, instrucciones, detalles técnicos y errores comunes.
 - Alta de ejercicios propios con nombre, grupo muscular, resumen e indicaciones de técnica.
-- Ciclo semanal editable de tres sesiones: Día 1, Día 2 y Día 3.
+- Ciclo semanal editable de 3 a 7 sesiones, con tres días por defecto.
 - Planificación de cada ejercicio con series, repeticiones objetivo y resistencia/peso previsto.
 - Vista de entrenamiento que muestra solo la sesión seleccionada y permite desplegar u ocultar la técnica de cada ejercicio.
 - Registro por ejercicio de repeticiones realizadas, resistencia/peso utilizado y valoración: fácil, aceptable o imposible.
@@ -19,7 +19,7 @@ Crear una aplicación web progresiva (PWA) para entrenar con bandas de resistenc
 
 ### Planificar el ciclo
 
-La persona abre la pestaña **Plan**, elige uno de los tres días y añade ejercicios del catálogo. Puede editar o eliminar cada línea del plan. El ciclo se conserva para reutilizarlo cada semana.
+La persona ajusta desde **Ejercicios** entre 3 y 7 días de entrenamiento. Después abre la pestaña **Plan**, elige uno de los días y añade ejercicios del catálogo. Puede editar o eliminar cada línea del plan. El ciclo se conserva para reutilizarlo cada semana.
 
 ### Realizar una sesión
 
@@ -38,7 +38,7 @@ En **Ejercicios**, consulta los ejercicios existentes y despliega su técnica. D
 | Entidad | Campos principales |
 | :--- | :--- |
 | Ejercicio | id, nombre, grupo muscular, resumen, ejecución, detalles técnicos, errores comunes |
-| Plan semanal | tres sesiones identificadas por Día 1, Día 2 y Día 3 |
+| Plan semanal | de 3 a 7 sesiones identificadas por Día 1 a Día 7 |
 | Línea planificada | id de ejercicio, series, repeticiones objetivo, resistencia/peso previsto |
 | Sesión completada | fecha, día, líneas registradas |
 | Registro | id de ejercicio, repeticiones realizadas, resistencia/peso usado, valoración |
@@ -55,7 +55,8 @@ En **Ejercicios**, consulta los ejercicios existentes y despliega su técnica. D
 ## Criterios de aceptación
 
 - La aplicación carga con las tres sesiones de la rutina inicial y permite modificar cada una.
-- Se puede crear un ejercicio y añadirlo a cualquiera de los tres días.
+- Se puede ajustar el ciclo entre 3 y 7 días desde la pestaña Ejercicios, creando planes vacíos para los días añadidos.
+- Se puede crear un ejercicio y añadirlo a cualquiera de los días configurados.
 - Una sesión muestra el plan y permite consultar la técnica sin abandonar el entrenamiento.
 - Al finalizar una sesión, cada registro conserva repeticiones, resistencia/peso y valoración.
 - El historial muestra los datos guardados y permite reutilizarlos en el plan del mismo día.
