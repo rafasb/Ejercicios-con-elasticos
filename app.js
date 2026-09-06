@@ -265,6 +265,7 @@ function renderPlan() {
 
 function renderHistory() {
   if (!data.history.length) return `<div class="empty-state"><h2>Aún no hay sesiones</h2><p>Al finalizar un entrenamiento, sus resultados aparecerán aquí.</p></div>`;
+  data.history.sort((first, second) => (Date.parse(second.date) || 0) - (Date.parse(first.date) || 0));
   return `<div class="session-heading"><div><h2>Historial</h2><p>Usa una sesión como punto de partida para el próximo ciclo.</p></div></div>${data.history.map((session, index) => `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${escapeHtml(session.weekday || new Date(session.date).toLocaleDateString("es-ES", { weekday: "long" }))} · ${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`).join("")}`;
 }
 
