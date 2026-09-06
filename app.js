@@ -102,6 +102,7 @@ function videosForStorage(value = "") { return value.split("\n").map((line) => l
 function getExercise(id) { return data.exercises.find((exercise) => exercise.id === id); }
 function toast(message) { const node = document.querySelector("#toast"); node.textContent = message; node.classList.add("visible"); setTimeout(() => node.classList.remove("visible"), 2500); }
 function repetitionsToCycles(value) { return Math.max(1, Number.parseInt(value, 10) || 1); }
+function remainingSets(entry, sets) { return Math.max(0, Number.isFinite(entry?.remainingSets) ? entry.remainingSets : repetitionsToCycles(sets)); }
 function updateVolumeLabel(value) { guideVolumeValue.value = `${Math.round(Number(value) * 100)} %`; guideVolumeValue.textContent = guideVolumeValue.value; }
 function openGuideSettings() {
   guideSettingsForm.elements.preparation.value = data.guide.preparation;
@@ -253,7 +254,7 @@ function renderTrain() {
   return `${daySwitcher()}<div class="session-heading"><div><h2>${activeDay.replace("DÍA ", "Día ")}</h2><p>Registra cada ejercicio antes de finalizar.</p></div><span class="target">${plan.length} ejercicios</span></div><section class="exercise-list">${plan.map((item, index) => {
     const exercise = getExercise(item.exerciseId); if (!exercise) return "";
     const entry = workout[item.exerciseId] || { reps: item.reps, resistance: item.resistance, rating: "aceptable" };
-    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-repetitions="${escapeHtml(item.reps)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button>${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
+    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><output class="sets-counter" aria-label="Series pendientes">${remainingSets(entry, item.sets)}</output><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-repetitions="${escapeHtml(item.reps)}" data-sets="${escapeHtml(item.sets)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button>${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
   }).join("")}</section><button class="primary-button sticky-action" data-action="finish">Finalizar ${activeDay.replace("DÍA ", "Día ")}</button>`;
 }
 
@@ -285,7 +286,13 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "new-exercise") openExerciseForm();
   if (action.dataset.action === "edit-exercise") openExerciseForm(getExercise(action.dataset.exerciseId));
   if (action.dataset.action === "close-dialog") dialog.close();
-  if (action.dataset.action === "start-guide") startGuide(getExercise(action.dataset.exerciseId), action.dataset.repetitions);
+  if (action.dataset.action === "start-guide") {
+    const entry = workout[action.dataset.exerciseId] ||= {};
+    entry.remainingSets = Math.max(0, remainingSets(entry, action.dataset.sets) - 1);
+    action.previousElementSibling.value = entry.remainingSets;
+    action.previousElementSibling.textContent = entry.remainingSets;
+    startGuide(getExercise(action.dataset.exerciseId), action.dataset.repetitions);
+  }
   if (action.dataset.action === "stop-guide") stopGuide();
   if (action.dataset.action === "show-videos") openVideos(getExercise(action.dataset.exerciseId));
   if (action.dataset.action === "close-videos") videosDialog.close();
