@@ -1,4 +1,5 @@
 const STORAGE_KEY = "ritmo-data-v1";
+const ROUTINE_URL = "rutina_entrenamiento_bandas.md?v=10";
 const MIN_DAYS = 3;
 const MAX_DAYS = 7;
 const DEFAULT_DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
@@ -194,6 +195,7 @@ function openExerciseForm(exercise) {
   form.elements.technical.value = technicalForForm(exercise?.technical);
   form.elements.errors.value = listForForm(exercise?.errors);
   form.elements.videos.value = (exercise?.videos || []).join("\n");
+  form.elements.hashtags.value = listForForm(exercise?.hashtags);
   document.querySelector("#exercise-dialog-title").textContent = exercise ? "Editar ejercicio" : "Nuevo ejercicio";
   document.querySelector("#exercise-submit").textContent = exercise ? "Guardar cambios" : "Añadir ejercicio";
   dialog.showModal();
@@ -211,9 +213,10 @@ function parseRoutine(markdown) {
     const summary = (section.match(/^\*([^*]+)\*/m) || ["", ""])[1].trim();
     const execution = (section.match(/#### Ejecución paso a paso\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
     const technical = (section.match(/#### Detalles técnicos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
+    const hashtags = (section.match(/#### Hastags\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
     const errors = (section.match(/#### Errores comunes a evitar\n([\s\S]*?)$/) || ["", ""])[1].trim();
     const videos = [...((section.match(/#### Vídeos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].matchAll(/https?:\/\/[^\s)>]+/g))].map(([url]) => url);
-    exercises.push({ id: `seed-${exercises.length + 1}`, name: heading[1].trim(), muscle: heading[2] || "General", summary, instructions: execution, technical, errors, videos, day });
+    exercises.push({ id: `seed-${exercises.length + 1}`, name: heading[1].trim(), muscle: heading[2] || "General", summary, instructions: execution, technical, hashtags, errors, videos, day });
   });
   return exercises;
 }
@@ -222,7 +225,7 @@ async function initialise() {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) { data = { ...data, ...JSON.parse(stored) }; }
   else {
-    const response = await fetch("rutina_entrenamiento_bandas.md");
+    const response = await fetch(ROUTINE_URL);
     data.exercises = parseRoutine(await response.text());
     configuredDays().forEach((day) => {
       data.plans[day] = data.exercises.filter((exercise) => exercise.day === day).map((exercise) => ({ exerciseId: exercise.id, sets: "3", reps: "12", resistance: "Media" }));
@@ -230,14 +233,15 @@ async function initialise() {
     save();
   }
   try {
-    const response = await fetch("rutina_entrenamiento_bandas.md");
+    const response = await fetch(ROUTINE_URL);
     const sourceExercises = parseRoutine(await response.text());
-    let updatedVideos = false;
+    let updatedExercises = false;
     data.exercises.forEach((exercise) => {
       const source = sourceExercises.find((item) => item.id === exercise.id || item.name === exercise.name);
-      if (!Array.isArray(exercise.videos)) { exercise.videos = source?.videos || []; updatedVideos = true; }
+      if (!Array.isArray(exercise.videos)) { exercise.videos = source?.videos || []; updatedExercises = true; }
+      if (typeof exercise.hashtags !== "string") { exercise.hashtags = source?.hashtags || ""; updatedExercises = true; }
     });
-    if (updatedVideos) save();
+    if (updatedExercises) save();
   } catch {}
   data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...data.guide };
   data.days = createDays(Array.isArray(data.days) ? data.days.length : MIN_DAYS);
@@ -386,7 +390,7 @@ guideSettingsForm.addEventListener("submit", (event) => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const fields = new FormData(form);
-  const exercise = { id: editingExerciseId || uid(), name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), technical: technicalForStorage(fields.get("technical")), errors: listForStorage(fields.get("errors")), videos: videosForStorage(fields.get("videos")), day: editingExerciseId ? getExercise(editingExerciseId).day : "" };
+  const exercise = { id: editingExerciseId || uid(), name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), technical: technicalForStorage(fields.get("technical")), hashtags: listForStorage(fields.get("hashtags")), errors: listForStorage(fields.get("errors")), videos: videosForStorage(fields.get("videos")), day: editingExerciseId ? getExercise(editingExerciseId).day : "" };
   const index = data.exercises.findIndex((item) => item.id === editingExerciseId);
   if (index === -1) data.exercises.push(exercise); else data.exercises[index] = exercise;
   save(); form.reset(); dialog.close(); toast(index === -1 ? "Ejercicio añadido al catálogo." : "Cambios guardados."); render();

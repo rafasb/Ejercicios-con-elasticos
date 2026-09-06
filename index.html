@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#d9543d" />
     <meta name="description" content="Planifica y registra tus entrenamientos con bandas." />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles.css?v=9" />
+    <link rel="stylesheet" href="styles.css?v=10" />
     <title>Ritmo</title>
   </head>
   <body>
@@ -47,6 +47,10 @@
         <fieldset>
           <legend>Vídeos</legend>
           <label>Enlaces de vídeo<textarea name="videos" rows="4" inputmode="url" placeholder="Una URL por línea.&#10;https://www.youtube.com/watch?v=..."></textarea></label>
+        </fieldset>
+        <fieldset>
+          <legend>Hastags</legend>
+          <label>Etiquetas<textarea name="hashtags" rows="3" placeholder="Una etiqueta por línea.&#10;#Gluteo"></textarea></label>
         </fieldset>
         <button id="exercise-submit" class="primary-button" type="submit">Añadir ejercicio</button>
       </form>
@@ -90,6 +94,6 @@
       </dialog>
 
     <div id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=9"></script>
+    <script src="app.js?v=10"></script>
   </body>
 </html>
