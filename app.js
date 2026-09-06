@@ -26,6 +26,9 @@ let editingExerciseId = null;
 let guideTimer = null;
 let guideState = null;
 let audioContext = null;
+let historyDisplay = "list";
+let historyMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let selectedHistoryDate = "";
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 function createDays(count = MIN_DAYS) {
@@ -264,10 +267,47 @@ function renderPlan() {
   return `<section class="cycle-settings" aria-labelledby="cycle-settings-title"><div><h2 id="cycle-settings-title">Ciclo semanal</h2><p>Configura los días que quieres entrenar cada semana.</p></div><label>Días de entrenamiento<input type="number" min="${MIN_DAYS}" max="${MAX_DAYS}" value="${configuredDays().length}" inputmode="numeric" data-setting="day-count"></label></section>${daySwitcher()}<div class="session-heading"><div><h2>Planificar ${activeDay.replace("DÍA ", "Día ")}</h2><p>Ajusta el objetivo de tu siguiente sesión.</p></div></div><section>${plan.map((item, index) => `<div class="plan-row" data-plan-index="${index}"><label>Ejercicio<select data-plan="exerciseId">${options.replace(`value="${item.exerciseId}"`, `value="${item.exerciseId}" selected`)}</select></label><label>Series<input data-plan="sets" type="number" min="1" value="${escapeHtml(item.sets)}"></label><label>Reps. / peso<input data-plan="reps" type="text" value="${escapeHtml(item.reps)}" aria-label="Repeticiones objetivo"><input data-plan="resistance" type="text" value="${escapeHtml(item.resistance)}" aria-label="Resistencia o peso"></label><button class="remove-button" data-action="remove-plan" aria-label="Eliminar ejercicio">×</button></div>`).join("")}</section><div class="action-row"><button class="outline-button" data-action="add-plan">+ Añadir ejercicio</button></div>`;
 }
 
+function sortedHistory() { return [...data.history].sort((first, second) => (Date.parse(second.date) || 0) - (Date.parse(first.date) || 0)); }
+function historyDateKey(session) {
+  const date = new Date(session.date);
+  if (Number.isNaN(date.getTime())) return "";
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+function historyDayLabel(dateKey) { return new Date(`${dateKey}T12:00:00`).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" }); }
+function renderHistorySession(session, index) {
+  return `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${escapeHtml(session.weekday || new Date(session.date).toLocaleDateString("es-ES", { weekday: "long" }))} · ${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`;
+}
+function historyToggle() {
+  return `<div class="history-toggle" role="group" aria-label="Vista del historial"><button class="${historyDisplay === "list" ? "active" : ""}" data-action="set-history-display" data-history-display="list" aria-pressed="${historyDisplay === "list"}">Lista</button><button class="${historyDisplay === "calendar" ? "active" : ""}" data-action="set-history-display" data-history-display="calendar" aria-pressed="${historyDisplay === "calendar"}">Calendario</button></div>`;
+}
+function renderHistoryCalendar(sessions) {
+  const year = historyMonth.getFullYear();
+  const month = historyMonth.getMonth();
+  const sessionsByDate = new Map();
+  sessions.forEach((session, index) => {
+    const key = historyDateKey(session);
+    if (key) sessionsByDate.set(key, [...(sessionsByDate.get(key) || []), { session, index }]);
+  });
+  const leadingDays = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const monthLabel = new Intl.DateTimeFormat("es-ES", { month: "long", year: "numeric" }).format(historyMonth);
+  const isCurrentMonth = year === new Date().getFullYear() && month === new Date().getMonth();
+  const cells = Array.from({ length: leadingDays + daysInMonth }, (_, index) => {
+    if (index < leadingDays) return `<span class="calendar-day empty" aria-hidden="true"></span>`;
+    const day = index - leadingDays + 1;
+    const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const records = sessionsByDate.get(key) || [];
+    const selected = key === selectedHistoryDate;
+    return `<button class="calendar-day ${records.length ? "has-records" : ""} ${selected ? "selected" : ""}" data-action="select-history-date" data-history-date="${key}" ${records.length ? `aria-label="${day}, ${records.length} registro${records.length === 1 ? "" : "s"}"` : `aria-label="${day}, sin registros"`} ${records.length ? "" : "disabled"}><span>${day}</span>${records.length ? `<b>${records.length}</b>` : ""}</button>`;
+  }).join("");
+  const selectedSessions = sessionsByDate.get(selectedHistoryDate) || [];
+  return `<section class="history-calendar" aria-label="Calendario de entrenamientos"><div class="calendar-header"><button class="icon-button" data-action="history-previous-month" aria-label="Mes anterior">&lsaquo;</button><h3>${monthLabel}</h3><button class="icon-button" data-action="history-next-month" aria-label="Mes siguiente" ${isCurrentMonth ? "disabled" : ""}>&rsaquo;</button></div><div class="calendar-weekdays" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div><div class="calendar-grid">${cells}</div></section>${selectedSessions.length ? `<section class="history-day-details" aria-live="polite"><h3>${historyDayLabel(selectedHistoryDate)}</h3>${selectedSessions.map(({ session, index }) => renderHistorySession(session, index)).join("")}</section>` : `<p class="calendar-hint">Selecciona un día marcado para consultar sus resultados.</p>`}`;
+}
 function renderHistory() {
-  if (!data.history.length) return `<div class="empty-state"><h2>Aún no hay sesiones</h2><p>Al finalizar un entrenamiento, sus resultados aparecerán aquí.</p></div>`;
-  data.history.sort((first, second) => (Date.parse(second.date) || 0) - (Date.parse(first.date) || 0));
-  return `<div class="session-heading"><div><h2>Historial</h2><p>Usa una sesión como punto de partida para el próximo ciclo.</p></div></div>${data.history.map((session, index) => `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${escapeHtml(session.weekday || new Date(session.date).toLocaleDateString("es-ES", { weekday: "long" }))} · ${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`).join("")}`;
+  const sessions = sortedHistory();
+  const heading = `<div class="session-heading"><div><h2>Historial</h2><p>Usa una sesión como punto de partida para el próximo ciclo.</p></div></div>${historyToggle()}`;
+  if (!sessions.length) return `${heading}<div class="empty-state"><h2>Aún no hay sesiones</h2><p>Al finalizar un entrenamiento, sus resultados aparecerán aquí.</p></div>`;
+  return `${heading}${historyDisplay === "calendar" ? renderHistoryCalendar(sessions) : sessions.map(renderHistorySession).join("")}`;
 }
 
 function renderExercises() { return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
@@ -300,6 +340,10 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "restore") restoreInput.click();
   if (action.dataset.action === "guide-settings") openGuideSettings();
   if (action.dataset.action === "close-guide-settings") guideSettingsDialog.close();
+  if (action.dataset.action === "set-history-display") { historyDisplay = action.dataset.historyDisplay; render(); }
+  if (action.dataset.action === "history-previous-month") { historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() - 1, 1); selectedHistoryDate = ""; render(); }
+  if (action.dataset.action === "history-next-month") { historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() + 1, 1); selectedHistoryDate = ""; render(); }
+  if (action.dataset.action === "select-history-date") { selectedHistoryDate = action.dataset.historyDate; render(); }
   if (action.dataset.action === "add-plan") { data.plans[activeDay].push({ exerciseId: data.exercises[0].id, sets: "3", reps: "12", resistance: "Media" }); save(); render(); }
   if (action.dataset.action === "remove-plan") { data.plans[activeDay].splice(Number(action.closest("[data-plan-index]").dataset.planIndex), 1); save(); render(); }
   if (action.dataset.action === "finish") {
@@ -308,7 +352,7 @@ document.addEventListener("click", (event) => {
     const completedAt = new Date();
     data.history.unshift({ date: completedAt.toISOString(), weekday: completedAt.toLocaleDateString("es-ES", { weekday: "long" }), day: activeDay, entries }); save(); workout = {}; toast("Sesión guardada en el historial."); render();
   }
-  if (action.dataset.action === "reuse") { const session = data.history[Number(action.dataset.historyIndex)]; data.plans[session.day] = session.entries.map((entry) => ({ exerciseId: entry.exerciseId, sets: "3", reps: entry.reps, resistance: entry.resistance })); save(); activeDay = session.day; activeView = "plan"; toast("Resultados aplicados al plan."); render(); }
+  if (action.dataset.action === "reuse") { const session = sortedHistory()[Number(action.dataset.historyIndex)]; data.plans[session.day] = session.entries.map((entry) => ({ exerciseId: entry.exerciseId, sets: "3", reps: entry.reps, resistance: entry.resistance })); save(); activeDay = session.day; activeView = "plan"; toast("Resultados aplicados al plan."); render(); }
 });
 
 restoreInput.addEventListener("change", () => {

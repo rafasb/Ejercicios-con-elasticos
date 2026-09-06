@@ -77,6 +77,26 @@ textarea { resize: vertical; }
 .history-meta { color: var(--muted); font-size: .82rem; margin: 5px 0 9px; }
 .result-line { display: flex; justify-content: space-between; gap: 8px; font-size: .88rem; padding: 4px 0; }
 .badge { text-transform: capitalize; font-size: .72rem; font-family: "Courier New", monospace; padding: 2px 5px; background: var(--yellow); }
+.history-toggle { display: inline-grid; grid-template-columns: repeat(2, 1fr); margin: 0 0 18px; border: 1px solid var(--ink); }
+.history-toggle button { min-width: 92px; min-height: 38px; border: 0; background: transparent; color: var(--muted); font-size: .82rem; font-weight: bold; }
+.history-toggle button + button { border-left: 1px solid var(--ink); }
+.history-toggle button.active { background: var(--ink); color: var(--paper); }
+.history-calendar { margin: 0; padding: 0 0 14px; border-bottom: 1px solid var(--line); }
+.calendar-header { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; margin-bottom: 8px; }
+.calendar-header h3 { margin: 0; text-align: center; font-size: 1rem; text-transform: capitalize; }
+.calendar-header .icon-button { width: 40px; height: 40px; justify-self: center; font-size: 2rem; line-height: 1; }
+.calendar-header .icon-button:disabled { color: var(--line); cursor: default; }
+.calendar-weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.calendar-weekdays { margin-bottom: 4px; color: var(--muted); font-family: "Courier New", monospace; font-size: .72rem; font-weight: bold; text-align: center; }
+.calendar-day { position: relative; display: grid; min-width: 0; aspect-ratio: 1; place-items: center; border: 1px solid transparent; background: transparent; color: var(--muted); font-family: "Courier New", monospace; font-size: .84rem; font-weight: bold; }
+.calendar-day.empty { pointer-events: none; }
+.calendar-day.has-records { border-color: var(--coral); background: #fff2e7; color: var(--coral-dark); }
+.calendar-day.has-records.selected { background: var(--coral); color: white; }
+.calendar-day b { position: absolute; top: 2px; right: 2px; min-width: 13px; padding: 1px 2px; background: var(--ink); color: white; font-size: .58rem; line-height: 1; }
+.calendar-day.selected b { background: var(--paper); color: var(--ink); }
+.history-day-details { margin-top: 18px; }
+.history-day-details > h3 { margin: 0; font-size: 1rem; text-transform: capitalize; }
+.calendar-hint { margin: 14px 0 0; color: var(--muted); font-size: .84rem; }
 .catalogue-card { border-bottom: 1px solid var(--line); padding: 14px 0; }
 .catalogue-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .catalogue-card h3 { margin: 0; font-size: 1rem; }
@@ -114,6 +134,12 @@ dialog::backdrop { background: rgba(29,42,49,.55); }
 #toast.visible { opacity: 1; }
 @media (max-width: 420px) {
   .technical-grid, .guide-settings-grid, .cycle-settings { grid-template-columns: 1fr; }
+  .history-toggle { width: 100%; }
+  .history-toggle button { min-width: 0; }
+  .calendar-weekdays, .calendar-grid { gap: 3px; }
+  .calendar-weekdays { font-size: .66rem; }
+  .calendar-day { font-size: .74rem; }
+  .calendar-day b { top: 1px; right: 1px; min-width: 11px; font-size: .52rem; }
   .exercise-actions { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .exercise-actions .sets-counter { grid-column: span 1; }
   .exercise-actions .guide-play { grid-column: span 2; }
