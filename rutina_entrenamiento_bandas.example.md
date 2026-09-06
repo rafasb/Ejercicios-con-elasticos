@@ -24,9 +24,6 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 3 segundos de bajada, 1 segundo abajo, 1 segundo de subida |
 
-#### Hastags
-- #Cuadriceps #Gluteo
-
 #### Errores comunes a evitar
 - **Colapso de rodillas (Valgo):** Dejar que la resistencia de la miniband venza a las piernas y las rodillas se junten al bajar o subir.
 - **Despegar los talones:** Elevar los talones del suelo al descender, trasladando el peso a las puntas.
@@ -58,9 +55,6 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de empuje, 1 segundo de pausa, 3 segundos de regreso |
 
-#### Hastags
-- #Pectoral
-
 #### Errores comunes a evitar
 - **Inestabilidad del torso:** Balancear el cuerpo o arquear en exceso la zona lumbar durante el empuje por usar demasiada resistencia.
 - **Codos demasiado abiertos:** Colocar los codos alineados a 90° con los hombros, lo cual genera un pinzamiento articular innecesario.
@@ -91,9 +85,6 @@
 | **Ubicación de la banda** | Tobillos (para menor exigencia se puede subir a las espinillas; para mayor, a las puntas de los pies) |
 | **Series y repeticiones** | 3 a 4 series de 10 pasos por lado (ida y vuelta) |
 | **Tiempo/Cadencia** | Ritmo fluido pero controlado: 1 segundo por paso, sin tirones |
-
-#### Hastags
-- #Gluteo
 
 #### Errores comunes a evitar
 - **Perder la tensión en la banda:** Juntar demasiado los pies entre paso y paso, dejando que la miniband se afloje por completo.
@@ -127,9 +118,6 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos para cerrar, 1 segundo de contracción al frente, 3 segundos para abrir |
 
-#### Hastags
-- #Pectoral
-
 #### Errores comunes a evitar
 - **Modificar el ángulo del codo:** Doblar y estirar los brazos durante el movimiento transformándolo en un press de pecho en lugar de un aislamiento de pectoral (la flexión de codo debe permanecer fija).
 - **Sobreestiramiento al regresar:** Dejar que los codos superen ampliamente la línea de la espalda al abrir, lo que genera un estrés innecesario en la parte anterior del hombro.
@@ -160,9 +148,6 @@
 | **Ubicación del anclaje** | Base/marco inferior de la puerta |
 | **Series y repeticiones** | 3 a 4 series de 10 a 12 repeticiones por pierna (20-24 totales) |
 | **Tiempo/Cadencia** | 2 segundos de bajada, 1 segundo rozando abajo, 2 segundos de subida |
-
-#### Hastags
-- #Abdominal
 
 #### Errores comunes a evitar
 - **Arquear la zona lumbar:** Permitir que la espalda baja se despegue del suelo al extender la pierna. Si esto ocurre, no bajes la pierna tan cerca del piso o reduce ligeramente la tensión de la banda.
@@ -197,9 +182,6 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de tirón, 1 segundo de apretón atrás, 3 segundos de regreso |
 
-#### Hastags
-- #Espalda
-
 #### Errores comunes a evitar
 - **Inclinación del tronco:** Balancear la espalda hacia atrás al tirar de la banda para impulsarte, restando trabajo a la espalda.
 - **Elevar los hombros:** Encoger los hombros hacia las orejas durante la tracción, cargando en exceso el trapecio superior.
@@ -230,9 +212,6 @@
 | **Posición del anclaje** | Bajo la planta de un pie (pisa firme en el centro de la banda) |
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de subida, 1 segundo arriba, 3 segundos de bajada |
-
-#### Hastags
-- #Hombro
 
 #### Errores comunes a evitar
 - **Arquear la espalda baja:** Curvar la zona lumbar hacia atrás al empujar hacia arriba por falta de activación del abdomen o por exceso de resistencia.
@@ -265,9 +244,6 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de subida, 1 segundo de pausa arriba, 3 segundos de bajada |
 
-#### Hastags
-- #Hombro
-
 #### Errores comunes a evitar
 - **Inclinación o tirón con el torso:** Balancear la espalda hacia atrás o dar un impulso con el cuerpo para subir las manos.
 - **Elevar los brazos por encima de los hombros:** Subir las manos por encima de la línea de los hombros, trasladando la tensión al trapecio superior en lugar del deltoides.
@@ -299,9 +275,6 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de subida, 1 segundo de apretón arriba, 3 segundos de bajada |
 
-#### Hastags
-- #Biceps
-
 #### Errores comunes a evitar
 - **Separar o mover los codos:** Desplazar los codos hacia adelante o hacia atrás durante la subida, restando tensión directa al bíceps.
 - **Balancear el torso:** Balancear la espalda para coger impulso al subir por usar demasiado nivel de resistencia en la banda.
@@ -332,9 +305,6 @@
 | **Posición del anclaje** | Bajo el talón de la pierna trasera (anclaje pisado) |
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones (por brazo) |
 | **Tiempo/Cadencia** | 2 segundos de subida, 1 segundo de apretón arriba, 3 segundos de bajada |
-
-#### Hastags
-- #Triceps
 
 #### Errores comunes a evitar
 - **Abrir o mover el codo:** Permitir que el codo se abra hacia afuera o se mueva adelante y atrás durante la ejecución, restando tensión directa al tríceps e involucrando en exceso la articulación del hombro.
@@ -369,9 +339,6 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones por pierna |
 | **Tiempo/Cadencia** | 2 segundos de subida/empuje, 1 segundo de apretón arriba, 3 segundos de bajada |
 
-#### Hastags
-- #Gluteo
-
 #### Errores comunes a evitar
 - **Arquear la zona lumbar (hiperlordosis):** Dejar caer la pelvis por falta de activación abdominal, lo que traslada la tensión a la parte baja de la espalda en lugar del glúteo.
 - **Rotar la cadera:** Girar la pelvis hacia el lado de la pierna que trabaja durante la subida en lugar de mantener ambas crestas ilíacas mirando de frente al suelo.
@@ -402,9 +369,6 @@
 | **Posición del anclaje** | Bajo las plantas de ambos pies; tubos sobre hombros/pecho |
 | **Series y repeticiones** | 3 a 4 series de 10 a 12 repeticiones |
 | **Tiempo/Cadencia** | 3 segundos de inclinación/bajada, 1 segundo de pausa abajo, 2 segundos de subida |
-
-#### Hastags
-- #Lumbar #Gluteo
 
 #### Errores comunes a evitar
 - **Redondear la espalda:** Flexionar la columna vertebral en lugar de articular únicamente la bisagra de cadera, lo que aumenta el riesgo de sobrecarga en la zona lumbar.
@@ -437,9 +401,6 @@
 | **Series y repeticiones** | 3 a 4 series de 15 a 20 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de subida, 2 segundos de apretón consciente arriba, 3 segundos de bajada |
 
-#### Hastags
-- #Gluteo
-
 #### Errores comunes a evitar
 - **Dejar que las rodillas se colapsen hacia adentro (valgo):** Ceder a la resistencia de la miniband, juntando las rodillas y perdiendo la activación del glúteo medio.
 - **Arqueo lumbar excesivo arriba:** Elevar la cadera empujando con la zona lumbar en lugar de bloquear con los glúteos, sobrecargando la columna.
@@ -471,9 +432,6 @@
 | **Series y repeticiones** | 3 series de 12 a 15 repeticiones por cada lado |
 | **Tiempo/Cadencia** | 2 segundos de tirón/rotación, 1 segundo de pausa abajo, 3 segundos de retorno |
 
-#### Hastags
-- #Abdominal
-
 #### Errores comunes a evitar
 - **Tirar únicamente con los brazos:** Flexionar y extender los codos para mover la carga en lugar de iniciar el movimiento desde la rotación del torso y la fuerza del core.
 - **Mantener los pies fijos y bloquear la cadera:** No pivotar sobre el pie trasero al rotar, lo que genera un estrés o torsión excesiva e innecesaria en la articulación de la rodilla.
@@ -504,9 +462,6 @@
 | **Posición del anclaje** | Miniband colocada alrededor de ambas muñecas |
 | **Series y repeticiones** | 3 a 4 series de 10 a 12 toques totales por mano (o 30-45 segundos) |
 | **Tiempo/Cadencia** | Movimientos alternos fluidos; 1 segundo para tocar, 1 segundo para regresar |
-
-#### Hastags
-- #Abdominal
 
 #### Errores comunes a evitar
 - **Balancear las caderas (basculación):** Girar la pelvis de lado a lado cada vez que despegas una mano del suelo. La cadera debe permanecer completamente paralela a la esterilla.
