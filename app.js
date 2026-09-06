@@ -1,6 +1,6 @@
 const STORAGE_KEY = "ritmo-data-v1";
 const DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
-const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, volume: .6 };
+const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, rest: 120, volume: .6 };
 const app = document.querySelector("#app");
 const restoreInput = document.querySelector("#restore-input");
 const dialog = document.querySelector("#exercise-dialog");
@@ -27,7 +27,7 @@ let audioContext = null;
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 function downloadBackup() {
-  const backup = { version: 1, exportedAt: new Date().toISOString(), plans: data.plans, history: data.history };
+  const backup = { version: 1, exportedAt: new Date().toISOString(), plans: data.plans, history: data.history, guide: data.guide };
   const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
   const link = document.createElement("a");
   link.href = url;
@@ -48,9 +48,10 @@ async function restoreBackup(file) {
     if (!isValidBackup(backup)) throw new Error("invalid backup");
     data.plans = backup.plans;
     data.history = backup.history;
+    if (backup.guide && typeof backup.guide === "object" && !Array.isArray(backup.guide)) data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...backup.guide };
     save();
     render();
-    toast("Plan e historial restaurados.");
+    toast("Plan, historial y guía restaurados.");
   } catch {
     toast("El archivo no es un backup válido de Ritmo.");
   } finally {
@@ -87,6 +88,7 @@ function openGuideSettings() {
   guideSettingsForm.elements.preparation.value = data.guide.preparation;
   guideSettingsForm.elements.tension.value = data.guide.tension;
   guideSettingsForm.elements.distension.value = data.guide.distension;
+  guideSettingsForm.elements.rest.value = data.guide.rest;
   guideSettingsForm.elements.volume.value = data.guide.volume;
   updateVolumeLabel(data.guide.volume);
   guideSettingsDialog.showModal();
@@ -134,7 +136,7 @@ function runTensionCycle() {
   const cycle = guideState.cycle;
   runGuidePhase("Tensión", data.guide.tension, cycle, 660, () => {
     runGuidePhase("Distensión", data.guide.distension, cycle, 392, () => {
-      if (cycle === guideState.cycles) finishGuide();
+      if (cycle === guideState.cycles) runGuidePhase("Descanso", data.guide.rest, cycle, 294, finishGuide);
       else { guideState.cycle += 1; runTensionCycle(); }
     });
   });
@@ -293,7 +295,7 @@ document.addEventListener("input", (event) => {
 guideSettingsForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const fields = new FormData(guideSettingsForm);
-  data.guide = { preparation: Number(fields.get("preparation")), tension: Number(fields.get("tension")), distension: Number(fields.get("distension")), volume: Number(fields.get("volume")) };
+  data.guide = { preparation: Number(fields.get("preparation")), tension: Number(fields.get("tension")), distension: Number(fields.get("distension")), rest: Number(fields.get("rest")), volume: Number(fields.get("volume")) };
   save(); guideSettingsDialog.close(); toast("Ajustes de guía guardados.");
 });
 
