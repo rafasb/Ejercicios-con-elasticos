@@ -271,6 +271,7 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "remove-plan") { data.plans[activeDay].splice(Number(action.closest("[data-plan-index]").dataset.planIndex), 1); save(); render(); }
   if (action.dataset.action === "finish") {
     const entries = data.plans[activeDay].map((item) => { const exercise = getExercise(item.exerciseId); const entry = workout[exercise.id] || {}; return { name: exercise.name, exerciseId: exercise.id, reps: entry.reps || item.reps, resistance: entry.resistance || item.resistance, rating: entry.rating || "aceptable" }; });
+    data.history = data.history.filter((session) => session.day !== activeDay);
     data.history.unshift({ date: new Date().toISOString(), day: activeDay, entries }); save(); workout = {}; toast("Sesión guardada en el historial."); render();
   }
   if (action.dataset.action === "reuse") { const session = data.history[Number(action.dataset.historyIndex)]; data.plans[session.day] = session.entries.map((entry) => ({ exerciseId: entry.exerciseId, sets: "3", reps: entry.reps, resistance: entry.resistance })); save(); activeDay = session.day; activeView = "plan"; toast("Resultados aplicados al plan."); render(); }
