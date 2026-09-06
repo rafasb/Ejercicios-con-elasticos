@@ -106,7 +106,7 @@ function videosForStorage(value = "") { return value.split("\n").map((line) => l
 function getExercise(id) { return data.exercises.find((exercise) => exercise.id === id); }
 function toast(message) { const node = document.querySelector("#toast"); node.textContent = message; node.classList.add("visible"); setTimeout(() => node.classList.remove("visible"), 2500); }
 function repetitionsToCycles(value) { return Math.max(1, Number.parseInt(value, 10) || 1); }
-function remainingSets(entry, sets) { return Math.max(0, Number.isFinite(entry?.remainingSets) ? entry.remainingSets : repetitionsToCycles(sets)); }
+function completedSets(entry) { return Math.max(0, Number.isFinite(entry?.completedSets) ? entry.completedSets : 0); }
 function updateVolumeLabel(value) { guideVolumeValue.value = `${Math.round(Number(value) * 100)} %`; guideVolumeValue.textContent = guideVolumeValue.value; }
 function openGuideSettings() {
   guideSettingsForm.elements.preparation.value = data.guide.preparation;
@@ -261,7 +261,7 @@ function renderTrain() {
   return `${daySwitcher()}<div class="session-heading"><div><h2>${activeDay.replace("DÍA ", "Día ")}</h2><p>Registra cada ejercicio antes de finalizar.</p></div><span class="target">${plan.length} ejercicios</span></div><section class="exercise-list">${plan.map((item, index) => {
     const exercise = getExercise(item.exerciseId); if (!exercise) return "";
     const entry = workout[item.exerciseId] || { reps: item.reps, resistance: item.resistance, rating: "aceptable" };
-    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><output class="sets-counter" aria-label="Series pendientes">${remainingSets(entry, item.sets)}</output><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-repetitions="${escapeHtml(item.reps)}" data-sets="${escapeHtml(item.sets)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button>${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
+    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><output class="sets-counter" aria-label="Series realizadas">${completedSets(entry)}</output><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-repetitions="${escapeHtml(item.reps)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button>${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
   }).join("")}</section><button class="primary-button sticky-action" data-action="finish">Finalizar ${activeDay.replace("DÍA ", "Día ")}</button>`;
 }
 
@@ -279,7 +279,7 @@ function historyDateKey(session) {
 }
 function historyDayLabel(dateKey) { return new Date(`${dateKey}T12:00:00`).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" }); }
 function renderHistorySession(session, index) {
-  return `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${escapeHtml(session.weekday || new Date(session.date).toLocaleDateString("es-ES", { weekday: "long" }))} · ${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`;
+  return `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${escapeHtml(session.weekday || new Date(session.date).toLocaleDateString("es-ES", { weekday: "long" }))} · ${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${entry.sets ?? 0} series · ${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge" data-rating="${escapeHtml(entry.rating)}">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`;
 }
 function historyToggle() {
   return `<div class="history-toggle" role="group" aria-label="Vista del historial"><button class="${historyDisplay === "list" ? "active" : ""}" data-action="set-history-display" data-history-display="list" aria-pressed="${historyDisplay === "list"}">Lista</button><button class="${historyDisplay === "calendar" ? "active" : ""}" data-action="set-history-display" data-history-display="calendar" aria-pressed="${historyDisplay === "calendar"}">Calendario</button></div>`;
@@ -332,9 +332,9 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "close-dialog") dialog.close();
   if (action.dataset.action === "start-guide") {
     const entry = workout[action.dataset.exerciseId] ||= {};
-    entry.remainingSets = Math.max(0, remainingSets(entry, action.dataset.sets) - 1);
-    action.previousElementSibling.value = entry.remainingSets;
-    action.previousElementSibling.textContent = entry.remainingSets;
+    entry.completedSets = completedSets(entry) + 1;
+    action.previousElementSibling.value = entry.completedSets;
+    action.previousElementSibling.textContent = entry.completedSets;
     startGuide(getExercise(action.dataset.exerciseId), action.dataset.repetitions);
   }
   if (action.dataset.action === "stop-guide") stopGuide();
@@ -351,7 +351,7 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "add-plan") { data.plans[activeDay].push({ exerciseId: data.exercises[0].id, sets: "3", reps: "12", resistance: "Media" }); save(); render(); }
   if (action.dataset.action === "remove-plan") { data.plans[activeDay].splice(Number(action.closest("[data-plan-index]").dataset.planIndex), 1); save(); render(); }
   if (action.dataset.action === "finish") {
-    const entries = data.plans[activeDay].map((item) => { const exercise = getExercise(item.exerciseId); const entry = workout[exercise.id] || {}; return { name: exercise.name, exerciseId: exercise.id, reps: entry.reps || item.reps, resistance: entry.resistance || item.resistance, rating: entry.rating || "aceptable" }; });
+    const entries = data.plans[activeDay].map((item) => { const exercise = getExercise(item.exerciseId); const entry = workout[exercise.id] || {}; return { name: exercise.name, exerciseId: exercise.id, sets: completedSets(entry), reps: entry.reps || item.reps, resistance: entry.resistance || item.resistance, rating: entry.rating || "aceptable" }; });
     data.history = data.history.filter((session) => session.day !== activeDay);
     const completedAt = new Date();
     data.history.unshift({ date: completedAt.toISOString(), weekday: completedAt.toLocaleDateString("es-ES", { weekday: "long" }), day: activeDay, entries }); save(); workout = {}; toast("Sesión guardada en el historial."); render();

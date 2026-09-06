@@ -60,9 +60,9 @@ label { display: grid; gap: 5px; font-size: .82rem; font-weight: bold; }
 input, textarea, select { width: 100%; min-height: 42px; border: 1px solid var(--line); border-radius: 0; background: #fff; padding: 8px; color: var(--ink); }
 textarea { resize: vertical; }
 .rating { flex: 1; min-width: 82px; }
-.rating.selected[data-rating="fácil"] { background: var(--sage); }
-.rating.selected[data-rating="aceptable"] { background: var(--yellow); }
-.rating.selected[data-rating="imposible"] { background: #e9a396; }
+.rating.selected[data-rating="fácil"], .badge[data-rating="fácil"] { background: var(--sage); }
+.rating.selected[data-rating="aceptable"], .badge[data-rating="aceptable"] { background: var(--yellow); }
+.rating.selected[data-rating="imposible"], .badge[data-rating="imposible"] { background: #e9a396; }
 .sets-counter { display: inline-grid; place-items: center; min-width: 44px; min-height: 44px; border: 1px solid var(--coral); background: var(--coral); color: white; font-family: "Courier New", monospace; font-size: 1rem; font-weight: bold; }
 .guide-play { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 8px 11px; border: 1px solid var(--coral); background: #fff2e7; color: var(--coral-dark); font-size: .86rem; font-weight: bold; }
 .guide-play span { font-size: .8rem; }
