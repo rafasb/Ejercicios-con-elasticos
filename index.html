@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#d9543d" />
     <meta name="description" content="Planifica y registra tus entrenamientos con bandas." />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="stylesheet" href="styles.css?v=15" />
     <title>Ritmo</title>
   </head>
   <body>
@@ -41,7 +41,18 @@
         </fieldset>
         <fieldset>
           <legend>Técnica y seguridad</legend>
-          <label>Detalles técnicos<textarea name="technical" rows="5" placeholder="Un dato por línea.&#10;Músculos principales: ...&#10;Series y repeticiones: ..."></textarea></label>
+          <label>Músculos principales<input name="primaryMuscles" maxlength="150" /></label>
+          <label>Músculos secundarios<input name="secondaryMuscles" maxlength="150" /></label>
+          <label>Músculos estabilizadores<input name="stabilizerMuscles" maxlength="150" /></label>
+          <label>Resistencia o peso<input name="resistance" maxlength="100" placeholder="Ej.: Banda media" /></label>
+          <label>Series y repeticiones<input name="setsAndRepetitions" maxlength="100" placeholder="Ej.: 3 series de 12 repeticiones" /></label>
+          <div class="guide-settings-grid">
+            <label>Tiempo tensión (segundos)<input name="guide-tension" type="number" min="0" inputmode="numeric" /></label>
+            <label>Tiempo pausa (segundos)<input name="guide-pause" type="number" min="0" inputmode="numeric" /></label>
+            <label>Tiempo distensión (segundos)<input name="guide-distension" type="number" min="0" inputmode="numeric" /></label>
+            <label>Tiempo descanso entre series (segundos)<input name="guide-rest" type="number" min="0" inputmode="numeric" /></label>
+          </div>
+          <label>Notas técnicas<textarea name="technicalNotes" rows="4" placeholder="Un dato por línea.&#10;Anclaje: ...&#10;Ubicación de la banda: ..."></textarea></label>
           <label>Errores a evitar<textarea name="errors" rows="5" placeholder="Un error por línea.&#10;Arquear la espalda: ..."></textarea></label>
         </fieldset>
         <fieldset>
@@ -77,12 +88,9 @@
         <form id="guide-settings-form">
           <div class="dialog-heading"><h2 id="guide-settings-title">Ajustar guía</h2><button class="icon-button" type="button" data-action="close-guide-settings" aria-label="Cerrar">×</button></div>
           <fieldset>
-            <legend>Duración de las fases</legend>
+            <legend>Preparación</legend>
             <div class="guide-settings-grid">
               <label>Preparación (segundos)<input name="preparation" type="number" min="1" max="120" required /></label>
-              <label>Tensión (segundos)<input name="tension" type="number" min="1" max="60" required /></label>
-              <label>Distensión (segundos)<input name="distension" type="number" min="1" max="60" required /></label>
-              <label>Descanso (segundos)<input name="rest" type="number" min="1" max="600" required /></label>
             </div>
           </fieldset>
           <fieldset>
@@ -94,6 +102,6 @@
       </dialog>
 
     <div id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=12"></script>
+    <script src="app.js?v=15"></script>
   </body>
 </html>
