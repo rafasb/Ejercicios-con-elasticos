@@ -362,7 +362,7 @@
 | Parámetro | Detalle recomendado |
 | :--- | :--- |
 | **Músculo principal** | Tríceps braquial (con especial énfasis en la cabeza larga) |
-| **Músculos secundarios** | Ancóneo y extensores del antebrazo |
+| **Músculos secundarios** | Ancóneo |
 | **Músculos estabilizadores** | Core (recto abdominal y lumbares), Deltoides posterior y Serrato anterior |
 | **Posición del anclaje** | Bajo el talón de la pierna trasera (anclaje pisado) |
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones (por brazo) |
