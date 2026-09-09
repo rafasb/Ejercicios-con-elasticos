@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#d9543d" />
     <meta name="description" content="Planifica y registra tus entrenamientos con bandas." />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles.css?v=15" />
+    <link rel="stylesheet" href="styles.css?v=20" />
     <title>Ritmo</title>
   </head>
   <body>
@@ -60,11 +60,22 @@
           <label>Enlaces de vídeo<textarea name="videos" rows="4" inputmode="url" placeholder="Una URL por línea.&#10;https://www.youtube.com/watch?v=..."></textarea></label>
         </fieldset>
         <fieldset>
-          <legend>Hastags</legend>
-          <label>Etiquetas<textarea name="hashtags" rows="3" placeholder="Una etiqueta por línea.&#10;#Gluteo"></textarea></label>
+          <legend>Etiquetas musculares</legend>
+          <label for="exercise-tags">Grupos musculares</label>
+          <select id="exercise-tags" name="tags" multiple size="5" aria-describedby="exercise-tags-help"></select>
+          <small id="exercise-tags-help">Puedes elegir varios grupos.</small>
         </fieldset>
         <button id="exercise-submit" class="primary-button" type="submit">Añadir ejercicio</button>
       </form>
+    </dialog>
+
+    <dialog id="plan-exercise-dialog" aria-labelledby="plan-exercise-dialog-title">
+      <section class="plan-exercise-dialog-content">
+        <div class="dialog-heading"><h2 id="plan-exercise-dialog-title">Seleccionar ejercicio</h2><button class="icon-button" type="button" data-action="close-plan-exercise-dialog" aria-label="Cerrar">×</button></div>
+        <label for="plan-exercise-tag-filter">Grupo muscular</label>
+        <select id="plan-exercise-tag-filter"></select>
+        <div id="plan-exercise-list" class="plan-exercise-list" aria-live="polite"></div>
+      </section>
     </dialog>
     
       <dialog id="guide-dialog" aria-labelledby="guide-exercise-name">
@@ -102,6 +113,6 @@
       </dialog>
 
     <div id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=15"></script>
+    <script src="app.js?v=20"></script>
   </body>
 </html>

@@ -14,6 +14,7 @@ Seguir estas indicaciones puede ser dañino para la salud. No deben interpretars
 - Plan semanal editable de 3 a 7 sesiones.
 - Registro de repeticiones, resistencia/peso y valoración tras cada sesión.
 - Historial reutilizable para ajustar sesiones posteriores.
+- Etiquetas musculares normalizadas para filtrar el catálogo y las opciones de planificación, con resúmenes diario y semanal por grupo.
 - Persistencia local en el navegador y funcionamiento PWA sin conexión tras la primera carga.
 
 ## Ejecutar con Docker
@@ -42,4 +43,4 @@ Abre [http://localhost:4173](http://localhost:4173).
 
 ## Datos
 
-Los datos se almacenan en el `localStorage` del navegador. Desde la pestaña **Ejercicios** puedes elegir entre 3 y 7 días de entrenamiento semanales, descargar un Backup en formato JSON y recuperarlo con Restore. Al reducir el número de días, se eliminan los planes de los últimos días, pero se conserva el historial. El backup contiene la configuración semanal, el plan, el historial y los ajustes de la guía; los ejercicios personalizados no se incluyen.
+Los datos se almacenan en el `localStorage` del navegador. Cada ejercicio conserva un grupo muscular descriptivo y un array `tags` con sus etiquetas musculares normalizadas, sin `#`: `Abdominal`, `Biceps`, `Cuadriceps`, `Espalda`, `Gluteo`, `Hombro`, `Lumbar`, `Pectoral` o `Triceps`. Desde la pestaña **Ejercicios** puedes elegir entre 3 y 7 días de entrenamiento semanales, filtrar por una o varias etiquetas, descargar un Backup en formato JSON y recuperarlo con Restore. Al reducir el número de días, se eliminan los planes de los últimos días, pero se conserva el historial. El backup contiene la configuración semanal, el plan, el historial y los ajustes de la guía; los ejercicios personalizados no se incluyen.

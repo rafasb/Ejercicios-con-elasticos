@@ -24,7 +24,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 3 segundos de bajada, 1 segundo abajo, 1 segundo de subida |
 
-#### Hastags
+#### Hashtags
 - #Cuadriceps #Gluteo
 
 #### Errores comunes a evitar
@@ -58,7 +58,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de empuje, 1 segundo de pausa, 3 segundos de regreso |
 
-#### Hastags
+#### Hashtags
 - #Pectoral
 
 #### Errores comunes a evitar
@@ -92,7 +92,7 @@
 | **Series y repeticiones** | 3 a 4 series de 10 pasos por lado (ida y vuelta) |
 | **Tiempo/Cadencia** | Ritmo fluido pero controlado: 1 segundo por paso, sin tirones |
 
-#### Hastags
+#### Hashtags
 - #Gluteo
 
 #### Errores comunes a evitar
@@ -127,7 +127,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos para cerrar, 1 segundo de contracción al frente, 3 segundos para abrir |
 
-#### Hastags
+#### Hashtags
 - #Pectoral
 
 #### Errores comunes a evitar
@@ -161,7 +161,7 @@
 | **Series y repeticiones** | 3 a 4 series de 10 a 12 repeticiones por pierna (20-24 totales) |
 | **Tiempo/Cadencia** | 2 segundos de bajada, 1 segundo rozando abajo, 2 segundos de subida |
 
-#### Hastags
+#### Hashtags
 - #Abdominal
 
 #### Errores comunes a evitar
@@ -197,7 +197,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de tirón, 1 segundo de apretón atrás, 3 segundos de regreso |
 
-#### Hastags
+#### Hashtags
 - #Espalda
 
 #### Errores comunes a evitar
@@ -231,7 +231,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de subida, 1 segundo arriba, 3 segundos de bajada |
 
-#### Hastags
+#### Hashtags
 - #Hombro
 
 #### Errores comunes a evitar
@@ -265,7 +265,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de subida, 1 segundo de pausa arriba, 3 segundos de bajada |
 
-#### Hastags
+#### Hashtags
 - #Hombro
 
 #### Errores comunes a evitar
@@ -299,7 +299,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de subida, 1 segundo de apretón arriba, 3 segundos de bajada |
 
-#### Hastags
+#### Hashtags
 - #Biceps
 
 #### Errores comunes a evitar
@@ -333,7 +333,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones (por brazo) |
 | **Tiempo/Cadencia** | 2 segundos de subida, 1 segundo de apretón arriba, 3 segundos de bajada |
 
-#### Hastags
+#### Hashtags
 - #Triceps
 
 #### Errores comunes a evitar
@@ -369,7 +369,7 @@
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones por pierna |
 | **Tiempo/Cadencia** | 2 segundos de subida/empuje, 1 segundo de apretón arriba, 3 segundos de bajada |
 
-#### Hastags
+#### Hashtags
 - #Gluteo
 
 #### Errores comunes a evitar
@@ -403,7 +403,7 @@
 | **Series y repeticiones** | 3 a 4 series de 10 a 12 repeticiones |
 | **Tiempo/Cadencia** | 3 segundos de inclinación/bajada, 1 segundo de pausa abajo, 2 segundos de subida |
 
-#### Hastags
+#### Hashtags
 - #Lumbar #Gluteo
 
 #### Errores comunes a evitar
@@ -437,7 +437,7 @@
 | **Series y repeticiones** | 3 a 4 series de 15 a 20 repeticiones |
 | **Tiempo/Cadencia** | 2 segundos de subida, 2 segundos de apretón consciente arriba, 3 segundos de bajada |
 
-#### Hastags
+#### Hashtags
 - #Gluteo
 
 #### Errores comunes a evitar
@@ -505,7 +505,7 @@
 | **Series y repeticiones** | 3 a 4 series de 10 a 12 toques totales por mano (o 30-45 segundos) |
 | **Tiempo/Cadencia** | Movimientos alternos fluidos; 1 segundo para tocar, 1 segundo para regresar |
 
-#### Hastags
+#### Hashtags
 - #Abdominal
 
 #### Errores comunes a evitar

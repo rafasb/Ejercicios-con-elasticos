@@ -37,7 +37,7 @@ En **Ejercicios**, consulta los ejercicios existentes y despliega su técnica. D
 
 | Entidad | Campos principales |
 | :--- | :--- |
-| Ejercicio | id, nombre, grupo muscular, resumen, ejecución, detalles técnicos, errores comunes |
+| Ejercicio | id, nombre, grupo muscular libre, etiquetas musculares normalizadas, resumen, ejecución, detalles técnicos, errores comunes |
 | Plan semanal | de 3 a 7 sesiones identificadas por Día 1 a Día 7 |
 | Línea planificada | id de ejercicio, series, repeticiones objetivo, resistencia/peso previsto |
 | Sesión completada | fecha, día, líneas registradas |
@@ -62,6 +62,7 @@ En **Ejercicios**, consulta los ejercicios existentes y despliega su técnica. D
 - El historial muestra los datos guardados y permite reutilizarlos en el plan del mismo día.
 - La aplicación se puede instalar desde un navegador compatible y sigue mostrando los datos y recursos básicos sin conexión.
 - `docker compose up --build` la sirve correctamente en el puerto documentado.
+- Las etiquetas musculares usan el vocabulario controlado `Abdominal`, `Biceps`, `Cuadriceps`, `Espalda`, `Gluteo`, `Hombro`, `Lumbar`, `Pectoral` y `Triceps`; se guardan sin `#` y se pueden combinar para filtrar el catálogo y el plan.
 
 ## Plan de desarrollo
 

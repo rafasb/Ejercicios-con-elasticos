@@ -1,8 +1,9 @@
 const STORAGE_KEY = "ritmo-data-v1";
-const ROUTINE_URL = "rutina_entrenamiento_bandas.md?v=10";
+const ROUTINE_URL = "rutina_entrenamiento_bandas.md?v=16";
 const MIN_DAYS = 3;
 const MAX_DAYS = 7;
 const DEFAULT_DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
+const MUSCLE_TAGS = ["Abdominal", "Biceps", "Cuadriceps", "Espalda", "Gluteo", "Hombro", "Lumbar", "Pectoral", "Triceps"];
 const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, rest: 120, volume: .6 };
 const DEFAULT_EXERCISE_GUIDE = { tension: 0, pause: 0, distension: 0, rest: 120 };
 const app = document.querySelector("#app");
@@ -20,6 +21,9 @@ const guideVolumeValue = document.querySelector("#guide-volume-value");
 const videosDialog = document.querySelector("#videos-dialog");
 const videosExerciseName = document.querySelector("#videos-exercise-name");
 const videosList = document.querySelector("#videos-list");
+const planExerciseDialog = document.querySelector("#plan-exercise-dialog");
+const planExerciseTagFilter = document.querySelector("#plan-exercise-tag-filter");
+const planExerciseList = document.querySelector("#plan-exercise-list");
 let activeView = "train";
 let activeDay = DEFAULT_DAYS[0];
 let data = { days: [...DEFAULT_DAYS], exercises: [], plans: {}, history: [], guide: { ...DEFAULT_GUIDE_SETTINGS } };
@@ -31,6 +35,9 @@ let audioContext = null;
 let historyDisplay = "list";
 let historyMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let selectedHistoryDate = "";
+let selectedTags = [];
+let planExerciseIndex = null;
+let planExerciseTag = "";
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 function createDays(count = MIN_DAYS) {
@@ -127,6 +134,7 @@ function normaliseExercise(exercise) {
   const legacy = exerciseFromTechnical(exercise.technical || "");
   EXERCISE_DETAIL_FIELDS.forEach((field) => { exercise[field] = typeof exercise[field] === "string" ? exercise[field] : legacy[field]; });
   exercise.guide = exercise.guide ? { ...legacy.guide, ...guideForExercise(exercise) } : legacy.guide;
+  exercise.tags = normaliseTags(exercise.tags ?? exercise.hashtags);
   return exercise;
 }
 function exerciseTechnicalDetails(exercise) {
@@ -137,6 +145,18 @@ function exerciseTechnicalDetails(exercise) {
 function listForStorage(value) { return value.split("\n").map((line) => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean).map((line) => `- ${line}`).join("\n"); }
 function listForForm(value = "") { return value.split("\n").map((line) => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean).join("\n"); }
 function videosForStorage(value = "") { return value.split("\n").map((line) => line.trim()).filter((line) => /^https?:\/\//i.test(line)); }
+function normaliseTag(value) {
+  const clean = String(value || "").replace(/^\s*#\s*/, "").trim().toLocaleLowerCase("es-ES").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return MUSCLE_TAGS.find((tag) => tag.toLocaleLowerCase("es-ES") === clean);
+}
+function normaliseTags(value = []) {
+  const entries = Array.isArray(value) ? value : String(value).split(/[\n,]/);
+  return [...new Set(entries.flatMap((entry) => String(entry).match(/#\s*[\p{L}]+|[^#,\n]+/gu) || []).map(normaliseTag).filter(Boolean))];
+}
+function tagsForForm() { return MUSCLE_TAGS.map((tag) => `<option value="${tag}">${tag}</option>`).join(""); }
+function tagBadges(exercise) { return exercise.tags?.length ? `<div class="tag-list" aria-label="Etiquetas musculares">${exercise.tags.map((tag) => `<span class="tag-badge">#${escapeHtml(tag)}</span>`).join("")}</div>` : ""; }
+function tagFilter() { return `<div class="tag-filter"><label for="tag-filter">Filtrar por grupos musculares</label><select id="tag-filter" data-tag-filter multiple size="4">${MUSCLE_TAGS.map((tag) => `<option value="${tag}" ${selectedTags.includes(tag) ? "selected" : ""}>#${tag}</option>`).join("")}</select><button class="text-button" data-action="clear-tag-filter" ${selectedTags.length ? "" : "disabled"}>Limpiar filtros</button></div>`; }
+function matchesSelectedTags(exercise) { return selectedTags.every((tag) => exercise.tags?.includes(tag)); }
 function getExercise(id) { return data.exercises.find((exercise) => exercise.id === id); }
 function toast(message) { const node = document.querySelector("#toast"); node.textContent = message; node.classList.add("visible"); setTimeout(() => node.classList.remove("visible"), 2500); }
 function repetitionsToCycles(value) { return Math.max(1, Number.parseInt(value, 10) || 1); }
@@ -220,6 +240,20 @@ function openVideos(exercise) {
     : "<li>No hay vídeos disponibles para este ejercicio.</li>";
   videosDialog.showModal();
 }
+function renderPlanExercisePicker() {
+  const currentExerciseId = data.plans[activeDay]?.[planExerciseIndex]?.exerciseId;
+  const exercises = data.exercises.filter((exercise) => !planExerciseTag || exercise.tags?.includes(planExerciseTag));
+  planExerciseTagFilter.innerHTML = `<option value="">Todos los grupos</option>${MUSCLE_TAGS.map((tag) => `<option value="${tag}" ${tag === planExerciseTag ? "selected" : ""}>#${tag}</option>`).join("")}`;
+  planExerciseList.innerHTML = exercises.length
+    ? exercises.map((exercise) => `<button type="button" class="plan-exercise-option ${exercise.id === currentExerciseId ? "selected" : ""}" data-action="select-plan-exercise" data-exercise-id="${exercise.id}"><strong>${escapeHtml(exercise.name)}</strong>${tagBadges(exercise)}</button>`).join("")
+    : `<p class="empty-state">No hay ejercicios con esta etiqueta.</p>`;
+}
+function openPlanExercisePicker(index) {
+  planExerciseIndex = index;
+  planExerciseTag = "";
+  renderPlanExercisePicker();
+  planExerciseDialog.showModal();
+}
 function openExerciseForm(exercise) {
   const details = exercise ? normaliseExercise(exercise) : { guide: { ...DEFAULT_EXERCISE_GUIDE } };
   editingExerciseId = exercise?.id || null;
@@ -232,7 +266,8 @@ function openExerciseForm(exercise) {
   GUIDE_FIELDS.forEach((field) => { form.elements[`guide-${field}`].value = details.guide?.[field] || ""; });
   form.elements.errors.value = listForForm(exercise?.errors);
   form.elements.videos.value = (exercise?.videos || []).join("\n");
-  form.elements.hashtags.value = listForForm(exercise?.hashtags);
+  form.elements.tags.innerHTML = tagsForForm();
+  [...form.elements.tags.options].forEach((option) => { option.selected = details.tags?.includes(option.value); });
   document.querySelector("#exercise-dialog-title").textContent = exercise ? "Editar ejercicio" : "Nuevo ejercicio";
   document.querySelector("#exercise-submit").textContent = exercise ? "Guardar cambios" : "Añadir ejercicio";
   dialog.showModal();
@@ -250,10 +285,10 @@ function parseRoutine(markdown) {
     const summary = (section.match(/^\*([^*]+)\*/m) || ["", ""])[1].trim();
     const execution = (section.match(/#### Ejecución paso a paso\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
     const technical = (section.match(/#### Detalles técnicos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
-    const hashtags = (section.match(/#### Hastags\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
+    const hashtagSection = (section.match(/#### Hashtags\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1];
     const errors = (section.match(/#### Errores comunes a evitar\n([\s\S]*?)$/) || ["", ""])[1].trim();
     const videos = [...((section.match(/#### Vídeos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].matchAll(/https?:\/\/[^\s)>]+/g))].map(([url]) => url);
-    exercises.push({ id: `seed-${exercises.length + 1}`, name: heading[1].trim(), muscle: heading[2] || "General", summary, instructions: execution, hashtags, errors, videos, day, ...exerciseFromTechnical(technical) });
+    exercises.push({ id: `seed-${exercises.length + 1}`, name: heading[1].trim(), muscle: heading[2] || "General", summary, instructions: execution, tags: normaliseTags(hashtagSection), errors, videos, day, ...exerciseFromTechnical(technical) });
   });
   return exercises;
 }
@@ -276,7 +311,9 @@ async function initialise() {
     data.exercises.forEach((exercise) => {
       const source = sourceExercises.find((item) => item.id === exercise.id || item.name === exercise.name);
       if (!Array.isArray(exercise.videos)) { exercise.videos = source?.videos || []; updatedExercises = true; }
-      if (typeof exercise.hashtags !== "string") { exercise.hashtags = source?.hashtags || ""; updatedExercises = true; }
+      const sourceTags = source?.tags || [];
+      const tags = normaliseTags(exercise.tags ?? exercise.hashtags);
+      if (tags.join(",") !== sourceTags.join(",") && exercise.id.startsWith("seed-")) { exercise.tags = sourceTags; updatedExercises = true; }
     });
     if (updatedExercises) save();
   } catch {}
@@ -308,10 +345,14 @@ function guideInputs(item) {
   const guide = item.guide || {};
   return `<div class="plan-guide"><label>Tensión (s)<input data-plan-guide="tension" type="number" min="0" inputmode="numeric" value="${seconds(guide.tension)}"></label><label>Pausa (s)<input data-plan-guide="pause" type="number" min="0" inputmode="numeric" value="${seconds(guide.pause)}"></label><label>Distensión (s)<input data-plan-guide="distension" type="number" min="0" inputmode="numeric" value="${seconds(guide.distension)}"></label><label>Descanso (s)<input data-plan-guide="rest" type="number" min="0" inputmode="numeric" value="${seconds(guide.rest)}"></label></div>`;
 }
+function tagSummary(items, label) {
+  const counts = new Map();
+  items.forEach((item) => getExercise(item.exerciseId)?.tags?.forEach((tag) => counts.set(tag, (counts.get(tag) || 0) + 1)));
+  return counts.size ? `<section class="tag-summary" aria-label="${label}"><h3>${label}</h3><p>${[...counts].map(([tag, count]) => `<span>#${tag}: ${count}</span>`).join(" | ")}</p></section>` : "";
+}
 function renderPlan() {
   const plan = data.plans[activeDay];
-  const options = data.exercises.map((exercise) => `<option value="${exercise.id}">${escapeHtml(exercise.name)}</option>`).join("");
-  return `<section class="cycle-settings" aria-labelledby="cycle-settings-title"><div><h2 id="cycle-settings-title">Ciclo semanal</h2><p>Configura los días que quieres entrenar cada semana.</p></div><label>Días de entrenamiento<input type="number" min="${MIN_DAYS}" max="${MAX_DAYS}" value="${configuredDays().length}" inputmode="numeric" data-setting="day-count"></label></section>${daySwitcher()}<div class="session-heading"><div><h2>Planificar ${activeDay.replace("DÍA ", "Día ")}</h2><p>Ajusta el objetivo de tu siguiente sesión.</p></div></div><section>${plan.map((item, index) => `<div class="plan-row" data-plan-index="${index}"><label>Ejercicio<select data-plan="exerciseId">${options.replace(`value="${item.exerciseId}"`, `value="${item.exerciseId}" selected`)}</select></label><label>Series<input data-plan="sets" type="number" min="1" value="${escapeHtml(item.sets)}"></label><label class="plan-repetitions">Repeticiones<input data-plan="reps" type="text" value="${escapeHtml(item.reps)}" aria-label="Repeticiones objetivo"></label><label class="plan-resistance">Peso o fuerza<input data-plan="resistance" type="text" value="${escapeHtml(item.resistance)}" aria-label="Peso o fuerza"></label>${guideInputs(item)}<button class="remove-button" data-action="remove-plan" aria-label="Eliminar ejercicio">×</button></div>`).join("")}</section><div class="action-row"><button class="outline-button" data-action="add-plan">+ Añadir ejercicio</button></div>`;
+  return `<section class="cycle-settings" aria-labelledby="cycle-settings-title"><div><h2 id="cycle-settings-title">Ciclo semanal</h2><p>Configura los días que quieres entrenar cada semana.</p></div><label>Días de entrenamiento<input type="number" min="${MIN_DAYS}" max="${MAX_DAYS}" value="${configuredDays().length}" inputmode="numeric" data-setting="day-count"></label></section>${tagSummary(Object.values(data.plans).flat(), "Resumen muscular semanal")}${daySwitcher()}<div class="session-heading"><div><h2>Planificar ${activeDay.replace("DÍA ", "Día ")}</h2><p>Ajusta el objetivo de tu siguiente sesión.</p></div></div>${tagSummary(plan, `Resumen muscular de ${activeDay.replace("DÍA ", "Día ")}`)}<section>${plan.map((item, index) => { const exercise = getExercise(item.exerciseId); return `<div class="plan-row" data-plan-index="${index}"><div class="plan-exercise-field"><span>Ejercicio</span><button type="button" class="plan-exercise-picker" data-action="open-plan-exercise-dialog" data-plan-index="${index}" aria-haspopup="dialog">${escapeHtml(exercise.name)}${tagBadges(exercise)}</button></div><label>Series<input data-plan="sets" type="number" min="1" value="${escapeHtml(item.sets)}"></label><label class="plan-repetitions">Repeticiones<input data-plan="reps" type="text" value="${escapeHtml(item.reps)}" aria-label="Repeticiones objetivo"></label><label class="plan-resistance">Peso o fuerza<input data-plan="resistance" type="text" value="${escapeHtml(item.resistance)}" aria-label="Peso o fuerza"></label>${guideInputs(item)}<button class="remove-button" data-action="remove-plan" aria-label="Eliminar ejercicio">×</button></div>`; }).join("")}</section><div class="action-row"><button class="outline-button" data-action="add-plan">+ Añadir ejercicio</button></div>`;
 }
 
 function sortedHistory() { return [...data.history].sort((first, second) => (Date.parse(second.date) || 0) - (Date.parse(first.date) || 0)); }
@@ -357,7 +398,7 @@ function renderHistory() {
   return `${heading}${historyDisplay === "calendar" ? renderHistoryCalendar(sessions) : sessions.map(renderHistorySession).join("")}`;
 }
 
-function renderExercises() { return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${data.exercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p></div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("")}`; }
+function renderExercises() { const filteredExercises = data.exercises.filter(matchesSelectedTags); return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${filteredExercises.length} de ${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${tagFilter()}${filteredExercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p>${tagBadges(exercise)}</div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("") || `<div class="empty-state"><h2>Sin coincidencias</h2><p>Prueba a quitar alguna etiqueta del filtro.</p></div>`}`; }
 function render() {
   const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
   app.innerHTML = views[activeView]();
@@ -384,6 +425,15 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "stop-guide") stopGuide();
   if (action.dataset.action === "show-videos") openVideos(getExercise(action.dataset.exerciseId));
   if (action.dataset.action === "close-videos") videosDialog.close();
+  if (action.dataset.action === "open-plan-exercise-dialog") openPlanExercisePicker(Number(action.dataset.planIndex));
+  if (action.dataset.action === "close-plan-exercise-dialog") planExerciseDialog.close();
+  if (action.dataset.action === "select-plan-exercise") {
+    const item = data.plans[activeDay][planExerciseIndex];
+    const exercise = getExercise(action.dataset.exerciseId);
+    item.exerciseId = exercise.id;
+    item.guide = guideForExercise(exercise);
+    save(); planExerciseDialog.close(); render();
+  }
   if (action.dataset.action === "backup") downloadBackup();
   if (action.dataset.action === "restore") restoreInput.click();
   if (action.dataset.action === "guide-settings") openGuideSettings();
@@ -392,6 +442,7 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "history-previous-month") { historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() - 1, 1); selectedHistoryDate = ""; render(); }
   if (action.dataset.action === "history-next-month") { historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() + 1, 1); selectedHistoryDate = ""; render(); }
   if (action.dataset.action === "select-history-date") { selectedHistoryDate = action.dataset.historyDate; render(); }
+  if (action.dataset.action === "clear-tag-filter") { selectedTags = []; render(); }
   if (action.dataset.action === "add-plan") { const exercise = data.exercises[0]; data.plans[activeDay].push({ exerciseId: exercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(exercise) }); save(); render(); }
   if (action.dataset.action === "remove-plan") { data.plans[activeDay].splice(Number(action.closest("[data-plan-index]").dataset.planIndex), 1); save(); render(); }
   if (action.dataset.action === "finish") {
@@ -409,6 +460,8 @@ restoreInput.addEventListener("change", () => {
 });
 
 guideDialog.addEventListener("close", () => { clearInterval(guideTimer); guideTimer = null; guideState = null; });
+planExerciseDialog.addEventListener("close", () => { planExerciseIndex = null; });
+planExerciseTagFilter.addEventListener("change", () => { planExerciseTag = planExerciseTagFilter.value; renderPlanExercisePicker(); });
 
 document.addEventListener("input", (event) => {
   const card = event.target.closest("[data-workout-id]"); if (card && event.target.dataset.record) { const entry = workout[card.dataset.workoutId] ||= {}; entry[event.target.dataset.record] = event.target.value; }
@@ -418,13 +471,8 @@ document.addEventListener("input", (event) => {
 });
 
 document.addEventListener("change", (event) => {
+  if (event.target.dataset.tagFilter !== undefined) { selectedTags = normaliseTags([...event.target.selectedOptions].map((option) => option.value)); render(); return; }
   const row = event.target.closest("[data-plan-index]");
-  if (row && event.target.dataset.plan === "exerciseId") {
-    const item = data.plans[activeDay][Number(row.dataset.planIndex)];
-    item.guide = guideForExercise(getExercise(event.target.value));
-    save(); render();
-    return;
-  }
   if (event.target.dataset.setting !== "day-count") return;
   const previousCount = configuredDays().length;
   setDayCount(event.target.value);
@@ -442,7 +490,7 @@ guideSettingsForm.addEventListener("submit", (event) => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const fields = new FormData(form);
-  const exercise = { id: editingExerciseId || uid(), name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), hashtags: listForStorage(fields.get("hashtags")), errors: listForStorage(fields.get("errors")), videos: videosForStorage(fields.get("videos")), day: editingExerciseId ? getExercise(editingExerciseId).day : "", guide: Object.fromEntries(GUIDE_FIELDS.map((field) => [field, seconds(fields.get(`guide-${field}`))])) };
+  const exercise = { id: editingExerciseId || uid(), name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), tags: normaliseTags(fields.getAll("tags")), errors: listForStorage(fields.get("errors")), videos: videosForStorage(fields.get("videos")), day: editingExerciseId ? getExercise(editingExerciseId).day : "", guide: Object.fromEntries(GUIDE_FIELDS.map((field) => [field, seconds(fields.get(`guide-${field}`))])) };
   EXERCISE_DETAIL_FIELDS.forEach((field) => { exercise[field] = fields.get(field).trim(); });
   const index = data.exercises.findIndex((item) => item.id === editingExerciseId);
   if (index === -1) data.exercises.push(exercise); else data.exercises[index] = exercise;
