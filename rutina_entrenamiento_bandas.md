@@ -416,25 +416,25 @@
 ## DÍA 3
 
 ### 1. Patada de Glúteo en Cuadrupedia
-*Coloca la miniband alrededor de las plantas o empeines de ambos pies y empuja un talón hacia el techo en posición de cuadrupedia.*
+*Coloca la miniband por encima de ambas rodillas y empuja un talón hacia el techo en posición de cuadrupedia, presionando la rodilla de apoyo hacia afuera.*
 
 #### Vídeos
 
 >https://youtube.com/shorts/wMZgm4Brcw0
 
 #### Ejecución paso a paso
-- **Posición inicial:** Colócate en posición de cuadrupedia (cuatro puntos) sobre una esterilla, apoyando las palmas de las manos alineadas directamente bajo los hombros y las rodillas bajo las caderas. Coloca una miniband alrededor de la planta de los pies (o empeines).
+- **Posición inicial:** Colócate en posición de cuadrupedia (cuatro puntos) sobre una esterilla, apoyando las palmas de las manos alineadas directamente bajo los hombros y las rodillas bajo las caderas. Coloca la miniband 2-3 cm por encima de ambas rodillas.
 - **Postura y alineación:** Mantén la columna en posición neutra, la mirada dirigida hacia el suelo (sin forzar el cuello) y el abdomen contraído para evitar que la zona lumbar se arquee durante el movimiento.
-- **Fase concéntrica (extensión/empuje):** Exhala el aire y empuja un talón hacia el techo estirando la pierna hacia atrás y arriba, concentrando la fuerza exclusivamente en el trabajo del glúteo mayor hasta lograr la alineación casi completa de la pierna con el torso.
+- **Fase concéntrica (extensión/empuje):** Exhala el aire y empuja un talón hacia el techo estirando la pierna hacia atrás y arriba, manteniendo la rodilla de apoyo empujando ligeramente hacia afuera contra la banda para sumar activación del glúteo medio a la del glúteo mayor.
 - **Fase excéntrica (retorno):** Inhala y desciende la pierna de forma lenta y controlada hasta que la rodilla vuelva casi a la posición inicial junto a la otra, manteniendo constante la tensión en la banda sin apoyarla bruscamente en el suelo.
 
 #### Detalles técnicos
 | Parámetro | Detalle recomendado |
 | :--- | :--- |
 | **Músculo principal** | Glúteo mayor |
-| **Músculos secundarios** | Isquiotibiales (bíceps femoral, semitendinoso) |
+| **Músculos secundarios** | Glúteo medio e Isquiotibiales (bíceps femoral, semitendinoso) |
 | **Músculos estabilizadores** | Core (recto abdominal, transversa y lumbares), Cuádriceps y Serrato anterior |
-| **Posición del anclaje** | Miniband colocada alrededor de las plantas o empeines de ambos pies |
+| **Posición del anclaje** | Miniband colocada por encima de ambas rodillas (más estable que en pies/empeines y añade tensión en abducción) |
 | **Series y repeticiones** | 3 a 4 series de 12 a 15 repeticiones por pierna |
 | **Tiempo/Cadencia** | 2 segundos de subida/empuje, 1 segundo de apretón arriba, 3 segundos de bajada |
 
@@ -445,7 +445,7 @@
 - **Arquear la zona lumbar (hiperlordosis):** Dejar caer la pelvis por falta de activación abdominal, lo que traslada la tensión a la parte baja de la espalda en lugar del glúteo.
 - **Rotar la cadera:** Girar la pelvis hacia el lado de la pierna que trabaja durante la subida en lugar de mantener ambas crestas ilíacas mirando de frente al suelo.
 - **Usar impulso o balanceo:** Dar un tironazo rápido para subir la pierna desaprovechando la fase de contracción muscular y perdiendo el control del movimiento.
-- **Perder la tensión de la miniband:** Dejar que la goma quede suelta o arrugada al regresar la pierna a la posición de inicio.
+- **Dejar caer la rodilla de apoyo hacia adentro:** Ceder a la tensión de la banda y perder la presión hacia afuera en la rodilla que permanece en el suelo.
 
 ---
 
