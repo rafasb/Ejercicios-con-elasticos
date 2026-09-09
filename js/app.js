@@ -31,6 +31,7 @@ function toast(message) {
 
 function openGuideSettings() {
   guideSettingsForm.elements.preparation.value = state.data.guide.preparation;
+  guideSettingsForm.elements.rest.value = state.data.guide.rest;
   guideSettingsForm.elements.volume.value = state.data.guide.volume;
   updateVolumeLabel(state.data.guide.volume);
   guideSettingsDialog.showModal();
@@ -99,7 +100,7 @@ function runTensionCycle() {
 }
 
 function startGuide(exercise, sets, repetitions, guide) {
-  state.guideState = { sets: Math.max(1, Number.parseInt(sets, 10) || 1), set: 1, cycles: repetitionsToCycles(repetitions), cycle: 1, guide: { ...guideForExercise(exercise), ...guide } };
+  state.guideState = { sets: Math.max(1, Number.parseInt(sets, 10) || 1), set: 1, cycles: repetitionsToCycles(repetitions), cycle: 1, guide: { ...guideForExercise(exercise), ...guide, rest: state.data.guide.rest } };
   guideExerciseName.textContent = exercise.name;
   guideDialog.showModal();
   runGuidePhase("Preparación", state.data.guide.preparation, 0, 523, runTensionCycle);
@@ -142,7 +143,7 @@ function openExerciseForm(exercise) {
   form.elements.summary.value = exercise?.summary || "";
   form.elements.instructions.value = listForForm(exercise?.instructions);
   EXERCISE_DETAIL_FIELDS.forEach((field) => { form.elements[field].value = details[field] || ""; });
-  GUIDE_FIELDS.forEach((field) => { form.elements[`guide-${field}`].value = details.guide?.[field] || ""; });
+  GUIDE_FIELDS.filter((field) => field !== "rest").forEach((field) => { form.elements[`guide-${field}`].value = details.guide?.[field] || ""; });
   form.elements.errors.value = listForForm(exercise?.errors);
   form.elements.videos.value = (exercise?.videos || []).join("\n");
   form.elements.tags.innerHTML = tagsForForm();
@@ -352,7 +353,7 @@ document.addEventListener("change", (event) => {
 guideSettingsForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const fields = new FormData(guideSettingsForm);
-  state.data.guide = { ...state.data.guide, preparation: Number(fields.get("preparation")), volume: Number(fields.get("volume")) };
+  state.data.guide = { ...state.data.guide, preparation: Number(fields.get("preparation")), rest: Number(fields.get("rest")), volume: Number(fields.get("volume")) };
   save();
   guideSettingsDialog.close();
   toast("Ajustes de guía guardados.");

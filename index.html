@@ -53,7 +53,6 @@
             <label>Tiempo tensión (segundos)<input name="guide-tension" type="number" min="0" inputmode="numeric" /></label>
             <label>Tiempo pausa (segundos)<input name="guide-pause" type="number" min="0" inputmode="numeric" /></label>
             <label>Tiempo distensión (segundos)<input name="guide-distension" type="number" min="0" inputmode="numeric" /></label>
-            <label>Tiempo descanso entre series (segundos)<input name="guide-rest" type="number" min="0" inputmode="numeric" /></label>
           </div>
           <label>Notas técnicas<textarea name="technicalNotes" rows="4" placeholder="Un dato por línea.&#10;Anclaje: ...&#10;Ubicación de la banda: ..."></textarea></label>
           <label>Errores a evitar<textarea name="errors" rows="5" placeholder="Un error por línea.&#10;Arquear la espalda: ..."></textarea></label>
@@ -105,6 +104,7 @@
             <legend>Preparación</legend>
             <div class="guide-settings-grid">
               <label>Preparación (segundos)<input name="preparation" type="number" min="1" max="120" required /></label>
+              <label>Descanso entre series (segundos)<input name="rest" type="number" min="0" required /></label>
             </div>
           </fieldset>
           <fieldset>
