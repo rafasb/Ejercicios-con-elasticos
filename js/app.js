@@ -394,7 +394,12 @@ if ("serviceWorker" in navigator) {
 document.querySelector("#update-app-btn")?.addEventListener("click", async () => {
   if (!swRegistration) { toast("Actualización no disponible."); return; }
   toast("Buscando actualizaciones…");
-  try { await swRegistration.update(); } catch { toast("No se pudo comprobar actualizaciones."); }
+  try {
+    await swRegistration.update();
+    await initialise({ forceRoutineSync: true });
+    renderApp();
+    toast("Rutina actualizada.");
+  } catch { toast("No se pudo actualizar la rutina."); }
 });
 
 initialise().then(() => renderApp()).catch(() => { app.innerHTML = `<div class="empty-state"><h2>No se pudo cargar la rutina</h2><p>Abre la aplicación desde el servidor de Docker para inicializarla.</p></div>`; });

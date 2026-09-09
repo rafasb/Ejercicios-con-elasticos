@@ -86,7 +86,7 @@ export async function restoreBackup(file) {
   }
 }
 
-export async function initialise() {
+export async function initialise({ forceRoutineSync = false } = {}) {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     state.data = { ...state.data, ...JSON.parse(stored) };
@@ -100,15 +100,24 @@ export async function initialise() {
   }
 
   try {
-    const response = await fetch(ROUTINE_URL);
+    const response = await fetch(forceRoutineSync ? `${ROUTINE_URL}?sync=${Date.now()}` : ROUTINE_URL);
     const sourceExercises = parseRoutine(await response.text());
     let updatedExercises = false;
-    state.data.exercises.forEach((exercise) => {
-      const source = sourceExercises.find((item) => item.id === exercise.id || item.name === exercise.name);
-      if (!Array.isArray(exercise.videos)) { exercise.videos = source?.videos || []; updatedExercises = true; }
-      const sourceTags = source?.tags || [];
-      const tags = normaliseExercise({ ...exercise }).tags;
-      if (tags.join(",") !== sourceTags.join(",") && exercise.id.startsWith("seed-")) { exercise.tags = sourceTags; updatedExercises = true; }
+    const seedExercises = state.data.exercises.filter((exercise) => exercise.id.startsWith("seed-"));
+    const highestSeedId = seedExercises.reduce((highest, exercise) => Math.max(highest, Number(exercise.id.slice(5)) || 0), 0);
+    let nextSeedId = highestSeedId + 1;
+    sourceExercises.forEach((source) => {
+      const exercise = seedExercises.find((item) => item.name === source.name);
+      if (exercise) {
+        const id = exercise.id;
+        Object.assign(exercise, source, { id });
+        updatedExercises = true;
+        return;
+      }
+      const newExercise = { ...source, id: `seed-${nextSeedId++}` };
+      state.data.exercises.push(newExercise);
+      if (state.data.plans[source.day]) state.data.plans[source.day].push({ exerciseId: newExercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(newExercise) });
+      updatedExercises = true;
     });
     if (updatedExercises) save();
   } catch {}
