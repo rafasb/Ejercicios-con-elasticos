@@ -195,9 +195,7 @@ function runTensionCycle() {
     runGuidePhase("Pausa", guide.pause, cycle, 523, () => {
       runGuidePhase("Distensión", guide.distension, cycle, 392, () => {
         if (cycle < guideState.cycles) { guideState.cycle += 1; runTensionCycle(); return; }
-        if (guideState.set < guideState.sets) {
-          runGuidePhase("Descanso", guide.rest, cycle, 294, () => { guideState.set += 1; guideState.cycle = 1; runTensionCycle(); });
-        } else finishGuide();
+        runGuidePhase("Descanso", guide.rest, cycle, 294, finishGuide);
       });
     });
   });
