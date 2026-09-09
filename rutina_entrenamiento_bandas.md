@@ -421,6 +421,7 @@
 #### Vídeos
 
 >https://youtube.com/shorts/wMZgm4Brcw0
+>https://www.youtube.com/watch?v=cuV5rXm4tUg
 
 #### Ejecución paso a paso
 - **Posición inicial:** Colócate en posición de cuadrupedia (cuatro puntos) sobre una esterilla, apoyando las palmas de las manos alineadas directamente bajo los hombros y las rodillas bajo las caderas. Coloca la miniband 2-3 cm por encima de ambas rodillas.

@@ -496,5 +496,22 @@ form.addEventListener("submit", (event) => {
   if (index === -1) data.exercises.push(exercise); else data.exercises[index] = exercise;
   save(); form.reset(); dialog.close(); toast(index === -1 ? "Ejercicio añadido al catálogo." : "Cambios guardados."); render();
 });
-if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js"));
+let swRegistration = null;
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").then((reg) => {
+      swRegistration = reg;
+      reg.addEventListener("updatefound", () => {
+        const installing = reg.installing;
+        installing?.addEventListener("statechange", () => { if (installing.state === "activated") toast("Ritmo se ha actualizado."); });
+      });
+    });
+  });
+  navigator.serviceWorker.addEventListener("controllerchange", () => window.location.reload());
+}
+document.querySelector("#update-app-btn")?.addEventListener("click", async () => {
+  if (!swRegistration) { toast("Actualización no disponible."); return; }
+  toast("Buscando actualizaciones…");
+  try { await swRegistration.update(); } catch { toast("No se pudo comprobar actualizaciones."); }
+});
 initialise().catch(() => { app.innerHTML = `<div class="empty-state"><h2>No se pudo cargar la rutina</h2><p>Abre la aplicación desde el servidor de Docker para inicializarla.</p></div>`; });

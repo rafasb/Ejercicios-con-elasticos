@@ -6,12 +6,15 @@
     <meta name="theme-color" content="#d9543d" />
     <meta name="description" content="Planifica y registra tus entrenamientos con bandas." />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles.css?v=20" />
+    <link rel="stylesheet" href="styles.css?v=22" />
     <title>Ritmo</title>
   </head>
   <body>
     <header class="app-header">
-      <p class="eyebrow">ENTRENAMIENTO CON BANDAS</p>
+      <div class="header-top">
+        <p class="eyebrow">ENTRENAMIENTO CON BANDAS</p>
+        <button id="update-app-btn" class="icon-button update-button" type="button" aria-label="Actualizar aplicación" title="Actualizar aplicación">⟳</button>
+      </div>
       <h1>Ritmo</h1>
       <p id="header-copy">Tu ciclo semanal, listo para moverse.</p>
     </header>
@@ -113,6 +116,6 @@
       </dialog>
 
     <div id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20"></script>
+    <script src="app.js?v=22"></script>
   </body>
 </html>
