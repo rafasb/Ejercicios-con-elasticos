@@ -2,6 +2,13 @@ import { RATING_OPTIONS, VIEW_COPY } from "./constants.js";
 import { escapeHtml, exerciseDetails, historyToggle, renderHistoryCalendar, renderHistorySession, tagBadges, tagFilter, tagSummary } from "./utils.js";
 import { configuredDays, getCurrentPlan, getExercise, sortedHistory, state } from "./state.js";
 
+let appVersion = "…";
+
+function setAppVersion(version) {
+  appVersion = version;
+  document.querySelectorAll("[data-app-version]").forEach((node) => { node.textContent = `Versión ${version}`; });
+}
+
 function daySwitcher() {
   return `<div class="day-switcher">${configuredDays().map((day) => `<button class="day-button ${day === state.activeDay ? "active" : ""}" data-day="${day}">${day.replace("DÍA ", "Día ")}</button>`).join("")}</div>`;
 }
@@ -19,7 +26,7 @@ function renderTrain() {
 
 function renderExercises() {
   const filteredExercises = state.data.exercises.filter((exercise) => state.selectedTags.every((tag) => exercise.tags?.includes(tag)));
-  return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${filteredExercises.length} de ${state.data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${tagFilter(state.selectedTags)}${filteredExercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p>${tagBadges(exercise)}</div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("") || `<div class="empty-state"><h2>Sin coincidencias</h2><p>Prueba a quitar alguna etiqueta del filtro.</p></div>`}`;
+  return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button><span class="app-version" data-app-version aria-label="Versión de la aplicación">Versión ${appVersion}</span></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${filteredExercises.length} de ${state.data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${tagFilter(state.selectedTags)}${filteredExercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p>${tagBadges(exercise)}</div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("") || `<div class="empty-state"><h2>Sin coincidencias</h2><p>Prueba a quitar alguna etiqueta del filtro.</p></div>`}`;
 }
 
 function renderPlan() {
@@ -46,4 +53,4 @@ export function renderApp() {
   if (headerCopy) headerCopy.textContent = VIEW_COPY[state.activeView];
 }
 
-export { renderTrain, renderPlan, renderHistory, renderExercises };
+export { renderTrain, renderPlan, renderHistory, renderExercises, setAppVersion };

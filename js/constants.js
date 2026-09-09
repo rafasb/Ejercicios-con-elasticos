@@ -1,5 +1,5 @@
 export const STORAGE_KEY = "ritmo-data-v1";
-export const ROUTINE_URL = "rutina_entrenamiento_bandas.md?v=16";
+export const ROUTINE_URL = "rutina_entrenamiento_bandas.md";
 export const MIN_DAYS = 3;
 export const MAX_DAYS = 7;
 export const DEFAULT_DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];

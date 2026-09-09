@@ -1,7 +1,7 @@
 import { DEFAULT_GUIDE_SETTINGS, EXERCISE_DETAIL_FIELDS, GUIDE_FIELDS, MUSCLE_TAGS, ROUTINE_URL } from "./constants.js";
 import { completedSets, escapeHtml, guideForExercise, listForForm, listForStorage, normaliseTags, repetitionsToCycles, seconds, tagsForForm, videosForStorage } from "./utils.js";
 import { state, save, configuredDays, createDays, downloadBackup, getExercise, getCurrentPlan, initialise, restoreBackup, setDayCount, sortedHistory } from "./state.js";
-import { renderApp } from "./render.js";
+import { renderApp, setAppVersion } from "./render.js";
 
 const app = document.querySelector("#app");
 const restoreInput = document.querySelector("#restore-input");
@@ -375,9 +375,13 @@ form.addEventListener("submit", (event) => {
 
 let swRegistration = null;
 if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    if (event.data?.type === "APP_VERSION") setAppVersion(event.data.version);
+  });
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("service-worker.js").then((reg) => {
       swRegistration = reg;
+      navigator.serviceWorker.ready.then((readyRegistration) => readyRegistration.active?.postMessage({ type: "GET_VERSION" }));
       reg.addEventListener("updatefound", () => {
         const installing = reg.installing;
         installing?.addEventListener("statechange", () => { if (installing.state === "activated") toast("Ritmo se ha actualizado."); });
