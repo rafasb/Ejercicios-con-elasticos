@@ -471,7 +471,7 @@
 | **Series y repeticiones** | 3 series de 12 a 15 repeticiones por cada lado |
 | **Tiempo/Cadencia** | 2 segundos de tirón/rotación, 1 segundo de pausa abajo, 3 segundos de retorno |
 
-#### Hastags
+#### Hashtags
 - #Abdominal
 
 #### Errores comunes a evitar
