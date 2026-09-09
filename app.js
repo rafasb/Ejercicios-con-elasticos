@@ -102,7 +102,12 @@ function technicalDetails(markdown) {
 }
 const EXERCISE_DETAIL_FIELDS = ["primaryMuscles", "secondaryMuscles", "stabilizerMuscles", "resistance", "setsAndRepetitions", "technicalNotes"];
 const GUIDE_FIELDS = ["tension", "pause", "distension", "rest"];
+const VIEW_COPY = { train: "Tu ciclo semanal, listo para moverse.", plan: "Define objetivos claros para cada sesión.", history: "Mira lo que hiciste y ajusta el rumbo.", exercises: "Técnica antes que velocidad." };
+const RATING_OPTIONS = ["fácil", "aceptable", "imposible"];
 function seconds(value) { return Math.max(0, Number.parseInt(value, 10) || 0); }
+function getCurrentPlan() { return data.plans[activeDay] || []; }
+function getPlanItemByExerciseId(exerciseId) { return getCurrentPlan().find((item) => item.exerciseId === exerciseId); }
+function getExerciseByAction(action) { return getExercise(action.dataset.exerciseId); }
 function guideForExercise(exercise) { return Object.fromEntries(GUIDE_FIELDS.map((field) => [field, exercise?.guide?.[field] === undefined ? DEFAULT_EXERCISE_GUIDE[field] : seconds(exercise.guide[field])])); }
 function parseTechnicalRows(markdown = "") {
   return markdown.split("\n").filter((line) => /^\|/.test(line) && !/^\|\s*:?-+/.test(line)).map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim().replace(/\*\*/g, ""))).filter((cells) => cells.length === 2 && cells[0] !== "Parámetro");
@@ -332,12 +337,12 @@ function daySwitcher() { return `<div class="day-switcher">${configuredDays().ma
 function exerciseDetails(exercise) { const details = exerciseTechnicalDetails(exercise); return `<details class="details"><summary>Ver técnica y detalles</summary><section class="detail-section"><h4>Ejecución</h4>${markdownList(exercise.instructions)}</section>${details ? `<section class="detail-section"><h4>Detalles técnicos</h4>${details}</section>` : ""}${exercise.errors ? `<section class="detail-section"><h4>Errores a evitar</h4>${markdownList(exercise.errors)}</section>` : ""}</details>`; }
 
 function renderTrain() {
-  const plan = data.plans[activeDay];
+  const plan = getCurrentPlan();
   if (!plan.length) return `${daySwitcher()}<div class="empty-state"><h2>Sesión vacía</h2><p>Añade ejercicios desde Plan para preparar este día.</p></div>`;
-  return `${daySwitcher()}<div class="session-heading"><div><h2>${activeDay.replace("DÍA ", "Día ")}</h2><p>Registra cada ejercicio antes de finalizar.</p></div><span class="target">${plan.length} ejercicios</span></div><section class="exercise-list">${plan.map((item, index) => {
+  return `${daySwitcher()}<div class="session-heading"><div><h2>${activeDay.replace("DÍA ", "Día ")}</h2><p>Registra cada ejercicio antes de finalizar.</p></div><span class="target">${plan.length} ejercicios</span></div><section class="exercise-list">${plan.map((item) => {
     const exercise = getExercise(item.exerciseId); if (!exercise) return "";
     const entry = workout[item.exerciseId] || { reps: item.reps, resistance: item.resistance, rating: "aceptable" };
-    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><output class="sets-counter" aria-label="Series realizadas">${completedSets(entry)}</output><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-sets="${escapeHtml(item.sets)}" data-repetitions="${escapeHtml(item.reps)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button>${["fácil", "aceptable", "imposible"].map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
+    return `<article class="exercise-item" data-workout-id="${exercise.id}"><div class="exercise-title"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)}</p></div><span class="target">${item.sets} x ${item.reps}<br>${escapeHtml(item.resistance)}</span></div><p>${escapeHtml(exercise.summary)}</p>${exerciseDetails(exercise)}<div class="record-grid"><label>Repeticiones realizadas<input type="number" min="0" inputmode="numeric" data-record="reps" value="${escapeHtml(entry.reps)}"></label><label>Resistencia / peso<input data-record="resistance" value="${escapeHtml(entry.resistance)}"></label></div><div class="exercise-actions"><output class="sets-counter" aria-label="Series realizadas">${completedSets(entry)}</output><button class="guide-play" data-action="start-guide" data-exercise-id="${exercise.id}" data-sets="${escapeHtml(item.sets)}" data-repetitions="${escapeHtml(item.reps)}" aria-label="Iniciar guía para ${escapeHtml(exercise.name)}"><span aria-hidden="true">▶</span> Guía</button><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button>${RATING_OPTIONS.map((rating) => `<button class="rating ${entry.rating === rating ? "selected" : ""}" data-rating="${rating}">${rating}</button>`).join("")}</div></article>`;
   }).join("")}</section><button class="primary-button sticky-action" data-action="finish">Finalizar ${activeDay.replace("DÍA ", "Día ")}</button>`;
 }
 
@@ -400,58 +405,174 @@ function renderHistory() {
 
 function renderExercises() { const filteredExercises = data.exercises.filter(matchesSelectedTags); return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${filteredExercises.length} de ${data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${tagFilter()}${filteredExercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p>${tagBadges(exercise)}</div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("") || `<div class="empty-state"><h2>Sin coincidencias</h2><p>Prueba a quitar alguna etiqueta del filtro.</p></div>`}`; }
 function render() {
-  const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
-  app.innerHTML = views[activeView]();
+  const viewRenderers = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
+  app.innerHTML = viewRenderers[activeView]();
   document.querySelectorAll(".nav-button").forEach((button) => button.classList.toggle("active", button.dataset.view === activeView));
-  document.querySelector("#header-copy").textContent = ({ train: "Tu ciclo semanal, listo para moverse.", plan: "Define objetivos claros para cada sesión.", history: "Mira lo que hiciste y ajusta el rumbo.", exercises: "Técnica antes que velocidad." })[activeView];
+  document.querySelector("#header-copy").textContent = VIEW_COPY[activeView];
+}
+
+function handleNavigation(event) {
+  const button = event.target.closest("[data-view]");
+  if (!button) return false;
+  activeView = button.dataset.view;
+  render();
+  return true;
+}
+
+function handleDaySelection(event) {
+  const button = event.target.closest("[data-day]");
+  if (!button) return false;
+  activeDay = button.dataset.day;
+  render();
+  return true;
+}
+
+function handleRatingSelection(event) {
+  const rating = event.target.closest("[data-rating]");
+  if (!rating) return false;
+  const card = rating.closest("[data-workout-id]");
+  const exerciseId = card.dataset.workoutId;
+  const planItem = getPlanItemByExerciseId(exerciseId);
+  workout[exerciseId] ||= { reps: planItem.reps, resistance: planItem.resistance };
+  workout[exerciseId].rating = rating.dataset.rating;
+  render();
+  return true;
+}
+
+function handleAction(event) {
+  const action = event.target.closest("[data-action]");
+  if (!action) return false;
+
+  const { action: type, exerciseId, historyDisplay: historyView, planIndex, historyDate } = action.dataset;
+
+  switch (type) {
+    case "new-exercise":
+      openExerciseForm();
+      break;
+    case "edit-exercise":
+      openExerciseForm(getExercise(exerciseId));
+      break;
+    case "close-dialog":
+      dialog.close();
+      break;
+    case "start-guide": {
+      const entry = workout[exerciseId] ||= {};
+      const planItem = getPlanItemByExerciseId(exerciseId);
+      entry.completedSets = completedSets(entry) + 1;
+      action.previousElementSibling.value = entry.completedSets;
+      action.previousElementSibling.textContent = entry.completedSets;
+      startGuide(getExercise(exerciseId), action.dataset.sets, action.dataset.repetitions, planItem.guide);
+      break;
+    }
+    case "stop-guide":
+      stopGuide();
+      break;
+    case "show-videos":
+      openVideos(getExercise(exerciseId));
+      break;
+    case "close-videos":
+      videosDialog.close();
+      break;
+    case "open-plan-exercise-dialog":
+      openPlanExercisePicker(Number(planIndex));
+      break;
+    case "close-plan-exercise-dialog":
+      planExerciseDialog.close();
+      break;
+    case "select-plan-exercise": {
+      const item = data.plans[activeDay][planExerciseIndex];
+      const exercise = getExercise(exerciseId);
+      item.exerciseId = exercise.id;
+      item.guide = guideForExercise(exercise);
+      save();
+      planExerciseDialog.close();
+      render();
+      break;
+    }
+    case "backup":
+      downloadBackup();
+      break;
+    case "restore":
+      restoreInput.click();
+      break;
+    case "guide-settings":
+      openGuideSettings();
+      break;
+    case "close-guide-settings":
+      guideSettingsDialog.close();
+      break;
+    case "set-history-display":
+      historyDisplay = historyView;
+      render();
+      break;
+    case "history-previous-month":
+      historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() - 1, 1);
+      selectedHistoryDate = "";
+      render();
+      break;
+    case "history-next-month":
+      historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() + 1, 1);
+      selectedHistoryDate = "";
+      render();
+      break;
+    case "select-history-date":
+      selectedHistoryDate = historyDate;
+      render();
+      break;
+    case "clear-tag-filter":
+      selectedTags = [];
+      render();
+      break;
+    case "add-plan": {
+      const exercise = data.exercises[0];
+      getCurrentPlan().push({ exerciseId: exercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(exercise) });
+      save();
+      render();
+      break;
+    }
+    case "remove-plan": {
+      getCurrentPlan().splice(Number(action.closest("[data-plan-index]").dataset.planIndex), 1);
+      save();
+      render();
+      break;
+    }
+    case "finish": {
+      const entries = getCurrentPlan().map((item) => {
+        const exercise = getExercise(item.exerciseId);
+        const entry = workout[exercise.id] || {};
+        return { name: exercise.name, exerciseId: exercise.id, sets: completedSets(entry), reps: entry.reps || item.reps, resistance: entry.resistance || item.resistance, guide: { ...item.guide }, rating: entry.rating || "aceptable" };
+      });
+      data.history = data.history.filter((session) => session.day !== activeDay);
+      const completedAt = new Date();
+      data.history.unshift({ date: completedAt.toISOString(), weekday: completedAt.toLocaleDateString("es-ES", { weekday: "long" }), day: activeDay, entries });
+      save();
+      workout = {};
+      toast("Sesión guardada en el historial.");
+      render();
+      break;
+    }
+    case "reuse": {
+      const session = sortedHistory()[Number(action.dataset.historyIndex)];
+      data.plans[session.day] = session.entries.map((entry) => ({ exerciseId: entry.exerciseId, sets: "3", reps: entry.reps, resistance: entry.resistance, guide: { ...guideForExercise(getExercise(entry.exerciseId)), ...(entry.guide || {}) } }));
+      save();
+      activeDay = session.day;
+      activeView = "plan";
+      toast("Resultados aplicados al plan.");
+      render();
+      break;
+    }
+    default:
+      return false;
+  }
+
+  return true;
 }
 
 document.addEventListener("click", (event) => {
-  const viewButton = event.target.closest("[data-view]"); if (viewButton) { activeView = viewButton.dataset.view; render(); return; }
-  const dayButton = event.target.closest("[data-day]"); if (dayButton) { activeDay = dayButton.dataset.day; render(); return; }
-  const rating = event.target.closest("[data-rating]"); if (rating) { const card = rating.closest("[data-workout-id]"); const id = card.dataset.workoutId; const planItem = data.plans[activeDay].find((item) => item.exerciseId === id); workout[id] ||= { reps: planItem.reps, resistance: planItem.resistance }; workout[id].rating = rating.dataset.rating; render(); return; }
-  const action = event.target.closest("[data-action]"); if (!action) return;
-  if (action.dataset.action === "new-exercise") openExerciseForm();
-  if (action.dataset.action === "edit-exercise") openExerciseForm(getExercise(action.dataset.exerciseId));
-  if (action.dataset.action === "close-dialog") dialog.close();
-  if (action.dataset.action === "start-guide") {
-    const entry = workout[action.dataset.exerciseId] ||= {};
-    const planItem = data.plans[activeDay].find((item) => item.exerciseId === action.dataset.exerciseId);
-    entry.completedSets = completedSets(entry) + 1;
-    action.previousElementSibling.value = entry.completedSets;
-    action.previousElementSibling.textContent = entry.completedSets;
-    startGuide(getExercise(action.dataset.exerciseId), action.dataset.sets, action.dataset.repetitions, planItem.guide);
-  }
-  if (action.dataset.action === "stop-guide") stopGuide();
-  if (action.dataset.action === "show-videos") openVideos(getExercise(action.dataset.exerciseId));
-  if (action.dataset.action === "close-videos") videosDialog.close();
-  if (action.dataset.action === "open-plan-exercise-dialog") openPlanExercisePicker(Number(action.dataset.planIndex));
-  if (action.dataset.action === "close-plan-exercise-dialog") planExerciseDialog.close();
-  if (action.dataset.action === "select-plan-exercise") {
-    const item = data.plans[activeDay][planExerciseIndex];
-    const exercise = getExercise(action.dataset.exerciseId);
-    item.exerciseId = exercise.id;
-    item.guide = guideForExercise(exercise);
-    save(); planExerciseDialog.close(); render();
-  }
-  if (action.dataset.action === "backup") downloadBackup();
-  if (action.dataset.action === "restore") restoreInput.click();
-  if (action.dataset.action === "guide-settings") openGuideSettings();
-  if (action.dataset.action === "close-guide-settings") guideSettingsDialog.close();
-  if (action.dataset.action === "set-history-display") { historyDisplay = action.dataset.historyDisplay; render(); }
-  if (action.dataset.action === "history-previous-month") { historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() - 1, 1); selectedHistoryDate = ""; render(); }
-  if (action.dataset.action === "history-next-month") { historyMonth = new Date(historyMonth.getFullYear(), historyMonth.getMonth() + 1, 1); selectedHistoryDate = ""; render(); }
-  if (action.dataset.action === "select-history-date") { selectedHistoryDate = action.dataset.historyDate; render(); }
-  if (action.dataset.action === "clear-tag-filter") { selectedTags = []; render(); }
-  if (action.dataset.action === "add-plan") { const exercise = data.exercises[0]; data.plans[activeDay].push({ exerciseId: exercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(exercise) }); save(); render(); }
-  if (action.dataset.action === "remove-plan") { data.plans[activeDay].splice(Number(action.closest("[data-plan-index]").dataset.planIndex), 1); save(); render(); }
-  if (action.dataset.action === "finish") {
-    const entries = data.plans[activeDay].map((item) => { const exercise = getExercise(item.exerciseId); const entry = workout[exercise.id] || {}; return { name: exercise.name, exerciseId: exercise.id, sets: completedSets(entry), reps: entry.reps || item.reps, resistance: entry.resistance || item.resistance, guide: { ...item.guide }, rating: entry.rating || "aceptable" }; });
-    data.history = data.history.filter((session) => session.day !== activeDay);
-    const completedAt = new Date();
-    data.history.unshift({ date: completedAt.toISOString(), weekday: completedAt.toLocaleDateString("es-ES", { weekday: "long" }), day: activeDay, entries }); save(); workout = {}; toast("Sesión guardada en el historial."); render();
-  }
-  if (action.dataset.action === "reuse") { const session = sortedHistory()[Number(action.dataset.historyIndex)]; data.plans[session.day] = session.entries.map((entry) => ({ exerciseId: entry.exerciseId, sets: "3", reps: entry.reps, resistance: entry.resistance, guide: { ...guideForExercise(getExercise(entry.exerciseId)), ...(entry.guide || {}) } })); save(); activeDay = session.day; activeView = "plan"; toast("Resultados aplicados al plan."); render(); }
+  if (handleNavigation(event)) return;
+  if (handleDaySelection(event)) return;
+  if (handleRatingSelection(event)) return;
+  handleAction(event);
 });
 
 restoreInput.addEventListener("change", () => {

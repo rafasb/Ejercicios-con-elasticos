@@ -1,0 +1,12 @@
+export const STORAGE_KEY = "ritmo-data-v1";
+export const ROUTINE_URL = "rutina_entrenamiento_bandas.md?v=16";
+export const MIN_DAYS = 3;
+export const MAX_DAYS = 7;
+export const DEFAULT_DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
+export const MUSCLE_TAGS = ["Abdominal", "Biceps", "Cuadriceps", "Espalda", "Gluteo", "Hombro", "Lumbar", "Pectoral", "Triceps"];
+export const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, rest: 120, volume: 0.6 };
+export const DEFAULT_EXERCISE_GUIDE = { tension: 0, pause: 0, distension: 0, rest: 120 };
+export const EXERCISE_DETAIL_FIELDS = ["primaryMuscles", "secondaryMuscles", "stabilizerMuscles", "resistance", "setsAndRepetitions", "technicalNotes"];
+export const GUIDE_FIELDS = ["tension", "pause", "distension", "rest"];
+export const VIEW_COPY = { train: "Tu ciclo semanal, listo para moverse.", plan: "Define objetivos claros para cada sesión.", history: "Mira lo que hiciste y ajusta el rumbo.", exercises: "Técnica antes que velocidad." };
+export const RATING_OPTIONS = ["fácil", "aceptable", "imposible"];
