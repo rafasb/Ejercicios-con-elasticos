@@ -1,5 +1,7 @@
 # Rutina de Entrenamiento con Bandas de Resistencia
 
+> **Nota de revisión fisioterapéutica:** la técnica descrita en los 15 ejercicios originales es correcta y seguras las progresiones e indicaciones de seguridad. Para lograr una planificación semanal más equilibrada se han añadido 3 ejercicios de calistenia (sin material o con miniband/tubo con agarres): zancadas alternas en el Día 1 (fuerza unilateral de pierna, ausente en la rutina original), pull-apart/face pull en el Día 2 (equilibra el trabajo de empuje de pectoral con un trabajo de tracción para deltoides posterior y salud escapular) y extensión lumbar tipo "Superman" en el Día 3 (fortalece los erectores espinales sin depender de la banda, complementando el patrón de bisagra de cadera de los buenos días). Consulta con un profesional sanitario si existe dolor, lesión activa o patología de columna antes de incluir el patrón de bisagra de cadera o la extensión lumbar.
+
 ## DÍA 1
 
 ### 1. Sentadillas con miniband (Cuádriceps/Glúteos)
@@ -7,7 +9,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/hSUR7rYXGIo?si=UyobAFw5DRGzQ96k
+>https://youtube.com/shorts/hSUR7rYXGIo
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, con los pies abiertos al ancho de los hombros (o ligeramente más) y las puntas mirando sensiblemente hacia afuera. La miniband debe quedar ubicada 2-3 cm por encima de las rodillas.
@@ -40,7 +42,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/TNRRMkzwKIY?si=5AzEI2AEhI0GFT9n
+>https://youtube.com/shorts/TNRRMkzwKIY
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda de resistencia en el marco de la puerta a la altura del pecho. Da la espalda a la puerta y toma una manija con cada mano. Da un paso hacia adelante (posición de zancada o pies al ancho de hombros) hasta notar tensión constante en las bandas.
@@ -74,7 +76,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/N28Hpdezg7Q?si=0kQu346EgbXOrJER
+>https://youtube.com/shorts/N28Hpdezg7Q
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, coloca la miniband alrededor de los tobillos. Separa los pies a la anchura de las caderas para que la banda mantenga una tensión inicial constante. Flexiona ligeramente las rodillas y la cadera (media sentadilla) y mantén el abdomen activado y la mirada al frente.
@@ -108,8 +110,8 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/3GMddm9m-0A?si=QkjfLYoYSuFQy6vV
->https://youtube.com/shorts/jRjgQOmivTY?si=zWFvHQL_pCeQCxyk
+>https://youtube.com/shorts/3GMddm9m-0A
+>https://youtube.com/shorts/jRjgQOmivTY
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda de resistencia en el marco de la puerta a la altura del pecho. Da la espalda a la puerta y toma una manija con cada mano. Da un paso al frente (posición de zancada para mayor estabilidad) hasta que la banda quede tensa con los brazos abiertos hacia los lados.
@@ -143,7 +145,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/UTkKdH4XDKk?si=Cm88_BFe4ZEXUv5r
+>https://youtube.com/shorts/UTkKdH4XDKk
 
 #### Ejecución paso a paso
 - **Anclaje y posición inicial:** Ancla la banda de resistencia en la parte inferior de la puerta (a ras de suelo). Túmbate boca arriba (decúbito supino) mirando en dirección al anclaje. Toma una manija con cada mano y estira los brazos verticalmente hacia el techo (a 90° respecto al torso), generando tensión constante en la goma.
@@ -172,6 +174,39 @@
 
 ---
 
+### 6. Zancadas alternas con miniband (Cuádriceps/Glúteo)
+*Coloca la miniband justo por arriba de las rodillas y da un paso largo alternando piernas, bajando hasta formar 90° en ambas rodillas.*
+
+#### Vídeos
+
+>https://youtu.be/-8VRqLJ7hOo
+
+#### Ejecución paso a paso
+- **Posición inicial:** De pie, con la miniband colocada 2-3 cm por encima de las rodillas y las manos en la cintura o al frente para el equilibrio. Mantén el abdomen activado y la mirada al frente.
+- **Paso y descenso:** Da un paso largo hacia adelante con una pierna y flexiona ambas rodillas hasta que la trasera casi roce el suelo y la delantera forme un ángulo de 90°, empujando la rodilla delantera ligeramente hacia afuera contra la banda.
+- **Alineación de la rodilla:** Mantén la rodilla delantera alineada con la punta del pie sin que sobrepase en exceso la línea de los dedos, y el torso erguido durante todo el recorrido.
+- **Subida y alternancia:** Empuja con fuerza desde el talón delantero para regresar de pie y repite el patrón con la pierna contraria, alternando de forma controlada.
+
+#### Detalles técnicos
+| Parámetro | Detalle recomendado |
+| :--- | :--- |
+| **Músculos principales** | Cuádriceps y Glúteo mayor |
+| **Músculos estabilizadores** | Glúteo medio (control de la rodilla frente a la miniband), Core y Tobillo |
+| **Resistencia de la banda** | Media (debe permitir el descenso completo sin colapsar la rodilla hacia adentro) |
+| **Series y repeticiones** | 3 series de 10 a 12 repeticiones por pierna |
+| **Tiempo/Cadencia** | 2 segundos de bajada, 1 segundo abajo, 2 segundos de subida |
+
+#### Hashtags
+- #Cuadriceps #Gluteo
+
+#### Errores comunes a evitar
+- **Colapso de rodilla (valgo):** Dejar que la resistencia de la miniband venza la pierna delantera y la rodilla caiga hacia adentro.
+- **Rodilla delantera muy adelantada:** Permitir que la rodilla sobrepase ampliamente la punta del pie, cargando en exceso la articulación en lugar del muslo.
+- **Paso demasiado corto:** No dar suficiente zancada, lo que reduce el rango de movimiento y la activación glútea.
+- **Perder el equilibrio del torso:** Inclinarse hacia adelante en lugar de mantener el tronco erguido durante el descenso.
+
+---
+
 ## DÍA 2
 
 ### 1. Remo sentado a la puerta (Espalda/Bíceps)
@@ -179,7 +214,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/FeLf5KZBICo?si=twLujHDXiiJeEhok
+>https://youtube.com/shorts/FeLf5KZBICo
 
 #### Ejecución paso a paso
 - **Posición inicial:** Siéntate en el suelo de cara a la puerta con las piernas extendidas al frente (o con una ligera flexión en las rodillas si sientes mucha tensión en los isquiotibiales). Toma una manija con cada mano, mantén los brazos estirados y aléjate lo suficiente como para notar tensión en la banda desde el inicio.
@@ -213,7 +248,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/VJXjl6ur6zI?si=g62N2Mhm8ISiSv6m
+>https://youtube.com/shorts/VJXjl6ur6zI
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, coloca el centro de la banda de resistencia debajo de la planta de un solo pie para ajustar la resistencia (un pie adelante para un inicio más accesible, o posición de zancada para mayor estabilidad). Toma los agarres con las palmas mirando hacia adelante (o neutras) y eleva las manos a la altura de los hombros/orejas.
@@ -247,7 +282,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/02BZGVLCVNw?si=pR5ZKuF-8kM6-2FM
+>https://youtube.com/shorts/02BZGVLCVNw
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, pisa el centro de la banda de resistencia con un pie (o ambos al ancho de caderas si buscas mayor resistencia). Sostén los agarres a los lados del cuerpo con las palmas mirando hacia adentro y una ligera semiflexión en los codos que mantendrás fija durante todo el ejercicio.
@@ -281,7 +316,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/p7tWqclgxmw?si=7gNXD5tvK7iYSFO0
+>https://youtube.com/shorts/p7tWqclgxmw
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, pisa el centro de la banda de resistencia con ambos pies abiertos a la anchura de las caderas. Toma los agarres con las palmas mirando hacia al frente (agarre supino) y los brazos extendidos a los lados del cuerpo, manteniendo una ligera tensión inicial en la goma.
@@ -315,7 +350,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/h6gNPrqtQ4k?si=At1D4sDv7zZa_2ma
+>https://youtube.com/shorts/h6gNPrqtQ4k
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, adopta una posición en zancada corta y pisa firmemente un extremo de la banda de resistencia con el talón de la pierna trasera. Lleva la manija/agarre por detrás de la espalda y sube el codo de modo que apunte hacia arriba, al lado de tu cabeza, manteniendo el brazo flexionado por detrás de la nuca y con una ligera tensión inicial constante en la goma.
@@ -344,6 +379,40 @@
 
 ---
 
+### 6. Face Pull / Pull-apart con tubo elástico (Hombro/Espalda)
+*Ancla el tubo a la altura de la cara (o estíralo frente al pecho sin anclaje) y tira de los agarres hacia la cara separando las manos, apretando las escápulas.*
+
+#### Vídeos
+
+> https://youtu.be/SZC3B7vEjV0
+
+#### Ejecución paso a paso
+- **Posición inicial:** Ancla el tubo elástico a la altura de la cara/pecho (o sujétalo con ambas manos sin anclaje para un pull-apart). Toma un agarre con cada mano, brazos extendidos al frente y una ligera tensión inicial.
+- **Postura corporal:** Mantén el pecho erguido, el abdomen activado y los hombros alejados de las orejas.
+- **Fase concéntrica (tirón):** Exhala y tira separando ambas manos hacia los lados de la cara, llevando los codos hacia atrás a la altura de los hombros y apretando conscientemente las escápulas entre sí.
+- **Fase excéntrica (retorno):** Inhala y regresa despacio a la posición inicial controlando el tirón del elástico, sin dejar que los hombros se adelanten ni se encorven.
+
+#### Detalles técnicos
+| Parámetro | Detalle recomendado |
+| :--- | :--- |
+| **Músculos principales** | Deltoides posterior, Trapecio medio y Romboides |
+| **Músculos secundarios** | Manguito rotador (rotadores externos) |
+| **Músculos estabilizadores** | Core (Abdomen) y Serrato anterior |
+| **Resistencia recomendada** | Baja a media (prioriza la calidad de la retracción escapular sobre la carga) |
+| **Series y repeticiones** | 3 series de 15 a 20 repeticiones |
+| **Tiempo/Cadencia** | 2 segundos de tirón, 1 segundo de apretón, 2 segundos de regreso |
+
+#### Hashtags
+- #Hombro #Espalda
+
+#### Errores comunes a evitar
+- **Encoger los hombros:** Elevar los hombros hacia las orejas en lugar de deprimirlos y retraer las escápulas.
+- **Usar demasiada resistencia:** Compensar con impulso del torso al no poder controlar un tubo demasiado exigente.
+- **Tirar solo con los brazos:** Flexionar los codos sin llevar el movimiento hacia atrás desde las escápulas, perdiendo el trabajo del deltoides posterior y romboides.
+- **Adelantar la cabeza:** Proyectar el cuello hacia adelante para «alcanzar» el tubo en vez de mantener una postura cervical neutra.
+
+---
+
 ## DÍA 3
 
 ### 1. Patada de Glúteo en Cuadrupedia
@@ -351,7 +420,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/wMZgm4Brcw0?si=ZiVzCOUeqt2Nv-yz
+>https://youtube.com/shorts/wMZgm4Brcw0
 
 #### Ejecución paso a paso
 - **Posición inicial:** Colócate en posición de cuadrupedia (cuatro puntos) sobre una esterilla, apoyando las palmas de las manos alineadas directamente bajo los hombros y las rodillas bajo las caderas. Coloca una miniband alrededor de la planta de los pies (o empeines).
@@ -385,7 +454,7 @@
 
 #### Vídeos
 
->https://youtu.be/CTRaCzE8pWU?si=rdK2lmRdUCxVT4qA
+>https://youtu.be/CTRaCzE8pWU
 
 #### Ejecución paso a paso
 - **Posición inicial:** De pie, pisa el centro de la banda elástica con ambos pies separados a la anchura de las caderas. Pasa los tubos por detrás de tus hombros y sujeta firmemente las manijas/agarres a la altura de la parte superior del pecho.
@@ -419,7 +488,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/IoWia647VZY?si=N2BBkgzBiOdvXjwL
+>https://youtube.com/shorts/IoWia647VZY
 
 #### Ejecución paso a paso
 - **Posición inicial:** Acuéstate boca arriba (decúbito supino) sobre la esterilla con las rodillas flexionadas y los pies apoyados completamente en el suelo, separados a la anchura de las caderas. Coloca la miniband situada un par de dedos por encima de las rodillas.
@@ -453,7 +522,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/seKy6d7-WoI?si=WaqxECM-3sxBnbVd
+>https://youtube.com/shorts/seKy6d7-WoI
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca el anclaje de la banda en la parte superior de la puerta. Ponte de lado a la puerta a una distancia adecuada, sepárate manteniendo los pies más anchos que la anchura de los hombros y sujeta el agarre/manija con ambas manos extendidas hacia el punto de anclaje.
@@ -487,7 +556,7 @@
 
 #### Vídeos
 
->https://youtube.com/shorts/DuMzURVKYRM?si=gtQNSsXudujxMvdJ
+>https://youtube.com/shorts/DuMzURVKYRM
 
 #### Ejecución paso a paso
 - **Posición inicial:** Coloca una miniband alrededor de tus muñecas. Adopta la posición de plancha alta apoyando las palmas de las manos en el suelo alineadas con los hombros y la punta de los pies (o apoyando las rodillas si eres principiante).
@@ -513,3 +582,37 @@
 - **Dejar caer la pelvis:** Permitir que la zona lumbar cuelgue por falta de activación del core.
 - **Elevar demasiado el culo:** Formar una "V" invertida con el cuerpo para facilitar el ejercicio en lugar de mantener la plancha alineada.
 - **Juntar en exceso las manos:** Dejar que la miniband pierda la tensión mínima de separación en la posición neutra.
+
+---
+
+### 6. Extensión lumbar "Superman" (Lumbar)
+*Túmbate boca abajo y eleva a la vez brazos y piernas estirados unos centímetros del suelo, apretando los glúteos y la zona lumbar.*
+
+#### Vídeos
+
+>https://youtube.com/shorts/MSO0yVf3Cvw
+
+#### Ejecución paso a paso
+- **Posición inicial:** Túmbate boca abajo (decúbito prono) sobre la esterilla con los brazos extendidos al frente y las piernas estiradas, apoyando la frente suavemente en el suelo.
+- **Activación previa:** Contrae ligeramente el abdomen y los glúteos antes de iniciar el movimiento para proteger la zona lumbar.
+- **Fase concéntrica (elevación):** Exhala y eleva simultáneamente brazos, pecho y piernas unos centímetros del suelo, alargando el cuerpo desde las manos hasta los pies sin buscar la máxima altura.
+- **Fase excéntrica (descenso):** Inhala y desciende de forma controlada hasta rozar el suelo, sin relajar por completo la tensión entre repeticiones.
+
+#### Detalles técnicos
+| Parámetro | Detalle recomendado |
+| :--- | :--- |
+| **Músculo principal** | Erector de la columna (lumbares) |
+| **Músculos secundarios** | Glúteo mayor e Isquiotibiales |
+| **Músculos estabilizadores** | Deltoides posterior y Core (transverso del abdomen) |
+| **Material necesario** | Ninguno (calistenia) |
+| **Series y repeticiones** | 3 series de 10 a 15 repeticiones |
+| **Tiempo/Cadencia** | 2 segundos de subida, 2 segundos de apretón arriba, 2 segundos de bajada |
+
+#### Hashtags
+- #Lumbar
+
+#### Errores comunes a evitar
+- **Hiperextensión brusca:** Elevar demasiado el tronco buscando altura en lugar de una contracción controlada, lo que puede generar compresión excesiva en las vértebras lumbares.
+- **Encoger el cuello:** Elevar la barbilla en exceso en lugar de mantener la mirada hacia el suelo y el cuello en línea con la columna.
+- **Contener la respiración:** Aguantar el aire durante la contracción en lugar de exhalar de forma controlada al subir.
+- **Movimiento con rebote:** Usar impulso para subir y bajar rápido en lugar de controlar ambas fases del movimiento.
