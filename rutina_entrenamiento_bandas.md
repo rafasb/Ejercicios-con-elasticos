@@ -37,7 +37,7 @@
 
 ---
 
-### 2. Press de pecho en puerta (Pectorales)
+### 2. Press de pecho con anclado en puerta (Pectorales)
 *Coloca el anclaje a la altura del pecho. Da la espalda a la puerta, da un paso al frente para tensar la banda y empuja las manijas hacia adelante.*
 
 #### Vídeos

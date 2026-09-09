@@ -1,4 +1,4 @@
-const CACHE = "ritmo-v23";
+const CACHE = "ritmo-v24";
 const VERSION = CACHE.match(/v(.+)$/)?.[1] || "desconocida";
 const ASSETS = ["./", "./index.html", "./styles.css", "./js/app.js", "./rutina_entrenamiento_bandas.md", "./manifest.webmanifest", "./icon.svg"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS.map((asset) => new Request(asset, { cache: "reload" })))).then(() => self.skipWaiting())));
