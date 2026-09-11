@@ -1,6 +1,6 @@
 import { DEFAULT_GUIDE_SETTINGS, EXERCISE_DETAIL_FIELDS, GUIDE_FIELDS, MUSCLE_TAGS, ROUTINE_URL } from "./constants.js";
 import { completedSets, escapeHtml, guideForExercise, listForForm, listForStorage, normaliseTags, repetitionsToCycles, seconds, tagsForForm, videosForStorage } from "./utils.js";
-import { state, save, configuredDays, createDays, downloadBackup, getExercise, getCurrentPlan, initialise, restoreBackup, setDayCount, sortedHistory } from "./state.js";
+import { state, save, configuredDays, createDays, downloadBackup, getExercise, getCurrentPlan, initialise, restoreBackup, setDayCount, sortedHistory, applyPreset } from "./state.js";
 import { renderApp, setAppVersion } from "./render.js";
 
 const app = document.querySelector("#app");
@@ -240,6 +240,11 @@ function handleGeneralAction(event) {
       break;
     case "guide-settings":
       openGuideSettings();
+      break;
+    case "apply-preset":
+      if (applyPreset(Number(action.dataset.presetDays))) toast(`Preconfiguración de ${action.dataset.presetDays} días aplicada.`);
+      else toast("No se pudo aplicar la preconfiguración.");
+      renderApp();
       break;
     case "close-guide-settings":
       guideSettingsDialog.close();

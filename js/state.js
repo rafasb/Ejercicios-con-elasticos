@@ -49,6 +49,61 @@ export function setDayCount(count) {
   save();
 }
 
+function planItemForExercise(exercise, existingItems) {
+  return existingItems.get(exercise.id) || { exerciseId: exercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(exercise) };
+}
+
+function compatibleGroups(first, second) {
+  return ![...first.tags].some((tag) => second.tags.has(tag));
+}
+
+function sixDayGroups(exercises) {
+  const groups = [];
+  for (let first = 0; first < exercises.length; first += 1) {
+    for (let second = first + 1; second < exercises.length; second += 1) {
+      for (let third = second + 1; third < exercises.length; third += 1) {
+        const indexes = [first, second, third];
+        groups.push({ indexes, tags: new Set(indexes.flatMap((index) => exercises[index].tags || [])) });
+      }
+    }
+  }
+
+  function search(path, used) {
+    if (path.length === 6) return used.size === exercises.length && compatibleGroups(path[5], path[0]) ? path : null;
+    for (const group of groups) {
+      if (group.indexes.some((index) => used.has(index))) continue;
+      if (path.length && !compatibleGroups(path[path.length - 1], group)) continue;
+      const nextUsed = new Set(used);
+      group.indexes.forEach((index) => nextUsed.add(index));
+      const result = search([...path, group], nextUsed);
+      if (result) return result;
+    }
+    return null;
+  }
+
+  return search([], new Set());
+}
+
+export function applyPreset(dayCount) {
+  const routineExercises = state.data.exercises.filter((exercise) => /^DÍA [1-3]$/.test(exercise.day));
+  if (routineExercises.length !== 18) return false;
+
+  const existingItems = new Map(Object.values(state.data.plans).flat().map((item) => [item.exerciseId, item]));
+  const presetDays = dayCount === 6 ? 6 : 3;
+  const groups = presetDays === 6 ? sixDayGroups(routineExercises) : [1, 2, 3].map((day) => routineExercises.filter((exercise) => exercise.day === `DÍA ${day}`));
+  if (!groups || groups.some((group) => !(group.indexes ? group.indexes.length : group.length))) return false;
+
+  state.data.days = createDays(presetDays);
+  state.data.plans = Object.fromEntries(groups.map((group, index) => {
+    const exercises = group.indexes ? group.indexes.map((exerciseIndex) => routineExercises[exerciseIndex]) : group;
+    return [`DÍA ${index + 1}`, exercises.map((exercise) => planItemForExercise(exercise, existingItems))];
+  }));
+  state.activeDay = state.data.days[0];
+  state.workout = {};
+  save();
+  return true;
+}
+
 export function downloadBackup() {
   const backup = { version: 2, exportedAt: new Date().toISOString(), days: state.data.days, plans: state.data.plans, history: state.data.history, guide: state.data.guide };
   const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
