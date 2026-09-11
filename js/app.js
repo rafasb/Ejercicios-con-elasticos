@@ -21,6 +21,9 @@ const videosList = document.querySelector("#videos-list");
 const planExerciseDialog = document.querySelector("#plan-exercise-dialog");
 const planExerciseTagFilter = document.querySelector("#plan-exercise-tag-filter");
 const planExerciseList = document.querySelector("#plan-exercise-list");
+const viewOrder = ["train", "plan", "history", "exercises"];
+const swipeThreshold = 50;
+let swipeStart = null;
 
 function toast(message) {
   const node = document.querySelector("#toast");
@@ -159,6 +162,21 @@ function handleViewSwitch(event) {
   state.activeView = viewButton.dataset.view;
   renderApp();
   return true;
+}
+
+function handleSwipe(event) {
+  if (!swipeStart || event.changedTouches.length !== 1) return;
+  const [{ clientX, clientY }] = event.changedTouches;
+  const deltaX = clientX - swipeStart.clientX;
+  const deltaY = clientY - swipeStart.clientY;
+  swipeStart = null;
+  if (Math.abs(deltaX) < swipeThreshold || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
+
+  const currentIndex = viewOrder.indexOf(state.activeView);
+  const nextIndex = currentIndex + (deltaX < 0 ? 1 : -1);
+  if (nextIndex < 0 || nextIndex >= viewOrder.length) return;
+  state.activeView = viewOrder[nextIndex];
+  renderApp();
 }
 
 function handleDaySwitch(event) {
@@ -322,6 +340,15 @@ document.addEventListener("click", (event) => {
   if (handleWorkoutRating(event)) return;
   handleGeneralAction(event);
 });
+
+app.addEventListener("touchstart", (event) => {
+  if (event.touches.length === 1) {
+    const [touch] = event.touches;
+    swipeStart = { clientX: touch.clientX, clientY: touch.clientY };
+  }
+}, { passive: true });
+app.addEventListener("touchend", handleSwipe, { passive: true });
+app.addEventListener("touchcancel", () => { swipeStart = null; }, { passive: true });
 
 restoreInput.addEventListener("change", async () => {
   const [file] = restoreInput.files;
