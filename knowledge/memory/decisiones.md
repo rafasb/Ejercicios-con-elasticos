@@ -20,6 +20,11 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 
 - Los edits a seeds por `name` se sobrescriben en cada `initialise()` — documentar aquí si se toca el sync. Ver [formato de la rutina](/project/rutina-formato.md).
 
-## Pendientes
+## Pendientes (draft — grill 2026-09-14, detalle en [mejoras](/project/mejoras.md))
 
-- (vacío — añadir con `status: draft` y promover a `stable` tras verificación humana)
+- [P0] Backup v3 con customs + restore v2/v3 + aviso UI.
+- [P0] Seeds `seed-*` inmutables + clon `user-*` (`parentSeedId`) + prefijo/badge visible; sync por `id`.
+- [P0] Marcar candidato local a canon (sin servidor).
+- [P0] Guardia `localStorage` corrupto + fuente rutina JSON generada desde md + validación.
+- [P1] PWA offline completo (`js/*` en `ASSETS`) + `applyPreset` no rígido + avisos UX.
+- Toolchain mínima: tests Node built-in + linter externo (`package.json` solo dev).
