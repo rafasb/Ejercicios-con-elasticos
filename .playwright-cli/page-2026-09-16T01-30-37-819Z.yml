@@ -1,0 +1,31 @@
+- generic [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - paragraph [ref=f1e4]: ENTRENAMIENTO CON BANDAS
+      - button "Actualizar aplicación" [ref=f1e5] [cursor=pointer]: ⟳
+    - heading "Ritmo" [level=1] [ref=f1e6]
+    - paragraph [ref=f1e7]: Mira lo que hiciste y ajusta el rumbo.
+  - main [ref=f1e8]:
+    - generic [ref=f1e550]:
+      - heading "Historial" [level=2] [ref=f1e551]
+      - paragraph [ref=f1e552]: Usa una sesión como punto de partida para el próximo ciclo.
+    - group "Vista del historial" [ref=f1e553]:
+      - button "Lista" [pressed] [ref=f1e554] [cursor=pointer]
+      - button "Calendario" [ref=f1e555] [cursor=pointer]
+    - generic [ref=f1e556]:
+      - heading "Aún no hay sesiones" [level=2] [ref=f1e557]
+      - paragraph [ref=f1e558]: Al finalizar un entrenamiento, sus resultados aparecerán aquí.
+  - navigation "Navegación principal" [ref=f1e152]:
+    - button "Entrenar" [ref=f1e153] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e154]: ◉
+      - text: Entrenar
+    - button "Planificar" [ref=f1e155] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e156]: ▦
+      - text: Plan
+    - button "Historial" [active] [ref=f1e157] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e158]: ◷
+      - text: Historial
+    - button "Ejercicios" [ref=f1e159] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e160]: ◎
+      - text: Ejercicios
+  - status

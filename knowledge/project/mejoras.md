@@ -18,6 +18,12 @@ sources:
   - id: espec
     resource: ../../Especificaciones iniciales.md
     title: Especificaciones iniciales
+  - id: aviso-html
+    resource: ../../index.html
+    title: index.html (avisos ES dialogo ejercicio)
+  - id: aviso-css
+    resource: ../../styles.css
+    title: styles.css (.dialog-notice)
 ---
 
 # Mejoras propuestas (backlog para próximas sesiones)
@@ -49,40 +55,46 @@ Acordado por grill el 2026-09-14. Objetivo: **robustez primero**, ámbito **ambo
 - **Propuesta (alcance cerrado):** flag `candidateForCanon: true` en `user-*`, filtro "candidatos" en Ejercicios; sin envío a servidor. Export JSON de propuesta = fuera de este backlog.
 - **Aceptación:** marcar/desmarcar persiste en `localStorage` y sobrevive al sync; backup v3 lo incluye.
 
-### M4. Guardia `localStorage` corrupto
+### M4. Guardia `localStorage` corrupto [hecho 2026-09-17]
 - **Problema:** `initialise()` hace `JSON.parse(stored)` sin `try`: un dato corrupto rompe el arranque.
 - **Propuesta:** `try/catch`, conservar copia corrupta (`ritmo-data-corrupt-<fecha>`), reset seguro + mensaje ES, y no perder seeds (re-seed desde fuente).
 - **Aceptación:** con dato corrupto la app arranca, avisa y conserva la copia para diagnóstico.
+- [Hecho 2026-09-17] Guardia en `js/state.js:18,169-196`: copia `ritmo-data-corrupt-${Date.now()}` con valor original, `storageWarning` ES + toast 2500ms, re-seed 18 `seed-*`; `npm run check` + harness corrupto/válido + runtime `http://localhost:4173` OK. Ver [decisiones activas](/memory/decisiones.md).
 
-### M4b. Fuente rutina en JSON generado desde md + validación
+### M4b. Fuente rutina en JSON generado desde md + validación [hecho 2026-09-17]
 - **Problema:** `parseRoutine()` depende de headings exactos, orden de secciones y regex frágiles (`Hashtags`, `Errores...` hasta fin, `Vídeos`).[^utils]
 - **Propuesta:** script (Node built-in) que convierte `rutina_entrenamiento_bandas.md` → `rutina.json` validado (18 ejercicios, días 1-3, tags del vocabulario); la app consume el JSON; el md queda legacy legible; error de fuente visible en consola/UI en vez de silencio (`catch {}` actual).
 - **Aceptación:** fuente inválida falla con mensaje accionable; el JSON generado pasa tests.
+- [Auditado hecho 2026-09-17] `rutina.json:1-10` + `scripts/generate-routine-json.mjs:1-18` (18, días 1-3, tags), `ROUTINE_JSON_URL` en `js/constants.js:3`, fetch JSON con fallback md en `js/state.js:75-83`; `parseRoutine`/`validateRoutineData` en `js/utils.js:125-175` con errores ES. Ver [decisiones activas](/memory/decisiones.md).
 
 ## P1 — PWA, presets y compatibilidad
 
-### M5. PWA offline completo (P1, después de P0)
+### M5. PWA offline completo (P1, después de P0) [hecho 2026-09-17]
 - **Problema:** `ASSETS` solo lista `./js/app.js`, no sus imports (`constants.js`, `utils.js`, `state.js`, `render.js`); cache-first offline puede romper la app.[^sw]
 - **Propuesta:** añadir todos los `js/*` cacheables a `ASSETS`, bump `CACHE`, test offline real (primera carga → avión → reload + entrenar).
 - **Aceptación:** app usable offline tras primera visita, incluyendo catálogo y plan.
+- [Auditado hecho 2026-09-17] `CACHE ritmo-v32` en `service-worker.js:1`, `ASSETS` con `js/*` + json/md en `service-worker.js:3`, network-first json/md en `service-worker.js:17-28`. Ver [decisiones activas](/memory/decisiones.md).
 
-### M6. Relajar `applyPreset` + compatibilidad backup v2/v3
+### M6. Relajar `applyPreset` + compatibilidad backup v2/v3 [hecho 2026-09-17]
 - **Problema:** `applyPreset()` exige exactamente 18 ejercicios `DÍA 1-3` y solo 3/6 días; `sixDayGroups` es búsqueda costosa y opaca; con customs o días 4-7 el preset falla en silencio (`return false`).
 - **Propuesta:** presets que no exijan 18 exactos, soporten 3-7 días o error ES explicable; `isValidBackup` cubre v2 y v3.
 - **Aceptación:** presets funcionan con catálogo extendido; fallo siempre con mensaje, nunca silencioso.
+- [Auditado hecho 2026-09-17] `applyPreset(dayCount)` en `js/state.js:86-102` (3-7 días, catálogo `seed-*`+`user-*`, retorno `{ok,message}` ES). Ver [decisiones activas](/memory/decisiones.md).
 
 ## UX mínima ligada (no features nuevas sueltas)
 
-### M7. Flujo clonar-editar + avisos honestos
+### M7. Flujo clonar-editar + avisos honestos [hecho 2026-09-17]
 - Clonar desde detalle del seed, badge de origen, pre-carga de tags al editar, guardar normalizado.
 - Avisos ES: qué incluye el backup, que los seeds no se editan directamente, qué pasa al reducir días.
+- [Hecho 2026-09-17] Diálogo con avisos "no se editan" y "copia incluye personalizados"[^aviso-html] con estilo `.dialog-notice`[^aviso-css]. Ver [decisiones activas](/memory/decisiones.md).
 - Sin consejo médico nuevo; mantener aviso `README.md`.
 
 ## Toolchain mínima (sin cambiar runtime)
 
-### M8. Tests Node built-in + linter externo
+### M8. Tests Node built-in + linter externo [hecho 2026-09-17]
 - Tests sin dependencias para `parseRoutine`, `normaliseTags`, `isValidBackup`/migración v2→v3, guardia corruptos.
 - Linter externo mínimo (acepta `package.json` dev); runtime sigue sin build/bundler; verificación manual actual se conserva como checklist.
+- [Hecho 2026-09-17] Artefactos `package.json` (Node 22, `check`/`lint`/`test`)/`biome.json`/`.dockerignore` + sync docs `AGENTS.md`/`README.md` (toolchain solo dev, backup v3 con customs). Ver [decisiones activas](/memory/decisiones.md).
 
 #### Riesgos del linter externo y mitigaciones (acordado 2026-09-14)
 - **R1. Rompe el invariante "cero toolchain".** Hoy no hay `package.json` y `AGENTS.md` lo prohíbe. *Mitigación:* `package.json` + lock solo dev; actualizar `AGENTS.md`, `README.md` y este backlog dejando por escrito que el runtime sigue vanilla sin build/bundler.
@@ -111,3 +123,5 @@ Acordado por grill el 2026-09-14. Objetivo: **robustez primero**, ámbito **ambo
 [^state]: `js/state.js`: `downloadBackup` (v2 sin customs), `initialise()` sync por `name`, `applyPreset` 18 exactos, `JSON.parse` sin `try`.
 [^utils]: `js/utils.js`: `parseRoutine`, `normaliseTags`, `videosForStorage`.
 [^sw]: `service-worker.js`: `ASSETS` sin `js/constants.js|utils.js|state.js|render.js`.
+[^aviso-html]: `index.html:35-36`: avisos ES del diálogo de ejercicio.
+[^aviso-css]: `styles.css:106`: estilo `.dialog-notice` de los avisos.

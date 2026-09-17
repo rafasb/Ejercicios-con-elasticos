@@ -1,6 +1,6 @@
-const CACHE = "ritmo-v30";
+const CACHE = "ritmo-v33";
 const VERSION = CACHE.match(/v(.+)$/)?.[1] || "desconocida";
-const ASSETS = ["./", "./index.html", "./styles.css", "./js/app.js", "./rutina_entrenamiento_bandas.md", "./manifest.webmanifest", "./icon.svg"];
+const ASSETS = ["./", "./index.html", "./styles.css", "./js/app.js", "./js/constants.js", "./js/utils.js", "./js/state.js", "./js/render.js", "./rutina_entrenamiento_bandas.md", "./rutina.json", "./manifest.webmanifest", "./icon.svg"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS.map((asset) => new Request(asset, { cache: "reload" })))).then(() => self.skipWaiting())));
 self.addEventListener("activate", (event) => event.waitUntil(
 	caches.keys()
@@ -14,14 +14,15 @@ self.addEventListener("message", (event) => {
 });
 self.addEventListener("fetch", (event) => {
 	const requestUrl = new URL(event.request.url);
-	if (requestUrl.pathname.endsWith("/rutina_entrenamiento_bandas.md")) {
+	if (requestUrl.pathname.endsWith("/rutina_entrenamiento_bandas.md") || requestUrl.pathname.endsWith("/rutina.json")) {
+		const cacheKey = requestUrl.pathname.endsWith(".json") ? "./rutina.json" : "./rutina_entrenamiento_bandas.md";
 		event.respondWith(
 			fetch(event.request, { cache: "no-store" })
 				.then((response) => caches.open(CACHE).then((cache) => {
-					cache.put("./rutina_entrenamiento_bandas.md", response.clone());
+					cache.put(cacheKey, response.clone());
 					return response;
 				}))
-				.catch(() => caches.match("./rutina_entrenamiento_bandas.md"))
+				.catch(() => caches.match(cacheKey))
 		);
 		return;
 	}

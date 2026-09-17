@@ -1,0 +1,273 @@
+- generic [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - paragraph [ref=f1e4]: ENTRENAMIENTO CON BANDAS
+      - button "Actualizar aplicación" [ref=f1e5] [cursor=pointer]: ⟳
+    - heading "Ritmo" [level=1] [ref=f1e6]
+    - paragraph [ref=f1e7]: Técnica antes que velocidad.
+  - main [ref=f1e8]:
+    - generic [ref=f1e316]:
+      - button "Backup" [ref=f1e317] [cursor=pointer]
+      - button "Restore" [ref=f1e318] [cursor=pointer]
+      - button "Ajustar guía" [ref=f1e319] [cursor=pointer]
+      - generic "Versión de la aplicación" [ref=f1e320]: Versión 32
+    - generic [ref=f1e321]:
+      - generic [ref=f1e322]:
+        - heading "Ejercicios" [level=2] [ref=f1e323]
+        - paragraph [ref=f1e324]: 18 de 18 disponibles en tu catálogo.
+      - button "Añadir" [ref=f1e325] [cursor=pointer]
+    - generic [ref=f1e326]:
+      - generic [ref=f1e327]: Filtrar por grupos musculares
+      - listbox "Filtrar por grupos musculares" [ref=f1e328]:
+        - option "#Abdominal" [ref=f1e329]
+        - option "#Biceps" [ref=f1e330]
+        - option "#Cuadriceps" [ref=f1e331]
+        - option "#Espalda" [ref=f1e332]
+        - option "#Gluteo" [ref=f1e333]
+        - option "#Hombro" [ref=f1e334]
+        - option "#Lumbar" [ref=f1e335]
+        - option "#Pectoral" [ref=f1e336]
+        - option "#Triceps" [ref=f1e337]
+      - button "Limpiar filtros" [disabled] [ref=f1e338]
+    - group "Filtrar por origen" [ref=f1e339]:
+      - button "Todos" [pressed] [ref=f1e340] [cursor=pointer]
+      - button "Mis ejercicios" [ref=f1e341] [cursor=pointer]
+      - button "Candidatas" [ref=f1e342] [cursor=pointer]
+    - article [ref=f1e343]:
+      - generic [ref=f1e344]:
+        - generic [ref=f1e345]:
+          - heading "Sentadillas con miniband" [level=3] [ref=f1e346]
+          - paragraph [ref=f1e347]: Cuádriceps/Glúteos · Coloca la miniband justo por arriba de las rodillas. Empuja las rodillas hacia afuera al bajar para activar el glúteo medio.
+          - generic "Origen del ejercicio" [ref=f1e348]: APP
+          - generic "Etiquetas musculares" [ref=f1e350]:
+            - generic [ref=f1e351]: "#Cuadriceps"
+            - generic [ref=f1e352]: "#Gluteo"
+        - generic [ref=f1e353]:
+          - button "Vídeos" [ref=f1e354] [cursor=pointer]
+          - button "Editar" [ref=f1e355] [cursor=pointer]
+      - group [ref=f1e356]:
+        - generic "Ver técnica y detalles" [ref=f1e357] [cursor=pointer]
+    - article [ref=f1e358]:
+      - generic [ref=f1e359]:
+        - generic [ref=f1e360]:
+          - heading "Press de pecho con anclaje en puerta" [level=3] [ref=f1e361]
+          - paragraph [ref=f1e362]: Pectorales · Coloca el anclaje a la altura del pecho. Da la espalda a la puerta, da un paso al frente para tensar la banda y empuja las manijas hacia adelante.
+          - generic "Origen del ejercicio" [ref=f1e363]: APP
+          - generic "Etiquetas musculares" [ref=f1e365]: "#Pectoral"
+        - generic [ref=f1e367]:
+          - button "Vídeos" [ref=f1e368] [cursor=pointer]
+          - button "Editar" [ref=f1e369] [cursor=pointer]
+      - group [ref=f1e370]:
+        - generic "Ver técnica y detalles" [ref=f1e371] [cursor=pointer]
+    - article [ref=f1e372]:
+      - generic [ref=f1e373]:
+        - generic [ref=f1e374]:
+          - heading "Pasos laterales con miniband" [level=3] [ref=f1e375]
+          - paragraph [ref=f1e376]: Glúteos · Pon la miniband en los tobillos. Da 10 pasos a la derecha y 10 a la izquierda manteniendo una ligera flexión de rodillas.
+          - generic "Origen del ejercicio" [ref=f1e377]: APP
+          - generic "Etiquetas musculares" [ref=f1e379]: "#Gluteo"
+        - generic [ref=f1e381]:
+          - button "Vídeos" [ref=f1e382] [cursor=pointer]
+          - button "Editar" [ref=f1e383] [cursor=pointer]
+      - group [ref=f1e384]:
+        - generic "Ver técnica y detalles" [ref=f1e385] [cursor=pointer]
+    - article [ref=f1e386]:
+      - generic [ref=f1e387]:
+        - generic [ref=f1e388]:
+          - heading "Aperturas de pecho con anclaje en puerta" [level=3] [ref=f1e389]
+          - paragraph [ref=f1e390]: Pectorales · Con el anclaje a la altura del pecho, abre los brazos como si fueras a dar un abrazo y júntalos al frente manteniendo los codos casi estirados.
+          - generic "Origen del ejercicio" [ref=f1e391]: APP
+          - generic "Etiquetas musculares" [ref=f1e393]: "#Pectoral"
+        - generic [ref=f1e395]:
+          - button "Vídeos" [ref=f1e396] [cursor=pointer]
+          - button "Editar" [ref=f1e397] [cursor=pointer]
+      - group [ref=f1e398]:
+        - generic "Ver técnica y detalles" [ref=f1e399] [cursor=pointer]
+    - article [ref=f1e400]:
+      - generic [ref=f1e401]:
+        - generic [ref=f1e402]:
+          - heading "Bicho muerto con banda" [level=3] [ref=f1e403]
+          - paragraph [ref=f1e404]: Abdominales · Ancla la banda abajo en la puerta. Tírate boca arriba, sujeta las manijas con los brazos estirados hacia el techo (generando tensión) y desciende una pierna de forma alterna sin despegar la espalda del suelo.
+          - generic "Origen del ejercicio" [ref=f1e405]: APP
+          - generic "Etiquetas musculares" [ref=f1e407]: "#Abdominal"
+        - generic [ref=f1e409]:
+          - button "Vídeos" [ref=f1e410] [cursor=pointer]
+          - button "Editar" [ref=f1e411] [cursor=pointer]
+      - group [ref=f1e412]:
+        - generic "Ver técnica y detalles" [ref=f1e413] [cursor=pointer]
+    - article [ref=f1e414]:
+      - generic [ref=f1e415]:
+        - generic [ref=f1e416]:
+          - heading "Zancadas alternas con miniband" [level=3] [ref=f1e417]
+          - paragraph [ref=f1e418]: Cuádriceps/Glúteo · Coloca la miniband justo por arriba de las rodillas y da un paso largo alternando piernas, bajando hasta formar 90° en ambas rodillas.
+          - generic "Origen del ejercicio" [ref=f1e419]: APP
+          - generic "Etiquetas musculares" [ref=f1e421]:
+            - generic [ref=f1e422]: "#Cuadriceps"
+            - generic [ref=f1e423]: "#Gluteo"
+        - generic [ref=f1e424]:
+          - button "Vídeos" [ref=f1e425] [cursor=pointer]
+          - button "Editar" [ref=f1e426] [cursor=pointer]
+      - group [ref=f1e427]:
+        - generic "Ver técnica y detalles" [ref=f1e428] [cursor=pointer]
+    - article [ref=f1e429]:
+      - generic [ref=f1e430]:
+        - generic [ref=f1e431]:
+          - heading "Remo sentado a la puerta" [level=3] [ref=f1e432]
+          - paragraph [ref=f1e433]: Espalda/Bíceps · Coloca el anclaje a la altura del ombligo. Siéntate en el suelo frente a la puerta con las piernas estiradas y tira de los agarres hacia tus costillas.
+          - generic "Origen del ejercicio" [ref=f1e434]: APP
+          - generic "Etiquetas musculares" [ref=f1e436]: "#Espalda"
+        - generic [ref=f1e438]:
+          - button "Vídeos" [ref=f1e439] [cursor=pointer]
+          - button "Editar" [ref=f1e440] [cursor=pointer]
+      - group [ref=f1e441]:
+        - generic "Ver técnica y detalles" [ref=f1e442] [cursor=pointer]
+    - article [ref=f1e443]:
+      - generic [ref=f1e444]:
+        - generic [ref=f1e445]:
+          - heading "Press de hombros de pie" [level=3] [ref=f1e446]
+          - paragraph [ref=f1e447]: Hombros · Pisa la banda con agarres con un solo pie (para menor resistencia inicial) y empuja las manos hacia el techo desde la altura de las orejas.
+          - generic "Origen del ejercicio" [ref=f1e448]: APP
+          - generic "Etiquetas musculares" [ref=f1e450]: "#Hombro"
+        - generic [ref=f1e452]:
+          - button "Vídeos" [ref=f1e453] [cursor=pointer]
+          - button "Editar" [ref=f1e454] [cursor=pointer]
+      - group [ref=f1e455]:
+        - generic "Ver técnica y detalles" [ref=f1e456] [cursor=pointer]
+    - article [ref=f1e457]:
+      - generic [ref=f1e458]:
+        - generic [ref=f1e459]:
+          - heading "Elevaciones laterales" [level=3] [ref=f1e460]
+          - paragraph [ref=f1e461]: Hombros · Pisa la banda y sube los brazos hacia los lados hasta la altura de tus hombros. Controla la bajada para que la banda no te gane.
+          - generic "Origen del ejercicio" [ref=f1e462]: APP
+          - generic "Etiquetas musculares" [ref=f1e464]: "#Hombro"
+        - generic [ref=f1e466]:
+          - button "Vídeos" [ref=f1e467] [cursor=pointer]
+          - button "Editar" [ref=f1e468] [cursor=pointer]
+      - group [ref=f1e469]:
+        - generic "Ver técnica y detalles" [ref=f1e470] [cursor=pointer]
+    - article [ref=f1e471]:
+      - generic [ref=f1e472]:
+        - generic [ref=f1e473]:
+          - heading "Curl de bíceps" [level=3] [ref=f1e474]
+          - paragraph [ref=f1e475]: Brazos · Pisa la banda con ambos pies y flexiona los codos llevando las manos a los hombros. Mantén los codos pegados a las costillas.
+          - generic "Origen del ejercicio" [ref=f1e476]: APP
+          - generic "Etiquetas musculares" [ref=f1e478]: "#Biceps"
+        - generic [ref=f1e480]:
+          - button "Vídeos" [ref=f1e481] [cursor=pointer]
+          - button "Editar" [ref=f1e482] [cursor=pointer]
+      - group [ref=f1e483]:
+        - generic "Ver técnica y detalles" [ref=f1e484] [cursor=pointer]
+    - article [ref=f1e485]:
+      - generic [ref=f1e486]:
+        - generic [ref=f1e487]:
+          - heading "Extensión de tríceps sobre la cabeza" [level=3] [ref=f1e488]
+          - paragraph [ref=f1e489]: Brazos · Pisa un extremo de la banda con el talón trasero, lleva la manija por detrás de tu espalda y estira el brazo hacia el techo.
+          - generic "Origen del ejercicio" [ref=f1e490]: APP
+          - generic "Etiquetas musculares" [ref=f1e492]: "#Triceps"
+        - generic [ref=f1e494]:
+          - button "Vídeos" [ref=f1e495] [cursor=pointer]
+          - button "Editar" [ref=f1e496] [cursor=pointer]
+      - group [ref=f1e497]:
+        - generic "Ver técnica y detalles" [ref=f1e498] [cursor=pointer]
+    - article [ref=f1e499]:
+      - generic [ref=f1e500]:
+        - generic [ref=f1e501]:
+          - heading "Face Pull / Pull-apart con tubo elástico" [level=3] [ref=f1e502]
+          - paragraph [ref=f1e503]: Hombro/Espalda · Ancla el tubo a la altura de la cara (o estíralo frente al pecho sin anclaje) y tira de los agarres hacia la cara separando las manos, apretando las escápulas.
+          - generic "Origen del ejercicio" [ref=f1e504]: APP
+          - generic "Etiquetas musculares" [ref=f1e506]:
+            - generic [ref=f1e507]: "#Hombro"
+            - generic [ref=f1e508]: "#Espalda"
+        - generic [ref=f1e509]:
+          - button "Vídeos" [ref=f1e510] [cursor=pointer]
+          - button "Editar" [ref=f1e511] [cursor=pointer]
+      - group [ref=f1e512]:
+        - generic "Ver técnica y detalles" [ref=f1e513] [cursor=pointer]
+    - article [ref=f1e514]:
+      - generic [ref=f1e515]:
+        - generic [ref=f1e516]:
+          - heading "Patada de Glúteo en Cuadrupedia" [level=3] [ref=f1e517]
+          - paragraph [ref=f1e518]: General · Coloca la miniband por encima de ambas rodillas y empuja un talón hacia el techo en posición de cuadrupedia, presionando la rodilla de apoyo hacia afuera.
+          - generic "Origen del ejercicio" [ref=f1e519]: APP
+          - generic "Etiquetas musculares" [ref=f1e521]: "#Gluteo"
+        - generic [ref=f1e523]:
+          - button "Vídeos" [ref=f1e524] [cursor=pointer]
+          - button "Editar" [ref=f1e525] [cursor=pointer]
+      - group [ref=f1e526]:
+        - generic "Ver técnica y detalles" [ref=f1e527] [cursor=pointer]
+    - article [ref=f1e528]:
+      - generic [ref=f1e529]:
+        - generic [ref=f1e530]:
+          - heading "Buenos Días con Banda" [level=3] [ref=f1e531]
+          - paragraph [ref=f1e532]: General · Pisa el centro de la banda con ambos pies, pasa los tubos por detrás de los hombros e inclina el torso flexionando la cadera.
+          - generic "Origen del ejercicio" [ref=f1e533]: APP
+          - generic "Etiquetas musculares" [ref=f1e535]:
+            - generic [ref=f1e536]: "#Lumbar"
+            - generic [ref=f1e537]: "#Gluteo"
+        - generic [ref=f1e538]:
+          - button "Vídeos" [ref=f1e539] [cursor=pointer]
+          - button "Editar" [ref=f1e540] [cursor=pointer]
+      - group [ref=f1e541]:
+        - generic "Ver técnica y detalles" [ref=f1e542] [cursor=pointer]
+    - article [ref=f1e543]:
+      - generic [ref=f1e544]:
+        - generic [ref=f1e545]:
+          - heading "Puente de Glúteos con Miniband" [level=3] [ref=f1e546]
+          - paragraph [ref=f1e547]: General · Coloca la miniband por encima de las rodillas, apoya los pies en el suelo boca arriba y eleva la cadera contrayendo glúteos.
+          - generic "Origen del ejercicio" [ref=f1e548]: APP
+          - generic "Etiquetas musculares" [ref=f1e550]: "#Gluteo"
+        - generic [ref=f1e552]:
+          - button "Vídeos" [ref=f1e553] [cursor=pointer]
+          - button "Editar" [ref=f1e554] [cursor=pointer]
+      - group [ref=f1e555]:
+        - generic "Ver técnica y detalles" [ref=f1e556] [cursor=pointer]
+    - article [ref=f1e557]:
+      - generic [ref=f1e558]:
+        - generic [ref=f1e559]:
+          - heading "Leñador en Puerta" [level=3] [ref=f1e560]
+          - paragraph [ref=f1e561]: Woodchopper · Ancla la banda en la parte superior de la puerta, ponte de lado y tira en diagonal hacia abajo rotando el torso.
+          - generic "Origen del ejercicio" [ref=f1e562]: APP
+          - generic "Etiquetas musculares" [ref=f1e564]: "#Abdominal"
+        - generic [ref=f1e566]:
+          - button "Vídeos" [ref=f1e567] [cursor=pointer]
+          - button "Editar" [ref=f1e568] [cursor=pointer]
+      - group [ref=f1e569]:
+        - generic "Ver técnica y detalles" [ref=f1e570] [cursor=pointer]
+    - article [ref=f1e571]:
+      - generic [ref=f1e572]:
+        - generic [ref=f1e573]:
+          - heading "Plancha Frontal con Toque de Manos" [level=3] [ref=f1e574]
+          - paragraph [ref=f1e575]: General · Coloca la miniband en las muñecas, ponte en posición de plancha alta y realiza toques alternos manteniendo la cadera estable.
+          - generic "Origen del ejercicio" [ref=f1e576]: APP
+          - generic "Etiquetas musculares" [ref=f1e578]: "#Abdominal"
+        - generic [ref=f1e580]:
+          - button "Vídeos" [ref=f1e581] [cursor=pointer]
+          - button "Editar" [ref=f1e582] [cursor=pointer]
+      - group [ref=f1e583]:
+        - generic "Ver técnica y detalles" [ref=f1e584] [cursor=pointer]
+    - article [ref=f1e585]:
+      - generic [ref=f1e586]:
+        - generic [ref=f1e587]:
+          - heading "Extensión lumbar \"Superman\"" [level=3] [ref=f1e588]
+          - paragraph [ref=f1e589]: Lumbar · Túmbate boca abajo y eleva a la vez brazos y piernas estirados unos centímetros del suelo, apretando los glúteos y la zona lumbar.
+          - generic "Origen del ejercicio" [ref=f1e590]: APP
+          - generic "Etiquetas musculares" [ref=f1e592]: "#Lumbar"
+        - generic [ref=f1e594]:
+          - button "Vídeos" [ref=f1e595] [cursor=pointer]
+          - button "Editar" [ref=f1e596] [cursor=pointer]
+      - group [ref=f1e597]:
+        - generic "Ver técnica y detalles" [ref=f1e598] [cursor=pointer]
+  - navigation "Navegación principal" [ref=f1e152]:
+    - button "Entrenar" [ref=f1e153] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e154]: ◉
+      - text: Entrenar
+    - button "Planificar" [ref=f1e155] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e156]: ▦
+      - text: Plan
+    - button "Historial" [ref=f1e157] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e158]: ◷
+      - text: Historial
+    - button "Ejercicios" [active] [ref=f1e159] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e160]: ◎
+      - text: Ejercicios
+  - status

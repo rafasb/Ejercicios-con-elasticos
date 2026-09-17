@@ -14,6 +14,7 @@ Bundle de conocimiento del proyecto y memoria de agentes. Leer este fichero al i
 
 * [Arquitectura y modelo de datos](project/arquitectura.md) - entrypoints, estado, backup, días y presets.
 * [Mejoras propuestas](project/mejoras.md) - backlog priorizado del grill 2026-09-14 para planificar próximas sesiones (draft).
+* [Plan mejoras M1-M8](/project/plan-mejoras.md) - plan por hitos M1-M8 derivado del backlog para disclosure progresiva.
 * [Formato de la rutina seed](project/rutina-formato.md) - contrato de `rutina_entrenamiento_bandas.md` con `parseRoutine()`.
 * [PWA y offline](project/pwa-offline.md) - service worker, caché y política de actualización.
 
