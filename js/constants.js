@@ -1,9 +1,12 @@
 export const STORAGE_KEY = "ritmo-data-v1";
 export const ROUTINE_URL = "rutina_entrenamiento_bandas.md";
+export const ROUTINE_JSON_URL = "rutina.json";
 export const MIN_DAYS = 3;
 export const MAX_DAYS = 7;
 export const DEFAULT_DAYS = ["DÍA 1", "DÍA 2", "DÍA 3"];
 export const MUSCLE_TAGS = ["Abdominal", "Biceps", "Cuadriceps", "Espalda", "Gluteo", "Hombro", "Lumbar", "Pectoral", "Triceps"];
+// Display labels in Spanish; keys must stay in MUSCLE_TAGS.
+export const MUSCLE_TAG_LABELS = { Abdominal: "Abdominal", Biceps: "Bíceps", Cuadriceps: "Cuádriceps", Espalda: "Espalda", Gluteo: "Glúteo", Hombro: "Hombro", Lumbar: "Lumbar", Pectoral: "Pectoral", Triceps: "Tríceps" };
 export const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, rest: 120, volume: 0.6 };
 export const DEFAULT_EXERCISE_GUIDE = { tension: 0, pause: 0, distension: 0, rest: 120 };
 export const EXERCISE_DETAIL_FIELDS = ["primaryMuscles", "secondaryMuscles", "stabilizerMuscles", "resistance", "setsAndRepetitions", "technicalNotes"];

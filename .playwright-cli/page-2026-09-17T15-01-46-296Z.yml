@@ -1,0 +1,183 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - paragraph [ref=e4]: ENTRENAMIENTO CON BANDAS
+      - button "Actualizar aplicación" [ref=e5] [cursor=pointer]: ⟳
+    - heading "Ritmo" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Tu ciclo semanal, listo para moverse.
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - button "Día 1" [ref=e10] [cursor=pointer]
+      - button "Día 2" [ref=e11] [cursor=pointer]
+      - button "Día 3" [ref=e12] [cursor=pointer]
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - heading "Día 1" [level=2] [ref=e15]
+        - paragraph [ref=e16]: Registra cada ejercicio antes de finalizar.
+      - generic [ref=e17]: 6 ejercicios
+    - generic [ref=e18]:
+      - article [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - heading "Sentadillas con miniband" [level=3] [ref=e22]
+            - paragraph [ref=e23]: Cuádriceps/Glúteos
+          - generic [ref=e24]: 3 x 12Media
+        - paragraph [ref=e25]: Coloca la miniband justo por arriba de las rodillas. Empuja las rodillas hacia afuera al bajar para activar el glúteo medio.
+        - group [ref=e26]:
+          - generic "Ver técnica y detalles" [ref=e27] [cursor=pointer]
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - text: Repeticiones realizadas
+            - spinbutton "Repeticiones realizadas" [ref=e30]: "12"
+          - generic [ref=e31]:
+            - text: Resistencia / peso
+            - textbox "Resistencia / peso" [ref=e32]: Media
+        - generic [ref=e33]:
+          - status "Series realizadas" [ref=e34]: "0"
+          - button "Iniciar guía para Sentadillas con miniband" [ref=e35] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e36]: ▶
+            - text: Guía
+          - button "Vídeos" [ref=e37] [cursor=pointer]
+          - button "fácil" [ref=e38] [cursor=pointer]
+          - button "aceptable" [ref=e39] [cursor=pointer]
+          - button "imposible" [ref=e40] [cursor=pointer]
+      - article [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - heading "Press de pecho con anclaje en puerta" [level=3] [ref=e44]
+            - paragraph [ref=e45]: Pectorales
+          - generic [ref=e46]: 3 x 12Media
+        - paragraph [ref=e47]: Coloca el anclaje a la altura del pecho. Da la espalda a la puerta, da un paso al frente para tensar la banda y empuja las manijas hacia adelante.
+        - group [ref=e48]:
+          - generic "Ver técnica y detalles" [ref=e49] [cursor=pointer]
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - text: Repeticiones realizadas
+            - spinbutton "Repeticiones realizadas" [ref=e52]: "12"
+          - generic [ref=e53]:
+            - text: Resistencia / peso
+            - textbox "Resistencia / peso" [ref=e54]: Media
+        - generic [ref=e55]:
+          - status "Series realizadas" [ref=e56]: "0"
+          - button "Iniciar guía para Press de pecho con anclaje en puerta" [ref=e57] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e58]: ▶
+            - text: Guía
+          - button "Vídeos" [ref=e59] [cursor=pointer]
+          - button "fácil" [ref=e60] [cursor=pointer]
+          - button "aceptable" [ref=e61] [cursor=pointer]
+          - button "imposible" [ref=e62] [cursor=pointer]
+      - article [ref=e63]:
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - heading "Pasos laterales con miniband" [level=3] [ref=e66]
+            - paragraph [ref=e67]: Glúteos
+          - generic [ref=e68]: 3 x 12Media
+        - paragraph [ref=e69]: Pon la miniband en los tobillos. Da 10 pasos a la derecha y 10 a la izquierda manteniendo una ligera flexión de rodillas.
+        - group [ref=e70]:
+          - generic "Ver técnica y detalles" [ref=e71] [cursor=pointer]
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - text: Repeticiones realizadas
+            - spinbutton "Repeticiones realizadas" [ref=e74]: "12"
+          - generic [ref=e75]:
+            - text: Resistencia / peso
+            - textbox "Resistencia / peso" [ref=e76]: Media
+        - generic [ref=e77]:
+          - status "Series realizadas" [ref=e78]: "0"
+          - button "Iniciar guía para Pasos laterales con miniband" [ref=e79] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e80]: ▶
+            - text: Guía
+          - button "Vídeos" [ref=e81] [cursor=pointer]
+          - button "fácil" [ref=e82] [cursor=pointer]
+          - button "aceptable" [ref=e83] [cursor=pointer]
+          - button "imposible" [ref=e84] [cursor=pointer]
+      - article [ref=e85]:
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - heading "Aperturas de pecho con anclaje en puerta" [level=3] [ref=e88]
+            - paragraph [ref=e89]: Pectorales
+          - generic [ref=e90]: 3 x 12Media
+        - paragraph [ref=e91]: Con el anclaje a la altura del pecho, abre los brazos como si fueras a dar un abrazo y júntalos al frente manteniendo los codos casi estirados.
+        - group [ref=e92]:
+          - generic "Ver técnica y detalles" [ref=e93] [cursor=pointer]
+        - generic [ref=e94]:
+          - generic [ref=e95]:
+            - text: Repeticiones realizadas
+            - spinbutton "Repeticiones realizadas" [ref=e96]: "12"
+          - generic [ref=e97]:
+            - text: Resistencia / peso
+            - textbox "Resistencia / peso" [ref=e98]: Media
+        - generic [ref=e99]:
+          - status "Series realizadas" [ref=e100]: "0"
+          - button "Iniciar guía para Aperturas de pecho con anclaje en puerta" [ref=e101] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e102]: ▶
+            - text: Guía
+          - button "Vídeos" [ref=e103] [cursor=pointer]
+          - button "fácil" [ref=e104] [cursor=pointer]
+          - button "aceptable" [ref=e105] [cursor=pointer]
+          - button "imposible" [ref=e106] [cursor=pointer]
+      - article [ref=e107]:
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - heading "Bicho muerto con banda" [level=3] [ref=e110]
+            - paragraph [ref=e111]: Abdominales
+          - generic [ref=e112]: 3 x 12Media
+        - paragraph [ref=e113]: Ancla la banda abajo en la puerta. Tírate boca arriba, sujeta las manijas con los brazos estirados hacia el techo (generando tensión) y desciende una pierna de forma alterna sin despegar la espalda del suelo.
+        - group [ref=e114]:
+          - generic "Ver técnica y detalles" [ref=e115] [cursor=pointer]
+        - generic [ref=e116]:
+          - generic [ref=e117]:
+            - text: Repeticiones realizadas
+            - spinbutton "Repeticiones realizadas" [ref=e118]: "12"
+          - generic [ref=e119]:
+            - text: Resistencia / peso
+            - textbox "Resistencia / peso" [ref=e120]: Media
+        - generic [ref=e121]:
+          - status "Series realizadas" [ref=e122]: "0"
+          - button "Iniciar guía para Bicho muerto con banda" [ref=e123] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e124]: ▶
+            - text: Guía
+          - button "Vídeos" [ref=e125] [cursor=pointer]
+          - button "fácil" [ref=e126] [cursor=pointer]
+          - button "aceptable" [ref=e127] [cursor=pointer]
+          - button "imposible" [ref=e128] [cursor=pointer]
+      - article [ref=e129]:
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - heading "Zancadas alternas con miniband" [level=3] [ref=e132]
+            - paragraph [ref=e133]: Cuádriceps/Glúteo
+          - generic [ref=e134]: 3 x 12Media
+        - paragraph [ref=e135]: Coloca la miniband justo por arriba de las rodillas y da un paso largo alternando piernas, bajando hasta formar 90° en ambas rodillas.
+        - group [ref=e136]:
+          - generic "Ver técnica y detalles" [ref=e137] [cursor=pointer]
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - text: Repeticiones realizadas
+            - spinbutton "Repeticiones realizadas" [ref=e140]: "12"
+          - generic [ref=e141]:
+            - text: Resistencia / peso
+            - textbox "Resistencia / peso" [ref=e142]: Media
+        - generic [ref=e143]:
+          - status "Series realizadas" [ref=e144]: "0"
+          - button "Iniciar guía para Zancadas alternas con miniband" [ref=e145] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e146]: ▶
+            - text: Guía
+          - button "Vídeos" [ref=e147] [cursor=pointer]
+          - button "fácil" [ref=e148] [cursor=pointer]
+          - button "aceptable" [ref=e149] [cursor=pointer]
+          - button "imposible" [ref=e150] [cursor=pointer]
+    - button "Finalizar Día 1" [ref=e151] [cursor=pointer]
+  - navigation "Navegación principal" [ref=e152]:
+    - button "Entrenar" [ref=e153] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e154]: ◉
+      - text: Entrenar
+    - button "Planificar" [ref=e155] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e156]: ▦
+      - text: Plan
+    - button "Historial" [ref=e157] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e158]: ◷
+      - text: Historial
+    - button "Ejercicios" [ref=e159] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e160]: ◎
+      - text: Ejercicios
+  - status

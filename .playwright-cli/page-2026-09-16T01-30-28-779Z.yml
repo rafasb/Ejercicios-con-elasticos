@@ -1,0 +1,202 @@
+- generic [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - paragraph [ref=f1e4]: ENTRENAMIENTO CON BANDAS
+      - button "Actualizar aplicación" [ref=f1e5] [cursor=pointer]: ⟳
+    - heading "Ritmo" [level=1] [ref=f1e6]
+    - paragraph [ref=f1e7]: Define objetivos claros para cada sesión.
+  - main [ref=f1e8]:
+    - region [ref=f1e404]:
+      - heading "Ciclo semanal" [level=2] [ref=f1e406]
+      - group "Preconfiguraciones del plan" [ref=f1e407]:
+        - button "3 días" [ref=f1e408] [cursor=pointer]
+        - button "6 días" [ref=f1e409] [cursor=pointer]
+    - region "Resumen muscular semanal" [ref=f1e410]:
+      - heading "Resumen muscular semanal" [level=3] [ref=f1e411]
+      - paragraph [ref=f1e412]: "#Cuadriceps: 2 | #Gluteo: 6 | #Pectoral: 2 | #Abdominal: 3 | #Espalda: 2 | #Hombro: 3 | #Biceps: 1 | #Triceps: 1 | #Lumbar: 2"
+    - generic [ref=f1e413]:
+      - button "Día 1" [ref=f1e414] [cursor=pointer]
+      - button "Día 2" [ref=f1e415] [cursor=pointer]
+      - button "Día 3" [ref=f1e416] [cursor=pointer]
+    - generic [ref=f1e418]:
+      - heading "Planificar Día 1" [level=2] [ref=f1e419]
+      - paragraph [ref=f1e420]: Ajusta el objetivo de tu siguiente sesión.
+    - region "Resumen muscular de Día 1" [ref=f1e421]:
+      - heading "Resumen muscular de Día 1" [level=3] [ref=f1e422]
+      - paragraph [ref=f1e423]: "#Cuadriceps: 2 | #Gluteo: 3 | #Pectoral: 2 | #Abdominal: 1"
+    - generic [ref=f1e424]:
+      - generic [ref=f1e425]:
+        - generic [ref=f1e426]:
+          - generic [ref=f1e427]: Ejercicio
+          - button [ref=f1e428] [cursor=pointer]:
+            - text: Sentadillas con miniband
+            - generic "Etiquetas musculares" [ref=f1e429]:
+              - generic [ref=f1e430]: "#Cuadriceps"
+              - generic [ref=f1e431]: "#Gluteo"
+        - generic [ref=f1e432]:
+          - text: Series
+          - spinbutton "Series" [ref=f1e433]: "3"
+        - generic [ref=f1e434]:
+          - text: Repeticiones
+          - textbox "Repeticiones objetivo" [ref=f1e435]: "12"
+        - generic [ref=f1e436]:
+          - text: Peso o fuerza
+          - textbox "Peso o fuerza" [ref=f1e437]: Media
+        - generic [ref=f1e438]:
+          - generic [ref=f1e439]:
+            - text: Tensión (s)
+            - spinbutton "Tensión (s)" [ref=f1e440]: "3"
+          - generic [ref=f1e441]:
+            - text: Pausa (s)
+            - spinbutton "Pausa (s)" [ref=f1e442]: "1"
+          - generic [ref=f1e443]:
+            - text: Distensión (s)
+            - spinbutton "Distensión (s)" [ref=f1e444]: "1"
+        - button "Eliminar ejercicio" [ref=f1e445] [cursor=pointer]: ×
+      - generic [ref=f1e446]:
+        - generic [ref=f1e447]:
+          - generic [ref=f1e448]: Ejercicio
+          - button [ref=f1e449] [cursor=pointer]:
+            - text: Press de pecho con anclaje en puerta
+            - generic "Etiquetas musculares" [ref=f1e450]: "#Pectoral"
+        - generic [ref=f1e452]:
+          - text: Series
+          - spinbutton "Series" [ref=f1e453]: "3"
+        - generic [ref=f1e454]:
+          - text: Repeticiones
+          - textbox "Repeticiones objetivo" [ref=f1e455]: "12"
+        - generic [ref=f1e456]:
+          - text: Peso o fuerza
+          - textbox "Peso o fuerza" [ref=f1e457]: Media
+        - generic [ref=f1e458]:
+          - generic [ref=f1e459]:
+            - text: Tensión (s)
+            - spinbutton "Tensión (s)" [ref=f1e460]: "2"
+          - generic [ref=f1e461]:
+            - text: Pausa (s)
+            - spinbutton "Pausa (s)" [ref=f1e462]: "1"
+          - generic [ref=f1e463]:
+            - text: Distensión (s)
+            - spinbutton "Distensión (s)" [ref=f1e464]: "3"
+        - button "Eliminar ejercicio" [ref=f1e465] [cursor=pointer]: ×
+      - generic [ref=f1e466]:
+        - generic [ref=f1e467]:
+          - generic [ref=f1e468]: Ejercicio
+          - button [ref=f1e469] [cursor=pointer]:
+            - text: Pasos laterales con miniband
+            - generic "Etiquetas musculares" [ref=f1e470]: "#Gluteo"
+        - generic [ref=f1e472]:
+          - text: Series
+          - spinbutton "Series" [ref=f1e473]: "3"
+        - generic [ref=f1e474]:
+          - text: Repeticiones
+          - textbox "Repeticiones objetivo" [ref=f1e475]: "12"
+        - generic [ref=f1e476]:
+          - text: Peso o fuerza
+          - textbox "Peso o fuerza" [ref=f1e477]: Media
+        - generic [ref=f1e478]:
+          - generic [ref=f1e479]:
+            - text: Tensión (s)
+            - spinbutton "Tensión (s)" [ref=f1e480]: "1"
+          - generic [ref=f1e481]:
+            - text: Pausa (s)
+            - spinbutton "Pausa (s)" [ref=f1e482]: "0"
+          - generic [ref=f1e483]:
+            - text: Distensión (s)
+            - spinbutton "Distensión (s)" [ref=f1e484]: "0"
+        - button "Eliminar ejercicio" [ref=f1e485] [cursor=pointer]: ×
+      - generic [ref=f1e486]:
+        - generic [ref=f1e487]:
+          - generic [ref=f1e488]: Ejercicio
+          - button [ref=f1e489] [cursor=pointer]:
+            - text: Aperturas de pecho con anclaje en puerta
+            - generic "Etiquetas musculares" [ref=f1e490]: "#Pectoral"
+        - generic [ref=f1e492]:
+          - text: Series
+          - spinbutton "Series" [ref=f1e493]: "3"
+        - generic [ref=f1e494]:
+          - text: Repeticiones
+          - textbox "Repeticiones objetivo" [ref=f1e495]: "12"
+        - generic [ref=f1e496]:
+          - text: Peso o fuerza
+          - textbox "Peso o fuerza" [ref=f1e497]: Media
+        - generic [ref=f1e498]:
+          - generic [ref=f1e499]:
+            - text: Tensión (s)
+            - spinbutton "Tensión (s)" [ref=f1e500]: "2"
+          - generic [ref=f1e501]:
+            - text: Pausa (s)
+            - spinbutton "Pausa (s)" [ref=f1e502]: "1"
+          - generic [ref=f1e503]:
+            - text: Distensión (s)
+            - spinbutton "Distensión (s)" [ref=f1e504]: "3"
+        - button "Eliminar ejercicio" [ref=f1e505] [cursor=pointer]: ×
+      - generic [ref=f1e506]:
+        - generic [ref=f1e507]:
+          - generic [ref=f1e508]: Ejercicio
+          - button [ref=f1e509] [cursor=pointer]:
+            - text: Bicho muerto con banda
+            - generic "Etiquetas musculares" [ref=f1e510]: "#Abdominal"
+        - generic [ref=f1e512]:
+          - text: Series
+          - spinbutton "Series" [ref=f1e513]: "3"
+        - generic [ref=f1e514]:
+          - text: Repeticiones
+          - textbox "Repeticiones objetivo" [ref=f1e515]: "12"
+        - generic [ref=f1e516]:
+          - text: Peso o fuerza
+          - textbox "Peso o fuerza" [ref=f1e517]: Media
+        - generic [ref=f1e518]:
+          - generic [ref=f1e519]:
+            - text: Tensión (s)
+            - spinbutton "Tensión (s)" [ref=f1e520]: "2"
+          - generic [ref=f1e521]:
+            - text: Pausa (s)
+            - spinbutton "Pausa (s)" [ref=f1e522]: "1"
+          - generic [ref=f1e523]:
+            - text: Distensión (s)
+            - spinbutton "Distensión (s)" [ref=f1e524]: "2"
+        - button "Eliminar ejercicio" [ref=f1e525] [cursor=pointer]: ×
+      - generic [ref=f1e526]:
+        - generic [ref=f1e527]:
+          - generic [ref=f1e528]: Ejercicio
+          - button [ref=f1e529] [cursor=pointer]:
+            - text: Zancadas alternas con miniband
+            - generic "Etiquetas musculares" [ref=f1e530]:
+              - generic [ref=f1e531]: "#Cuadriceps"
+              - generic [ref=f1e532]: "#Gluteo"
+        - generic [ref=f1e533]:
+          - text: Series
+          - spinbutton "Series" [ref=f1e534]: "3"
+        - generic [ref=f1e535]:
+          - text: Repeticiones
+          - textbox "Repeticiones objetivo" [ref=f1e536]: "12"
+        - generic [ref=f1e537]:
+          - text: Peso o fuerza
+          - textbox "Peso o fuerza" [ref=f1e538]: Media
+        - generic [ref=f1e539]:
+          - generic [ref=f1e540]:
+            - text: Tensión (s)
+            - spinbutton "Tensión (s)" [ref=f1e541]: "2"
+          - generic [ref=f1e542]:
+            - text: Pausa (s)
+            - spinbutton "Pausa (s)" [ref=f1e543]: "1"
+          - generic [ref=f1e544]:
+            - text: Distensión (s)
+            - spinbutton "Distensión (s)" [ref=f1e545]: "2"
+        - button "Eliminar ejercicio" [ref=f1e546] [cursor=pointer]: ×
+    - button "+ Añadir ejercicio" [ref=f1e548] [cursor=pointer]
+  - navigation "Navegación principal" [ref=f1e152]:
+    - button "Entrenar" [ref=f1e153] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e154]: ◉
+      - text: Entrenar
+    - button "Planificar" [active] [ref=f1e155] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e156]: ▦
+      - text: Plan
+    - button "Historial" [ref=f1e157] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e158]: ◷
+      - text: Historial
+    - button "Ejercicios" [ref=f1e159] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e160]: ◎
+      - text: Ejercicios
+  - status

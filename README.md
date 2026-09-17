@@ -41,6 +41,18 @@ python3 -m http.server 4173
 
 Abre [http://localhost:4173](http://localhost:4173).
 
+## Toolchain de desarrollo (solo dev, el runtime sigue vanilla sin build)
+
+Requiere Node 22 LTS (`engines: 22.x` en `package.json`).
+
+```bash
+npm run check   # node --check js/*.js (sintaxis)
+npm run lint    # Biome linter (solo dev)
+npm test        # tests Node built-in
+```
+
+`node_modules`, cachés npm y configs solo-dev no se sirven en Docker (`.dockerignore`) ni se cachean en el service worker.
+
 ## Datos
 
-Los datos se almacenan en el `localStorage` del navegador. Cada ejercicio conserva un grupo muscular descriptivo y un array `tags` con sus etiquetas musculares normalizadas, sin `#`: `Abdominal`, `Biceps`, `Cuadriceps`, `Espalda`, `Gluteo`, `Hombro`, `Lumbar`, `Pectoral` o `Triceps`. Desde la pestaña **Ejercicios** puedes elegir entre 3 y 7 días de entrenamiento semanales, filtrar por una o varias etiquetas, descargar un Backup en formato JSON y recuperarlo con Restore. Al reducir el número de días, se eliminan los planes de los últimos días, pero se conserva el historial. El backup contiene la configuración semanal, el plan, el historial y los ajustes de la guía; los ejercicios personalizados no se incluyen.
+Los datos se almacenan en el `localStorage` del navegador. Cada ejercicio conserva un grupo muscular descriptivo y un array `tags` con sus etiquetas musculares normalizadas, sin `#`: `Abdominal`, `Biceps`, `Cuadriceps`, `Espalda`, `Gluteo`, `Hombro`, `Lumbar`, `Pectoral` o `Triceps`. Desde la pestaña **Ejercicios** puedes elegir entre 3 y 7 días de entrenamiento semanales, filtrar por una o varias etiquetas, descargar un Backup en formato JSON y recuperarlo con Restore. Al reducir el número de días, se eliminan los planes de los últimos días, pero se conserva el historial. El backup contiene la configuración semanal, el plan, el historial, los ajustes de la guía y los ejercicios personalizados (backup v3 con customs; restore acepta v2 avisando "sin customs" y v3).

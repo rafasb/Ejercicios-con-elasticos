@@ -24,9 +24,36 @@ function renderTrain() {
   }).join("")}</section><button class="primary-button sticky-action" data-action="finish">Finalizar ${state.activeDay.replace("DÍA ", "Día ")}</button>`;
 }
 
+function originBadges(exercise) {
+  const origin = String(exercise.id || "").startsWith("seed-") ? "APP" : "MIS EJERCICIOS";
+  const candidate = exercise.candidateForCanon ? `<span class="tag-badge">${escapeHtml("CANDIDATA")}</span>` : "";
+  return `<div class="tag-list" aria-label="${escapeHtml("Origen del ejercicio")}"><span class="tag-badge">${escapeHtml(origin)}</span>${candidate}</div>`;
+}
+
+let originFilter = "all";
+
+function matchesOrigin(exercise) {
+  const isSeed = String(exercise.id || "").startsWith("seed-");
+  if (originFilter === "mine") return !isSeed;
+  if (originFilter === "candidates") return !isSeed && Boolean(exercise.candidateForCanon);
+  return true;
+}
+
+function originFilterBar() {
+  const options = [["all", "Todos"], ["mine", "Mis ejercicios"], ["candidates", "Candidatas"]];
+  return `<div class="origin-filter" role="group" aria-label="${escapeHtml("Filtrar por origen")}">${options.map(([value, label]) => `<button class="${originFilter === value ? "active" : ""}" data-origin-filter="${value}" aria-pressed="${originFilter === value}">${escapeHtml(label)}</button>`).join("")}</div>`;
+}
+
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-origin-filter]");
+  if (!button) return;
+  originFilter = button.dataset.originFilter;
+  renderApp();
+});
+
 function renderExercises() {
-  const filteredExercises = state.data.exercises.filter((exercise) => state.selectedTags.every((tag) => exercise.tags?.includes(tag)));
-  return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button><span class="app-version" data-app-version aria-label="Versión de la aplicación">Versión ${appVersion}</span></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${filteredExercises.length} de ${state.data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${tagFilter(state.selectedTags)}${filteredExercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p>${tagBadges(exercise)}</div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button></div></div>${exerciseDetails(exercise)}</article>`).join("") || `<div class="empty-state"><h2>Sin coincidencias</h2><p>Prueba a quitar alguna etiqueta del filtro.</p></div>`}`;
+  const filteredExercises = state.data.exercises.filter((exercise) => state.selectedTags.every((tag) => exercise.tags?.includes(tag))).filter(matchesOrigin);
+  return `<div class="exercise-tools"><button class="outline-button" data-action="backup">Backup</button><button class="outline-button" data-action="restore">Restore</button><button class="outline-button" data-action="guide-settings">Ajustar guía</button><span class="app-version" data-app-version aria-label="Versión de la aplicación">Versión ${appVersion}</span></div><div class="session-heading"><div><h2>Ejercicios</h2><p>${filteredExercises.length} de ${state.data.exercises.length} disponibles en tu catálogo.</p></div><button class="primary-button" data-action="new-exercise">Añadir</button></div>${tagFilter(state.selectedTags)}${originFilterBar()}${filteredExercises.map((exercise) => `<article class="catalogue-card"><div class="catalogue-heading"><div><h3>${escapeHtml(exercise.name)}</h3><p>${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.summary)}</p>${originBadges(exercise)}${tagBadges(exercise)}</div><div class="heading-actions"><button class="outline-button" data-action="show-videos" data-exercise-id="${exercise.id}">Vídeos</button><button class="outline-button" data-action="edit-exercise" data-exercise-id="${exercise.id}">Editar</button>${String(exercise.id || "").startsWith("user-") ? `<button class="outline-button" data-action="toggle-candidate" data-exercise-id="${exercise.id}">${escapeHtml(exercise.candidateForCanon ? "Quitar marca" : "Marcar candidata")}</button>` : ""}</div></div>${exerciseDetails(exercise)}</article>`).join("") || `<div class="empty-state"><h2>Sin coincidencias</h2><p>Prueba a quitar alguna etiqueta del filtro.</p></div>`}`;
 }
 
 function renderPlan() {

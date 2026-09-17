@@ -123,23 +123,55 @@ export function exerciseDetails(exercise) {
 }
 
 export function parseRoutine(markdown) {
+  if (!String(markdown || "").trim()) throw new Error("La rutina está vacía: añade días con ## DÍA N y ejercicios con ### N. Nombre.");
+  if (!/^##\s+DÍA \d+/m.test(String(markdown))) throw new Error("No se encontró ningún día: añade al menos un encabezado ## DÍA N (p. ej. ## DÍA 1).");
   const exercises = [];
   let day = "";
-  const sections = markdown.split(/(?=^## |^### )/m);
+  const sections = String(markdown).split(/(?=^## |^### )/m);
   sections.forEach((section) => {
     const dayMatch = section.match(/^##\s+(DÍA \d+)/m);
     if (dayMatch) { day = dayMatch[1]; return; }
+    if (!/^###\s+/m.test(section)) return;
     const heading = section.match(/^###\s+\d+\.\s+(.+?)\s*(?:\(([^)]+)\))?\s*$/m);
-    if (!heading || !day) return;
+    if (!heading) throw new Error("Ejercicio con encabezado inválido: usa ### N. Nombre (Músculo) (p. ej. ### 1. Sentadilla (Cuadriceps)).");
+    const name = heading[1].trim();
+    if (!name) throw new Error("Ejercicio sin nombre: usa ### N. Nombre (Músculo) (p. ej. ### 1. Sentadilla (Cuadriceps)).");
+    if (!day) throw new Error(`El ejercicio "${name}" no está bajo ningún día: añade ## DÍA N encima.`);
+    if (!/#### Hashtags/m.test(section)) throw new Error(`Al ejercicio "${name}" le falta #### Hashtags: añade una línea como - #Cuadriceps.`);
+    const hashtagSection = (section.match(/#### Hashtags\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1];
+    const unknown = (hashtagSection.match(/#\s*[\p{L}]+/gu) || []).filter((tag) => !normaliseTag(tag));
+    if (unknown.length) throw new Error(`Etiquetas no válidas en "${name}": ${unknown.join(", ")}. Usa solo: ${MUSCLE_TAGS.join(", ")}.`);
+    const tags = normaliseTags(hashtagSection);
+    if (!tags.length) throw new Error(`El ejercicio "${name}" no tiene etiquetas válidas: añade al menos una de ${MUSCLE_TAGS.join(", ")}.`);
     const summary = (section.match(/^\*([^*]+)\*/m) || ["", ""])[1].trim();
     const execution = (section.match(/#### Ejecución paso a paso\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
     const technical = (section.match(/#### Detalles técnicos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
-    const hashtagSection = (section.match(/#### Hashtags\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1];
-    const errors = (section.match(/#### Errores comunes a evitar\n([\s\S]*?)$/) || ["", ""])[1].trim();
+    const errors = (section.match(/#### Errores comunes a evitar\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
     const videos = [...((section.match(/#### Vídeos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].matchAll(/https?:\/\/[^\s)>]+/g))].map(([url]) => url);
-    exercises.push({ id: `seed-${exercises.length + 1}`, name: heading[1].trim(), muscle: heading[2] || "General", summary, instructions: execution, tags: normaliseTags(hashtagSection), errors, videos, day, ...exerciseFromTechnical(technical) });
+    exercises.push({ id: `seed-${exercises.length + 1}`, name, muscle: heading[2] || "General", summary, instructions: execution, tags, errors, videos, day, ...exerciseFromTechnical(technical) });
   });
+  if (!exercises.length) throw new Error("No se encontró ningún ejercicio: añade líneas ### N. Nombre (Músculo) bajo cada ## DÍA N.");
   return exercises;
+}
+
+export function validateRoutineData(data) {
+  if (!Array.isArray(data)) throw new Error("La rutina no es válida: se esperaba una lista de ejercicios.");
+  if (data.length !== 18) throw new Error(`La rutina debe tener 18 ejercicios (DÍA 1-3): hay ${data.length}. Revisa ## DÍA 1, ## DÍA 2 y ## DÍA 3.`);
+  const allowed = ["DÍA 1", "DÍA 2", "DÍA 3"];
+  const seen = new Set();
+  data.forEach((exercise, index) => {
+    const where = `Ejercicio ${index + 1}`;
+    if (!exercise || typeof exercise !== "object") throw new Error(`${where} no es válido: revisa ### N. Nombre (Músculo).`);
+    if (!String(exercise.name || "").trim()) throw new Error(`${where} no tiene nombre: usa ### N. Nombre (Músculo).`);
+    if (!allowed.includes(exercise.day)) throw new Error(`El ejercicio "${exercise.name || where}" tiene día no válido: usa DÍA 1, DÍA 2 o DÍA 3.`);
+    seen.add(exercise.day);
+    if (!Array.isArray(exercise.tags) || !exercise.tags.length) throw new Error(`El ejercicio "${exercise.name}" no tiene etiquetas válidas: añade al menos una de ${MUSCLE_TAGS.join(", ")}.`);
+    const bad = exercise.tags.filter((tag) => !MUSCLE_TAGS.includes(tag));
+    if (bad.length) throw new Error(`Etiquetas no válidas en "${exercise.name}": ${bad.join(", ")}. Usa solo: ${MUSCLE_TAGS.join(", ")}.`);
+  });
+  const missing = allowed.filter((day) => !seen.has(day));
+  if (missing.length) throw new Error(`Faltan días en la rutina: ${missing.join(", ")}. Añade ## ${missing.join(", ## ")}.`);
+  return data;
 }
 
 export function normaliseExercise(exercise) {

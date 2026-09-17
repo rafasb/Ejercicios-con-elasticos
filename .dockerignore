@@ -1,0 +1,17 @@
+# Mitigacion R2 — evita fuga a produccion nginx (Dockerfile COPY .) — ver /project/mejoras.md:88-90 y /project/pwa-offline.md
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.git
+.github
+knowledge/
+coverage
+.nyc_output
+.env
+.env.*
+.DS_Store
+.vscode
+.idea
+*.log

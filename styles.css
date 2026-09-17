@@ -37,6 +37,9 @@ main { max-width: 680px; margin: auto; padding: 20px 16px; }
 .tag-filter .text-button:disabled { color: var(--muted); cursor: default; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
 .tag-badge { padding: 3px 6px; background: rgba(241,202,102,.45); color: var(--ink); font-family: "Courier New", monospace; font-size: .72rem; font-weight: bold; }
+.badge-origen, .badge-candidata { display: inline-block; padding: 3px 6px; font-family: "Courier New", monospace; font-size: .72rem; font-weight: bold; line-height: 1.4; }
+.badge-origen { background: rgba(184,203,177,.5); color: var(--ink); }
+.badge-candidata { background: var(--ink); color: var(--paper); }
 .tag-summary { margin: 0 0 18px; padding: 12px; border-left: 5px solid var(--yellow); background: rgba(241,202,102,.16); }
 .tag-summary h3 { margin: 0; font-size: .88rem; }
 .tag-summary p { margin: 6px 0 0; color: var(--muted); font-family: "Courier New", monospace; font-size: .78rem; line-height: 1.6; }
@@ -100,6 +103,7 @@ textarea { resize: vertical; }
 .history-meta { color: var(--muted); font-size: .82rem; margin: 5px 0 9px; }
 .result-line { display: flex; justify-content: space-between; gap: 8px; font-size: .88rem; padding: 4px 0; }
 .badge { text-transform: capitalize; font-size: .72rem; font-family: "Courier New", monospace; padding: 2px 5px; background: var(--yellow); }
+.dialog-notice { margin: 0; padding: 8px 10px; background: rgba(241,202,102,.45); color: var(--ink); font-family: "Courier New", monospace; font-size: .78rem; font-weight: bold; line-height: 1.5; overflow-wrap: anywhere; }
 .history-toggle { display: inline-grid; grid-template-columns: repeat(2, 1fr); margin: 0 0 18px; border: 1px solid var(--ink); }
 .history-toggle button { min-width: 92px; min-height: 38px; border: 0; background: transparent; color: var(--muted); font-size: .82rem; font-weight: bold; }
 .history-toggle button + button { border-left: 1px solid var(--ink); }

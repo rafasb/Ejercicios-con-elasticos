@@ -1,6 +1,6 @@
 import { DEFAULT_GUIDE_SETTINGS, EXERCISE_DETAIL_FIELDS, GUIDE_FIELDS, MUSCLE_TAGS, ROUTINE_URL } from "./constants.js";
 import { completedSets, escapeHtml, guideForExercise, listForForm, listForStorage, normaliseTags, repetitionsToCycles, seconds, tagsForForm, videosForStorage } from "./utils.js";
-import { state, save, configuredDays, createDays, downloadBackup, getExercise, getCurrentPlan, initialise, restoreBackup, setDayCount, sortedHistory, applyPreset } from "./state.js";
+import { state, save, configuredDays, createDays, downloadBackup, getExercise, getCurrentPlan, initialise, restoreBackup, setDayCount, sortedHistory, applyPreset, cloneSeedToUser, toggleCandidateForCanon } from "./state.js";
 import { renderApp, setAppVersion } from "./render.js";
 
 const app = document.querySelector("#app");
@@ -209,9 +209,22 @@ function handleGeneralAction(event) {
     case "new-exercise":
       openExerciseForm();
       break;
-    case "edit-exercise":
-      openExerciseForm(getExercise(exerciseId));
+    case "edit-exercise": {
+      const exercise = getExercise(exerciseId);
+      if (exercise?.id.startsWith("seed-")) {
+        const clone = cloneSeedToUser(exercise.id);
+        toast("El ejercicio original no es editable: se ha creado una copia personalizable.");
+        openExerciseForm(clone);
+      } else openExerciseForm(exercise);
       break;
+    }
+    case "toggle-candidate": {
+      if (!String(exerciseId).startsWith("user-")) break;
+      const isCandidate = toggleCandidateForCanon(exerciseId);
+      toast(isCandidate ? "Marcada como candidata a la rutina." : "Se ha quitado la marca de candidata.");
+      renderApp();
+      break;
+    }
     case "close-dialog":
       dialog.close();
       break;
@@ -259,11 +272,12 @@ function handleGeneralAction(event) {
     case "guide-settings":
       openGuideSettings();
       break;
-    case "apply-preset":
-      if (applyPreset(Number(action.dataset.presetDays))) toast(`Preconfiguración de ${action.dataset.presetDays} días aplicada.`);
-      else toast("No se pudo aplicar la preconfiguración.");
+    case "apply-preset": {
+      const result = applyPreset(Number(action.dataset.presetDays));
+      toast(result.message);
       renderApp();
       break;
+    }
     case "close-guide-settings":
       guideSettingsDialog.close();
       break;
@@ -354,8 +368,7 @@ restoreInput.addEventListener("change", async () => {
   const [file] = restoreInput.files;
   if (file) {
     const result = await restoreBackup(file);
-    if (result.ok) toast(result.message);
-    else toast(result.message);
+    toast(result.message);
     renderApp();
   }
 });
@@ -375,9 +388,14 @@ document.addEventListener("change", (event) => {
   if (event.target.dataset.tagFilter !== undefined) { state.selectedTags = normaliseTags([...event.target.selectedOptions].map((option) => option.value)); renderApp(); return; }
   const row = event.target.closest("[data-plan-index]"); if (row && event.target.dataset.plan) { state.data.plans[state.activeDay][Number(row.dataset.planIndex)][event.target.dataset.plan] = event.target.value; save(); }
   if (event.target.dataset.setting === "day-count") {
-    const previousCount = configuredDays().length;
+    const previousDays = [...configuredDays()];
     setDayCount(event.target.value);
-    if (configuredDays().length !== previousCount) toast(`Ciclo semanal ajustado a ${configuredDays().length} días.`);
+    const currentDays = configuredDays();
+    if (currentDays.length === previousDays.length) { renderApp(); return; }
+    if (currentDays.length < previousDays.length) {
+      const removed = previousDays.filter((day) => !currentDays.includes(day));
+      toast(`Se borran los planes de ${removed.join(", ")}; se conserva el historial.`);
+    } else toast(`Ciclo semanal ajustado a ${currentDays.length} días.`);
     renderApp();
   }
 });
@@ -394,8 +412,22 @@ guideSettingsForm.addEventListener("submit", (event) => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const fields = new FormData(form);
-  const exercise = { id: state.editingExerciseId || crypto.randomUUID(), name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), tags: normaliseTags(fields.getAll("tags")), errors: listForStorage(fields.get("errors")), videos: videosForStorage(fields.get("videos")), day: state.editingExerciseId ? getExercise(state.editingExerciseId).day : "", guide: Object.fromEntries(GUIDE_FIELDS.map((field) => [field, seconds(fields.get(`guide-${field}`))])) };
+  const exercise = { id: state.editingExerciseId || `user-${crypto.randomUUID()}`, name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), tags: normaliseTags(fields.getAll("tags")), errors: listForStorage(fields.get("errors")), videos: videosForStorage(fields.get("videos")), day: state.editingExerciseId ? getExercise(state.editingExerciseId).day : "", guide: Object.fromEntries(GUIDE_FIELDS.map((field) => [field, seconds(fields.get(`guide-${field}`))])) };
   EXERCISE_DETAIL_FIELDS.forEach((field) => { exercise[field] = fields.get(field).trim(); });
+  const editing = state.editingExerciseId ? getExercise(state.editingExerciseId) : null;
+  if (editing?.id.startsWith("seed-")) {
+    exercise.id = `user-${crypto.randomUUID()}`;
+    exercise.parentSeedId = editing.id;
+    exercise.candidateForCanon = false;
+    exercise.day = editing.day;
+    state.data.exercises.push(exercise);
+    save();
+    form.reset();
+    dialog.close();
+    toast("Copia personalizable creada a partir del original.");
+    renderApp();
+    return;
+  }
   const index = state.data.exercises.findIndex((item) => item.id === state.editingExerciseId);
   if (index === -1) state.data.exercises.push(exercise); else state.data.exercises[index] = exercise;
   save();
@@ -430,8 +462,9 @@ document.querySelector("#update-app-btn")?.addEventListener("click", async () =>
     await swRegistration.update();
     await initialise({ forceRoutineSync: true });
     renderApp();
-    toast("Rutina actualizada.");
+    if (state.routineError) toast(state.routineError);
+    else toast("Rutina actualizada.");
   } catch { toast("No se pudo actualizar la rutina."); }
 });
 
-initialise().then(() => renderApp()).catch(() => { app.innerHTML = `<div class="empty-state"><h2>No se pudo cargar la rutina</h2><p>Abre la aplicación desde el servidor de Docker para inicializarla.</p></div>`; });
+initialise().then(() => { renderApp(); if (state.routineError) toast(state.routineError); }).catch(() => { app.innerHTML = `<div class="empty-state"><h2>No se pudo cargar la rutina</h2><p>Abre la aplicación desde el servidor de Docker para inicializarla.</p></div>`; });
