@@ -145,12 +145,12 @@ function openExerciseForm(exercise) {
   form.elements.muscle.value = exercise?.muscle || "";
   form.elements.summary.value = exercise?.summary || "";
   form.elements.instructions.value = listForForm(exercise?.instructions);
-  EXERCISE_DETAIL_FIELDS.forEach((field) => { form.elements[field].value = details[field] || ""; });
-  GUIDE_FIELDS.filter((field) => field !== "rest").forEach((field) => { form.elements[`guide-${field}`].value = details.guide?.[field] || ""; });
+  for (const field of EXERCISE_DETAIL_FIELDS) { form.elements[field].value = details[field] || ""; }
+  for (const field of GUIDE_FIELDS.filter((name) => name !== "rest")) { form.elements[`guide-${field}`].value = details.guide?.[field] || ""; }
   form.elements.errors.value = listForForm(exercise?.errors);
   form.elements.videos.value = (exercise?.videos || []).join("\n");
   form.elements.tags.innerHTML = tagsForForm();
-  [...form.elements.tags.options].forEach((option) => { option.selected = details.tags?.includes(option.value); });
+  for (const option of [...form.elements.tags.options]) { option.selected = details.tags?.includes(option.value); }
   document.querySelector("#exercise-dialog-title").textContent = exercise ? "Editar ejercicio" : "Nuevo ejercicio";
   document.querySelector("#exercise-submit").textContent = exercise ? "Guardar cambios" : "Añadir ejercicio";
   dialog.showModal();
@@ -413,7 +413,7 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   const fields = new FormData(form);
   const exercise = { id: state.editingExerciseId || `user-${crypto.randomUUID()}`, name: fields.get("name").trim(), muscle: fields.get("muscle").trim(), summary: fields.get("summary").trim(), instructions: listForStorage(fields.get("instructions")), tags: normaliseTags(fields.getAll("tags")), errors: listForStorage(fields.get("errors")), videos: videosForStorage(fields.get("videos")), day: state.editingExerciseId ? getExercise(state.editingExerciseId).day : "", guide: Object.fromEntries(GUIDE_FIELDS.map((field) => [field, seconds(fields.get(`guide-${field}`))])) };
-  EXERCISE_DETAIL_FIELDS.forEach((field) => { exercise[field] = fields.get(field).trim(); });
+  for (const field of EXERCISE_DETAIL_FIELDS) { exercise[field] = fields.get(field).trim(); }
   const editing = state.editingExerciseId ? getExercise(state.editingExerciseId) : null;
   if (editing?.id.startsWith("seed-")) {
     exercise.id = `user-${crypto.randomUUID()}`;

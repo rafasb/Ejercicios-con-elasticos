@@ -6,7 +6,7 @@ let appVersion = "…";
 
 function setAppVersion(version) {
   appVersion = version;
-  document.querySelectorAll("[data-app-version]").forEach((node) => { node.textContent = `Versión ${version}`; });
+  for (const node of document.querySelectorAll("[data-app-version]")) { node.textContent = `Versión ${version}`; }
 }
 
 function daySwitcher() {
@@ -75,7 +75,7 @@ function renderHistory() {
 export function renderApp() {
   const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
   document.querySelector("#app").innerHTML = views[state.activeView]();
-  document.querySelectorAll(".nav-button").forEach((button) => button.classList.toggle("active", button.dataset.view === state.activeView));
+  for (const button of document.querySelectorAll(".nav-button")) { button.classList.toggle("active", button.dataset.view === state.activeView); }
   const headerCopy = document.querySelector("#header-copy");
   if (headerCopy) headerCopy.textContent = VIEW_COPY[state.activeView];
 }

@@ -14,5 +14,5 @@ if (days.join(",") !== "DÍA 1,DÍA 2,DÍA 3") throw new Error(`Faltan días (${
 const bad = exercises.filter((e) => !e.tags?.length || e.tags.some((t) => !MUSCLE_TAGS.includes(t)));
 if (bad.length) throw new Error(`Etiquetas no válidas en: ${bad.map((e) => e.name).join(", ")}.`);
 
-writeFileSync(join(root, "rutina.json"), JSON.stringify(exercises, null, 2) + "\n");
+writeFileSync(join(root, "rutina.json"), `${JSON.stringify(exercises, null, 2)}\n`);
 console.log(`rutina.json generado con ${exercises.length} ejercicios.`);

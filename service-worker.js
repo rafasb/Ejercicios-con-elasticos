@@ -1,6 +1,6 @@
-const CACHE = "ritmo-v34";
+const CACHE = "ritmo-v35";
 const VERSION = CACHE.match(/v(.+)$/)?.[1] || "desconocida";
-const ASSETS = ["./", "./index.html", "./styles.css", "./js/app.js", "./js/constants.js", "./js/utils.js", "./js/state.js", "./js/render.js", "./rutina_entrenamiento_bandas.md", "./rutina.json", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
+const ASSETS = ["./", "./index.html", "./offline.html", "./styles.css", "./js/app.js", "./js/constants.js", "./js/utils.js", "./js/state.js", "./js/render.js", "./rutina_entrenamiento_bandas.md", "./rutina.json", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS.map((asset) => new Request(asset, { cache: "reload" })))).then(() => self.skipWaiting())));
 self.addEventListener("activate", (event) => event.waitUntil(
 	caches.keys()
@@ -26,5 +26,8 @@ self.addEventListener("fetch", (event) => {
 		);
 		return;
 	}
-	event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request)));
+	event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).catch((error) => {
+		if (event.request.mode === "navigate") return caches.match("./offline.html");
+		throw error;
+	})));
 });

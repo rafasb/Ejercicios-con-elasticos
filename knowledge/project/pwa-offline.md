@@ -16,8 +16,9 @@ sources:
 
 # PWA y offline
 
-- `CACHE ritmo-v34` en `service-worker.js:1` (bump en cada release); añadir a `ASSETS` cualquier fichero cacheable nuevo [^sw].
-- `ASSETS` en `service-worker.js:3`: 5 js (`app/constants/utils/state/render`) + `rutina.json` + resto (`index.html`, `styles.css`, md, manifest, icon.svg, icon-192.png, icon-512.png) [^sw].
+- `CACHE ritmo-v35` en `service-worker.js:1` (bump en cada release); añadir a `ASSETS` cualquier fichero cacheable nuevo [^sw].
+- `ASSETS` en `service-worker.js:3`: 5 js (`app/constants/utils/state/render`) + `rutina.json` + resto (`index.html`, `styles.css`, `offline.html`, md, manifest, icon.svg, icon-192.png, icon-512.png) [^sw].
+- `rutina_entrenamiento_bandas.md` network-first y `rutina.json` network-first (luego cacheados) en `service-worker.js:17-26`; resto cache-first en `service-worker.js:29` con fallback solo-navegación a `offline.html` [^sw].
 - `rutina_entrenamiento_bandas.md` network-first y `rutina.json` network-first (luego cacheados) en `service-worker.js:17-26`; resto cache-first en `service-worker.js:29` [^sw].
 - Botón Actualizar fuerza `initialise({ forceRoutineSync: true })` en `js/state.js:169,204` [^state].
 - `knowledge/` NO va a `ASSETS` (docs de agentes, no de la app).

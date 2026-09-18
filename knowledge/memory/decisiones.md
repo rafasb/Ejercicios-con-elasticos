@@ -14,6 +14,7 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 ## Vigentes
 
 - Arnés: flujo proporcional desde 2026-09-17. `explorador`, `planificador`, `revisor` y `verificador` se usan por incertidumbre/riesgo, no como cadena fija; cada edición ejecuta primero el check más barato que pueda refutarla. Ver [AGENTS.md](../../AGENTS.md).
+- Lint Biome (decisión 2026-09-18, punto 2): config sobre reescritura — relajadas `noMisleadingCharacterClass` (regex `normaliseTag` en `js/utils.js:83`, contrato `MUSCLE_TAGS`), `noAssignInExpressions` (patrón `||=` en `js/app.js`/`js/state.js`) y `noDelete` (contrato backup v3, `delete` en `js/state.js:149-150`); resto (`noForEach`→`for...of`, `useTemplate`, `useOptionalChain`) se corrige mecánico sin cambio semántico. `parseRoutine()` solo admite cambio de forma de iteración (`return`→`continue`), nunca de lógica.
 - El bundle OKF vive en `knowledge/` (raíz del repo). Ver [arquitectura](/project/arquitectura.md).
 - `knowledge/` es solo para agentes/humanos: nunca añadirlo a `ASSETS` del service worker. Ver [PWA y offline](/project/pwa-offline.md).
 - Seeds `seed-*` inmutables por `id` — sync por `id` en `js/state.js:211`; edición = clon `user-*` con `parentSeedId` y `candidateForCanon`. Ver [mejoras](/project/mejoras.md).

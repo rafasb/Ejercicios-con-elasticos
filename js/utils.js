@@ -45,7 +45,7 @@ export function parseCadence(value = "") {
 export function exerciseFromTechnical(markdown) {
   const exercise = { primaryMuscles: "", secondaryMuscles: "", stabilizerMuscles: "", resistance: "", setsAndRepetitions: "", technicalNotes: "", guide: { ...DEFAULT_EXERCISE_GUIDE } };
   const notes = [];
-  parseTechnicalRows(markdown).forEach(([term, description]) => {
+  for (const [term, description] of parseTechnicalRows(markdown)) {
     const key = term.toLowerCase();
     if (key === "músculos principales") exercise.primaryMuscles = description;
     else if (key === "músculos secundarios") exercise.secondaryMuscles = description;
@@ -54,7 +54,7 @@ export function exerciseFromTechnical(markdown) {
     else if (key === "series y repeticiones") exercise.setsAndRepetitions = description;
     else if (key === "tiempo/cadencia") exercise.guide = parseCadence(description);
     else notes.push(`${term}: ${description}`);
-  });
+  }
   exercise.technicalNotes = notes.join("\n");
   return exercise;
 }
@@ -128,10 +128,10 @@ export function parseRoutine(markdown) {
   const exercises = [];
   let day = "";
   const sections = String(markdown).split(/(?=^## |^### )/m);
-  sections.forEach((section) => {
+  for (const section of sections) {
     const dayMatch = section.match(/^##\s+(DÍA \d+)/m);
-    if (dayMatch) { day = dayMatch[1]; return; }
-    if (!/^###\s+/m.test(section)) return;
+    if (dayMatch) { day = dayMatch[1]; continue; }
+    if (!/^###\s+/m.test(section)) continue;
     const heading = section.match(/^###\s+\d+\.\s+(.+?)\s*(?:\(([^)]+)\))?\s*$/m);
     if (!heading) throw new Error("Ejercicio con encabezado inválido: usa ### N. Nombre (Músculo) (p. ej. ### 1. Sentadilla (Cuadriceps)).");
     const name = heading[1].trim();
@@ -149,7 +149,7 @@ export function parseRoutine(markdown) {
     const errors = (section.match(/#### Errores comunes a evitar\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].trim();
     const videos = [...((section.match(/#### Vídeos\n([\s\S]*?)(?=\n####|$)/) || ["", ""])[1].matchAll(/https?:\/\/[^\s)>]+/g))].map(([url]) => url);
     exercises.push({ id: `seed-${exercises.length + 1}`, name, muscle: heading[2] || "General", summary, instructions: execution, tags, errors, videos, day, ...exerciseFromTechnical(technical) });
-  });
+  }
   if (!exercises.length) throw new Error("No se encontró ningún ejercicio: añade líneas ### N. Nombre (Músculo) bajo cada ## DÍA N.");
   return exercises;
 }
@@ -159,7 +159,7 @@ export function validateRoutineData(data) {
   if (data.length !== 18) throw new Error(`La rutina debe tener 18 ejercicios (DÍA 1-3): hay ${data.length}. Revisa ## DÍA 1, ## DÍA 2 y ## DÍA 3.`);
   const allowed = ["DÍA 1", "DÍA 2", "DÍA 3"];
   const seen = new Set();
-  data.forEach((exercise, index) => {
+  for (const [index, exercise] of data.entries()) {
     const where = `Ejercicio ${index + 1}`;
     if (!exercise || typeof exercise !== "object") throw new Error(`${where} no es válido: revisa ### N. Nombre (Músculo).`);
     if (!String(exercise.name || "").trim()) throw new Error(`${where} no tiene nombre: usa ### N. Nombre (Músculo).`);
@@ -168,7 +168,7 @@ export function validateRoutineData(data) {
     if (!Array.isArray(exercise.tags) || !exercise.tags.length) throw new Error(`El ejercicio "${exercise.name}" no tiene etiquetas válidas: añade al menos una de ${MUSCLE_TAGS.join(", ")}.`);
     const bad = exercise.tags.filter((tag) => !MUSCLE_TAGS.includes(tag));
     if (bad.length) throw new Error(`Etiquetas no válidas en "${exercise.name}": ${bad.join(", ")}. Usa solo: ${MUSCLE_TAGS.join(", ")}.`);
-  });
+  }
   const missing = allowed.filter((day) => !seen.has(day));
   if (missing.length) throw new Error(`Faltan días en la rutina: ${missing.join(", ")}. Añade ## ${missing.join(", ## ")}.`);
   return data;
@@ -177,7 +177,7 @@ export function validateRoutineData(data) {
 export function normaliseExercise(exercise) {
   const legacy = exerciseFromTechnical(exercise.technical || "");
   const detailFields = ["primaryMuscles", "secondaryMuscles", "stabilizerMuscles", "resistance", "setsAndRepetitions", "technicalNotes"];
-  detailFields.forEach((field) => { exercise[field] = typeof exercise[field] === "string" ? exercise[field] : legacy[field]; });
+  for (const field of detailFields) { exercise[field] = typeof exercise[field] === "string" ? exercise[field] : legacy[field]; }
   exercise.guide = exercise.guide ? { ...legacy.guide, ...guideForExercise(exercise) } : legacy.guide;
   exercise.tags = normaliseTags(exercise.tags ?? exercise.hashtags);
   return exercise;
@@ -195,10 +195,10 @@ export function renderHistoryCalendar(sessions, historyMonth, selectedHistoryDat
   const year = historyMonth.getFullYear();
   const month = historyMonth.getMonth();
   const sessionsByDate = new Map();
-  sessions.forEach((session, index) => {
+  for (const [index, session] of sessions.entries()) {
     const key = historyDateKey(session);
     if (key) sessionsByDate.set(key, [...(sessionsByDate.get(key) || []), { session, index }]);
-  });
+  }
   const leadingDays = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const monthLabel = new Intl.DateTimeFormat("es-ES", { month: "long", year: "numeric" }).format(historyMonth);
@@ -217,6 +217,8 @@ export function renderHistoryCalendar(sessions, historyMonth, selectedHistoryDat
 
 export function tagSummary(items, label, getExercise) {
   const counts = new Map();
-  items.forEach((item) => getExercise(item.exerciseId)?.tags?.forEach((tag) => counts.set(tag, (counts.get(tag) || 0) + 1)));
+  for (const item of items) {
+    for (const tag of (getExercise(item.exerciseId)?.tags ?? [])) counts.set(tag, (counts.get(tag) || 0) + 1);
+  }
   return counts.size ? `<section class="tag-summary" aria-label="${label}"><h3>${label}</h3><p>${[...counts].map(([tag, count]) => `<span>#${tag}: ${count}</span>`).join(" | ")}</p></section>` : "";
 }

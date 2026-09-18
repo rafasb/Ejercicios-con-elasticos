@@ -60,8 +60,8 @@ export function getCurrentPlan() {
 
 export function setDayCount(count) {
   const days = createDays(count);
-  configuredDays().filter((day) => !days.includes(day)).forEach((day) => delete state.data.plans[day]);
-  days.forEach((day) => { state.data.plans[day] ||= []; });
+  for (const day of configuredDays().filter((day) => !days.includes(day))) delete state.data.plans[day];
+  for (const day of days) { state.data.plans[day] ||= []; }
   state.data.days = days;
   if (!days.includes(state.activeDay)) state.activeDay = days[0];
   state.workout = {};
@@ -198,9 +198,9 @@ export async function initialise({ forceRoutineSync = false } = {}) {
   if (needsSeed) {
     const { exercises, fallback } = await loadRoutineExercises();
     state.data.exercises = exercises;
-    configuredDays().forEach((day) => {
+    for (const day of configuredDays()) {
       state.data.plans[day] = state.data.exercises.filter((exercise) => exercise.day === day).map((exercise) => ({ exerciseId: exercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(exercise) }));
-    });
+    }
     if (fallback) state.routineError = "Rutina JSON no disponible: se cargó la versión clásica. Revisa tu conexión y pulsa Actualizar.";
     save();
   }
@@ -211,19 +211,19 @@ export async function initialise({ forceRoutineSync = false } = {}) {
     const seedExercises = state.data.exercises.filter((exercise) => exercise.id.startsWith("seed-"));
     const highestSeedId = seedExercises.reduce((highest, exercise) => Math.max(highest, Number(exercise.id.slice(5)) || 0), 0);
     let nextSeedId = highestSeedId + 1;
-    sourceExercises.forEach((source) => {
+    for (const source of sourceExercises) {
       const exercise = state.data.exercises.find((item) => item.id === source.id);
-      if (exercise && exercise.id.startsWith("seed-")) {
+      if (exercise?.id.startsWith("seed-")) {
         const index = state.data.exercises.indexOf(exercise);
         state.data.exercises[index] = { ...source, id: exercise.id };
         updatedExercises = true;
-        return;
+        continue;
       }
       const newExercise = { ...source, id: `seed-${nextSeedId++}` };
       state.data.exercises.push(newExercise);
       if (state.data.plans[source.day]) state.data.plans[source.day].push({ exerciseId: newExercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(newExercise) });
       updatedExercises = true;
-    });
+    }
     if (updatedExercises) save();
     state.routineError = fallback ? "Rutina JSON no disponible: se usó la versión clásica. Revisa tu conexión y pulsa Actualizar." : null;
   } catch (error) {
@@ -232,11 +232,11 @@ export async function initialise({ forceRoutineSync = false } = {}) {
   }
 
   state.data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...state.data.guide };
-  state.data.exercises.forEach((exercise) => normaliseExercise(exercise));
+  for (const exercise of state.data.exercises) { normaliseExercise(exercise); }
   state.data.days = createDays(Array.isArray(state.data.days) ? state.data.days.length : MIN_DAYS);
   state.data.plans ||= {};
-  configuredDays().forEach((day) => { state.data.plans[day] ||= []; });
-  Object.values(state.data.plans).flat().forEach((item) => { item.guide = { ...guideForExercise(getExercise(item.exerciseId)), ...(item.guide || {}) }; });
+  for (const day of configuredDays()) { state.data.plans[day] ||= []; }
+  for (const item of Object.values(state.data.plans).flat()) { item.guide = { ...guideForExercise(getExercise(item.exerciseId)), ...(item.guide || {}) }; }
   if (!configuredDays().includes(state.activeDay)) state.activeDay = configuredDays()[0];
   save();
 }
