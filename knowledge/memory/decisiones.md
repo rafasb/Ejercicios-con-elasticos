@@ -21,6 +21,7 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 - Backup v3 con customs (`exercises` filtrados `!seed-*`) y restore compatible v2/v3 (v2 avisa sin customs). Ver [arquitectura](/project/arquitectura.md).
 - Lote 1+2 UI (2026-09-18): paleta evolucionada sobria + gamificación sin migración; racha = días naturales consecutivos con sesión finalizada (hoy solo si finalizada, hueco rompe, vacío sin prefijo); progreso y resumen derivados sin storage nuevo; heatmap descartado y Lote 3 (XP/niveles/insignias) aparcado. Ver [módulos JS](/code/modulos-js.md).
 - Cues de audio de la guía (2026-09-18, release `ritmo-v37`): 5 audios m4a en `assets/` (una por fase, incluida `Preparacion`) reproducidos con Web Audio (`decodeAudioData` + `AudioBufferSourceNode` + `GainNode` con `state.data.guide.volume`); fallback al pitido sintetizado si falla el buffer; `service-worker.js:1,3` con `CACHE ritmo-v37` y los 5 `./assets/*.m4a` en `ASSETS`. Ver [módulos JS](/code/modulos-js.md) y [PWA y offline](/project/pwa-offline.md).
+- Preview de volumen (2026-09-18): el slider de "Ajustar guía" reproduce el cue `Preparacion` al volumen elegido con debounce de 180 ms (`previewGuideVolume()`), para preescuchar sin cambiar el contrato de guardado (el volumen se persiste igual en el `submit`). Ver [módulos JS](/code/modulos-js.md).
 
 ## Pitfalls aprendidos
 

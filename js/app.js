@@ -29,6 +29,8 @@ const swipeThreshold = 50;
 let swipeStart = null;
 const cueBuffers = new Map();
 const cuePromises = new Map();
+let volumePreviewTimer = null;
+let volumePreviewId = 0;
 
 function toast(message) {
   const node = document.querySelector("#toast");
@@ -50,7 +52,7 @@ function updateVolumeLabel(value) {
   guideVolumeValue.textContent = guideVolumeValue.value;
 }
 
-function playCue(frequency) {
+function playCue(frequency, volume = state.data.guide.volume) {
   if (!Number.isFinite(frequency)) return;
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   if (!AudioContext) return;
@@ -59,7 +61,7 @@ function playCue(frequency) {
   const oscillator = state.audioContext.createOscillator();
   const gain = state.audioContext.createGain();
   oscillator.frequency.value = frequency;
-  gain.gain.setValueAtTime(state.data.guide.volume, state.audioContext.currentTime);
+  gain.gain.setValueAtTime(volume, state.audioContext.currentTime);
   gain.gain.exponentialRampToValueAtTime(.001, state.audioContext.currentTime + .18);
   oscillator.connect(gain).connect(state.audioContext.destination);
   oscillator.start();
@@ -91,22 +93,34 @@ async function loadCue(cue) {
   return promise;
 }
 
-async function playGuideCue(cue, fallbackFrequency) {
+async function playCueBuffer(cue, fallbackFrequency, volume, isActive = () => true) {
   const buffer = await loadCue(cue);
-  if (!state.guideState) return;
-  if (!buffer) { playCue(fallbackFrequency); return; }
+  if (!isActive()) return;
+  if (!buffer) { playCue(fallbackFrequency, volume); return; }
   try {
     state.audioContext.resume();
-    if (!state.guideState) return;
+    if (!isActive()) return;
     const source = state.audioContext.createBufferSource();
     const gain = state.audioContext.createGain();
     source.buffer = buffer;
-    gain.gain.value = state.data.guide.volume;
+    gain.gain.value = volume;
     source.connect(gain).connect(state.audioContext.destination);
     source.start();
   } catch {
-    playCue(fallbackFrequency);
+    playCue(fallbackFrequency, volume);
   }
+}
+
+function playGuideCue(cue, fallbackFrequency) {
+  return playCueBuffer(cue, fallbackFrequency, state.data.guide.volume, () => Boolean(state.guideState));
+}
+
+function previewGuideVolume(volume) {
+  clearTimeout(volumePreviewTimer);
+  const id = ++volumePreviewId;
+  volumePreviewTimer = setTimeout(() => {
+    playCueBuffer(GUIDE_CUE_PREPARATION, GUIDE_CUE_FALLBACK_HZ[GUIDE_CUE_PREPARATION], Number(volume), () => id === volumePreviewId && guideSettingsDialog.open);
+  }, 180);
 }
 
 function updateGuide(phase, secondsLeft, cycle) {
@@ -350,6 +364,7 @@ function handleGeneralAction(event) {
       break;
     }
     case "close-guide-settings":
+      clearTimeout(volumePreviewTimer);
       guideSettingsDialog.close();
       break;
     case "set-history-display":
@@ -456,7 +471,7 @@ planExerciseTagFilter.addEventListener("change", () => { state.planExerciseTag =
 document.addEventListener("input", (event) => {
   const row = event.target.closest("[data-plan-index]"); if (row && event.target.dataset.plan) { state.data.plans[state.activeDay][Number(row.dataset.planIndex)][event.target.dataset.plan] = event.target.value; save(); }
   if (row && event.target.dataset.planGuide) { state.data.plans[state.activeDay][Number(row.dataset.planIndex)].guide[event.target.dataset.planGuide] = seconds(event.target.value); save(); }
-  if (event.target === guideSettingsForm.elements.volume) updateVolumeLabel(event.target.value);
+  if (event.target === guideSettingsForm.elements.volume) { updateVolumeLabel(event.target.value); previewGuideVolume(event.target.value); }
 });
 
 document.addEventListener("change", (event) => {
@@ -477,6 +492,7 @@ document.addEventListener("change", (event) => {
 
 guideSettingsForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  clearTimeout(volumePreviewTimer);
   const fields = new FormData(guideSettingsForm);
   state.data.guide = { ...state.data.guide, preparation: Number(fields.get("preparation")), rest: Number(fields.get("rest")), volume: Number(fields.get("volume")) };
   save();
