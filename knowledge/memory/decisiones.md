@@ -23,6 +23,7 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 ## Pitfalls aprendidos
 
 - No usar Docker/offline como gate de cada parche: `npm run check` existe y cubre la sintaxis JS; Docker y offline se reservan para PWA, arranque y entregas.
+- `pkill -f "http.server 4173"` se automata (coincide con la propia shell) y cuelga la llamada: usar `pkill -f "http[.]server 4173"` o PID (`echo $!` + `kill <pid>`), con arranque y parada en llamadas separadas. Regla fijada en `.opencode/agents/verificador.md:27-29`.
 - Sync ya no es por `name` sino por `id` (`js/state.js:211`): antes `Object.assign` por nombre sobrescribía edits del usuario; ahora `seed-*` es inmutable y solo el clon `user-*` es editable. Ver [formato de la rutina](/project/rutina-formato.md).
 
 ## Pendientes (auditado 2026-09-17 — detalle en [mejoras](/project/mejoras.md) y [plan M1-M8](/project/plan-mejoras.md))
