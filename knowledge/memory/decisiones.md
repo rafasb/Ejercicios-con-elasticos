@@ -30,7 +30,7 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 - Sync ya no es por `name` sino por `id` (`js/state.js:211`): antes `Object.assign` por nombre sobrescribía edits del usuario; ahora `seed-*` es inmutable y solo el clon `user-*` es editable. Ver [formato de la rutina](/project/rutina-formato.md).
 - Scroll-snap con sticky: `scroll-padding-top` (contenedor) y `scroll-margin-top` (objetivo) **se suman**, no se solapan; declarar ambos duplica el offset y el sticky tapa la tarjeta. Una sola fuente de offset = altura del sticky + `top` + hueco (`styles.css:64-68,102-107`). Ver [módulos JS](/code/modulos-js.md).
 - Progreso de Entrenar (`state.workout` efímero) solo se recalcula al re-renderizar: `start-guide` muta `completedSets` sin `renderApp()`, punto único de refresco el evento `close` de `#guide-dialog` en `js/app.js:405`. No añadir render por fase de guía. Ver [módulos JS](/code/modulos-js.md).
-- `playGuideCue()` es `async` (espera `loadCue()`) y `runGuidePhase()` no lo espera: hay que revalidar `state.guideState` tras cada `await` (`js/app.js:95-110`) o un cue tardío sonaría con la guía ya cancelada. Ver [módulos JS](/code/modulos-js.md).
+- `playCueBuffer()` es `async` (espera `loadCue()`) y `runGuidePhase()`/`previewGuideVolume()` no lo esperan: hay que revalidar `isActive()` tras cada `await` (`js/app.js:96-110`) o un cue tardío sonaría con la guía ya cancelada o el diálogo cerrado. Ver [módulos JS](/code/modulos-js.md).
 
 ## Pendientes (auditado 2026-09-17 — detalle en [mejoras](/project/mejoras.md) y [plan M1-M8](/project/plan-mejoras.md))
 
@@ -48,3 +48,4 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 - [x] [auditado hecho 2026-09-17] M6 `applyPreset` flexible 3-7 días (`js/state.js:86-102` retorno `{ok,message}` ES).
 - [x] [hecho 2026-09-17] M8 toolchain — artefactos (`package.json`/`biome.json`/`.dockerignore`) + sync docs `AGENTS.md`/`README.md` (Node 22, `check`/`lint`/`test`, backup v3).
 - [x] [hecho 2026-09-17] M7 avisos UX honestos (ver R-009 arriba). Ver [mejoras](/project/mejoras.md) y [plan M1-M8](/project/plan-mejoras.md).
+- [ ] [sugerido 2026-09-18] `test/guide-cues.test.mjs` solo comprueba que `GUIDE_CUE_PREPARATION` existe en `GUIDE_CUE_FILES`/`GUIDE_CUE_FALLBACK_HZ`; ampliar la aserción a **todas** las claves de `GUIDE_CUE_FILES` (cada cue debe tener fallback en `GUIDE_CUE_FALLBACK_HZ`) para que un cue nuevo sin frecuencia de fallback falle en test. Ver [módulos JS](/code/modulos-js.md).
