@@ -1,5 +1,8 @@
 # Knowledge Log
 
+## 2026-09-18
+* **Release ritmo-v34 (a11y+PWA)**: bump `CACHE` en `service-worker.js:1` + PNGs 192/512 en `ASSETS`; manifest con 3 iconos (SVG+PNG); `#update-app-btn` 48px y `.primary-button` AA 6.03 en `styles.css:26,63`; H2 diálogos con `Cargando…` en `index.html:87,97`; `revisor` APRUEBA + `verificador` PASA (0 errores, 4 vistas, offline Train+Plan). Ver `/project/pwa-offline.md`.
+
 ## 2026-09-17
 * **Release ritmo-v33**: bump `CACHE` en `service-worker.js:1` (M4 cambiaba `js/state.js` cacheado); `revisor` APRUEBA + `verificador` PASA (online 18 seeds/4 vistas, offline usable, M4 aviso ES). Ver `/project/pwa-offline.md`.
 * **M8 docs + auditoría backlog**: `README.md` sync toolchain Node 22 (`check`/`lint`/`test`) + backup v3 con customs; `decisiones.md`/`mejoras.md` alineados con repo (M4b/R-004/R-005/M5/M6 auditados hechos `fichero:línea` vía explorador). Ver `/memory/decisiones.md`.

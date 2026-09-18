@@ -23,6 +23,7 @@ button { cursor: pointer; }
 .header-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .header-top .eyebrow { margin: 0; }
 .header-top .update-button { width: auto; height: auto; padding: 2px 4px; font-size: 1.3rem; line-height: 1; color: var(--paper); flex-shrink: 0; }
+#update-app-btn { min-width: 48px; min-height: 48px; width: 48px; height: 48px; padding: 0; }
 .eyebrow { color: var(--yellow) !important; font-family: "Courier New", monospace; font-size: .68rem !important; font-weight: bold; letter-spacing: .08em; }
 main { max-width: 680px; margin: auto; padding: 20px 16px; }
 .day-switcher { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 18px; }
@@ -59,7 +60,7 @@ h2 { margin: 0; font-size: 1.45rem; }
 .app-version { align-self: center; color: var(--muted); font-family: "Courier New", monospace; font-size: .78rem; }
 .outline-button, .text-button, .rating { min-height: 44px; padding: 8px 11px; background: transparent; border: 1px solid var(--ink); color: var(--ink); font-size: .86rem; }
 .text-button { border-color: transparent; color: var(--coral-dark); padding-left: 0; }
-.primary-button { min-height: 48px; padding: 10px 16px; border: 0; background: var(--coral); color: white; font-weight: bold; }
+.primary-button { min-height: 48px; padding: 10px 16px; border: 0; background: var(--coral-dark); color: white; font-weight: bold; }
 .primary-button:active, .day-button:active { background: var(--coral-dark); }
 .details { margin-top: 13px; border-top: 1px solid var(--line); padding-top: 10px; color: #33454d; font-size: .88rem; line-height: 1.5; }
 .details summary { color: var(--coral-dark); cursor: pointer; font-weight: bold; }
