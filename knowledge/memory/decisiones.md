@@ -19,12 +19,15 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 - `knowledge/` es solo para agentes/humanos: nunca añadirlo a `ASSETS` del service worker. Ver [PWA y offline](/project/pwa-offline.md).
 - Seeds `seed-*` inmutables por `id` — sync por `id` en `js/state.js:211`; edición = clon `user-*` con `parentSeedId` y `candidateForCanon`. Ver [mejoras](/project/mejoras.md).
 - Backup v3 con customs (`exercises` filtrados `!seed-*`) y restore compatible v2/v3 (v2 avisa sin customs). Ver [arquitectura](/project/arquitectura.md).
+- Lote 1+2 UI (2026-09-18): paleta evolucionada sobria + gamificación sin migración; racha = días naturales consecutivos con sesión finalizada (hoy solo si finalizada, hueco rompe, vacío sin prefijo); progreso y resumen derivados sin storage nuevo; heatmap descartado y Lote 3 (XP/niveles/insignias) aparcado. Ver [módulos JS](/code/modulos-js.md).
 
 ## Pitfalls aprendidos
 
 - No usar Docker/offline como gate de cada parche: `npm run check` existe y cubre la sintaxis JS; Docker y offline se reservan para PWA, arranque y entregas.
 - `pkill -f "http.server 4173"` se automata (coincide con la propia shell) y cuelga la llamada: usar `pkill -f "http[.]server 4173"` o PID (`echo $!` + `kill <pid>`), con arranque y parada en llamadas separadas. Regla fijada en `.opencode/agents/verificador.md:27-29`.
 - Sync ya no es por `name` sino por `id` (`js/state.js:211`): antes `Object.assign` por nombre sobrescribía edits del usuario; ahora `seed-*` es inmutable y solo el clon `user-*` es editable. Ver [formato de la rutina](/project/rutina-formato.md).
+- Scroll-snap con sticky: `scroll-padding-top` (contenedor) y `scroll-margin-top` (objetivo) **se suman**, no se solapan; declarar ambos duplica el offset y el sticky tapa la tarjeta. Una sola fuente de offset = altura del sticky + `top` + hueco (`styles.css:64-68,102-107`). Ver [módulos JS](/code/modulos-js.md).
+- Progreso de Entrenar (`state.workout` efímero) solo se recalcula al re-renderizar: `start-guide` muta `completedSets` sin `renderApp()`, punto único de refresco el evento `close` de `#guide-dialog` en `js/app.js:405`. No añadir render por fase de guía. Ver [módulos JS](/code/modulos-js.md).
 
 ## Pendientes (auditado 2026-09-17 — detalle en [mejoras](/project/mejoras.md) y [plan M1-M8](/project/plan-mejoras.md))
 

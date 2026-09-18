@@ -16,7 +16,7 @@
         <button id="update-app-btn" class="icon-button update-button" type="button" aria-label="Actualizar aplicación" title="Actualizar aplicación">⟳</button>
       </div>
       <h1>Ritmo</h1>
-      <p id="header-copy">Tu ciclo semanal, listo para moverse.</p>
+      <p id="header-copy" aria-live="polite">Tu ciclo semanal, listo para moverse.</p>
     </header>
 
     <main id="app" tabindex="-1"></main>
@@ -96,6 +96,14 @@
         <section class="videos-dialog-content">
           <div class="dialog-heading"><div><p class="eyebrow">VÍDEOS DEL EJERCICIO</p><h2 id="videos-exercise-name">Cargando…</h2></div><button class="icon-button" type="button" data-action="close-videos" aria-label="Cerrar vídeos">×</button></div>
           <ul id="videos-list" class="videos-list"></ul>
+        </section>
+      </dialog>
+
+      <dialog id="summary-dialog" aria-labelledby="summary-title">
+        <section class="summary-dialog-content">
+          <div class="dialog-heading"><div><p class="eyebrow">RESUMEN DE SESIÓN</p><h2 id="summary-title">Resumen</h2></div><button class="icon-button" type="button" data-action="close-summary" aria-label="Cerrar resumen">×</button></div>
+          <div id="summary-body"></div>
+          <button class="primary-button" type="button" data-action="close-summary">Cerrar</button>
         </section>
       </dialog>
 

@@ -16,7 +16,16 @@ function daySwitcher() {
 function renderTrain() {
   const plan = getCurrentPlan();
   if (!plan.length) return `${daySwitcher()}<div class="empty-state"><h2>Sesión vacía</h2><p>Añade ejercicios desde Plan para preparar este día.</p></div>`;
-  return `${daySwitcher()}<div class="session-heading"><div><h2>${state.activeDay.replace("DÍA ", "Día ")}</h2><p>Registra cada ejercicio antes de finalizar.</p></div><span class="target">${plan.length} ejercicios</span></div><button class="primary-button sticky-action" data-action="finish">Finalizar ${state.activeDay.replace("DÍA ", "Día ")}</button><section class="exercise-list">${plan.map((item, planIndex) => {
+  const done = plan.filter((item) => {
+    const entry = state.workout[item.exerciseId];
+    if (!entry) return false;
+    const sets = Number.isFinite(entry.completedSets) ? entry.completedSets : 0;
+    return sets > 0 || Boolean(entry.rating);
+  }).length;
+  const percent = Math.round((done / plan.length) * 100);
+  const progressLabel = `${done} de ${plan.length} · ${percent}%`;
+  const finishState = done === plan.length ? "is-ready" : done > 0 ? "is-partial" : "";
+  return `${daySwitcher()}<div class="session-heading"><div><h2>${state.activeDay.replace("DÍA ", "Día ")}</h2><p>Personaliza cada ejercicio antes de empezar.</p></div><span class="target">${plan.length} ejercicios</span></div><div class="session-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}" aria-label="${escapeHtml("Progreso de la sesión")}"><div class="session-progress-bar" style="width: ${percent}%"></div></div><p class="session-progress-label">${escapeHtml(progressLabel)}</p><button class="primary-button sticky-action ${finishState}" data-action="finish">Finalizar ${state.activeDay.replace("DÍA ", "Día ")}</button><section class="exercise-list">${plan.map((item, planIndex) => {
     const exercise = getExercise(item.exerciseId); if (!exercise) return "";
     const entry = state.workout[item.exerciseId] || { reps: item.reps, resistance: item.resistance, rating: "aceptable" };
     const completed = Number.isFinite(state.workout[item.exerciseId]?.completedSets) ? state.workout[item.exerciseId].completedSets : 0;
@@ -72,12 +81,58 @@ function renderHistory() {
   return `${heading}${state.historyDisplay === "calendar" ? renderHistoryCalendar(sessions, state.historyMonth, state.selectedHistoryDate) : sessions.map((session, index) => renderHistorySession(session, index)).join("")}`;
 }
 
+function dayKeyOf(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+export function findPreviousEntry(exerciseId, history, skipDate) {
+  for (const session of history) {
+    if (session.date === skipDate) continue;
+    const entry = session.entries?.find((item) => item.exerciseId === exerciseId);
+    if (entry) return entry;
+  }
+  return null;
+}
+
+export function sessionSummaryHtml(session, history) {
+  const muscles = [...new Set(session.entries.flatMap((entry) => getExercise(entry.exerciseId)?.tags ?? []))];
+  const rows = session.entries.map((entry) => {
+    const previous = findPreviousEntry(entry.exerciseId, history, session.date);
+    const compare = previous ? `<p class="summary-previous">Anterior: ${previous.sets ?? 0} series · ${escapeHtml(previous.reps)} · ${escapeHtml(previous.resistance)} · ${escapeHtml(previous.rating)}</p>` : "";
+    return `<div class="summary-row"><h4>${escapeHtml(entry.name)}</h4><p>Hoy: ${entry.sets ?? 0} series · ${escapeHtml(entry.reps)} · ${escapeHtml(entry.resistance)} · ${escapeHtml(entry.rating)}</p>${compare}</div>`;
+  }).join("");
+  return `${tagBadges({ tags: muscles })}<div class="summary-list">${rows}</div>`;
+}
+
+export function currentStreak(sessions = [], today = new Date()) {
+  const days = new Set();
+  for (const session of sessions) {
+    const time = Date.parse(session?.date);
+    if (!Number.isFinite(time)) continue;
+    days.add(dayKeyOf(new Date(time)));
+  }
+  if (!days.size) return 0;
+  const cursor = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  if (!days.has(dayKeyOf(cursor))) cursor.setDate(cursor.getDate() - 1);
+  let streak = 0;
+  while (days.has(dayKeyOf(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
+}
+
 export function renderApp() {
   const views = { train: renderTrain, plan: renderPlan, history: renderHistory, exercises: renderExercises };
   document.querySelector("#app").innerHTML = views[state.activeView]();
   for (const button of document.querySelectorAll(".nav-button")) { button.classList.toggle("active", button.dataset.view === state.activeView); }
   const headerCopy = document.querySelector("#header-copy");
-  if (headerCopy) headerCopy.textContent = VIEW_COPY[state.activeView];
+  if (headerCopy) {
+    const streak = currentStreak(sortedHistory());
+    const baseCopy = VIEW_COPY[state.activeView];
+    headerCopy.textContent = streak > 0 ? `Racha ${streak} ${streak === 1 ? "día" : "días"} · ${baseCopy}` : baseCopy;
+    headerCopy.classList.toggle("has-streak", streak > 0);
+  }
 }
 
 export { renderTrain, renderPlan, renderHistory, renderExercises, setAppVersion };

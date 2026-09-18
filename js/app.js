@@ -1,7 +1,7 @@
 import { DEFAULT_GUIDE_SETTINGS, EXERCISE_DETAIL_FIELDS, GUIDE_FIELDS, MUSCLE_TAGS, ROUTINE_URL } from "./constants.js";
 import { completedSets, escapeHtml, guideForExercise, listForForm, listForStorage, normaliseTags, repetitionsToCycles, seconds, tagsForForm, videosForStorage } from "./utils.js";
 import { state, save, configuredDays, createDays, downloadBackup, getExercise, getCurrentPlan, initialise, restoreBackup, setDayCount, sortedHistory, applyPreset, cloneSeedToUser, toggleCandidateForCanon } from "./state.js";
-import { renderApp, setAppVersion } from "./render.js";
+import { renderApp, sessionSummaryHtml, setAppVersion } from "./render.js";
 
 const app = document.querySelector("#app");
 const restoreInput = document.querySelector("#restore-input");
@@ -21,6 +21,9 @@ const videosList = document.querySelector("#videos-list");
 const planExerciseDialog = document.querySelector("#plan-exercise-dialog");
 const planExerciseTagFilter = document.querySelector("#plan-exercise-tag-filter");
 const planExerciseList = document.querySelector("#plan-exercise-list");
+const summaryDialog = document.querySelector("#summary-dialog");
+const summaryTitle = document.querySelector("#summary-title");
+const summaryBody = document.querySelector("#summary-body");
 const viewOrder = ["train", "plan", "history", "exercises"];
 const swipeThreshold = 50;
 let swipeStart = null;
@@ -264,6 +267,9 @@ function handleGeneralAction(event) {
     case "close-videos":
       videosDialog.close();
       break;
+    case "close-summary":
+      summaryDialog.close();
+      break;
     case "open-plan-exercise-dialog":
       openPlanExercisePicker(Number(planIndex));
       break;
@@ -347,6 +353,10 @@ function handleGeneralAction(event) {
       state.workout = {};
       toast("Sesión guardada en el historial.");
       renderApp();
+      const session = state.data.history[0];
+      summaryTitle.textContent = `Resumen ${session.day.replace("DÍA ", "Día ")}`;
+      summaryBody.innerHTML = sessionSummaryHtml(session, sortedHistory());
+      summaryDialog.showModal();
       break;
     }
     case "reuse": {
@@ -392,7 +402,7 @@ restoreInput.addEventListener("change", async () => {
   }
 });
 
-guideDialog.addEventListener("close", () => { clearInterval(state.guideTimer); state.guideTimer = null; state.guideState = null; });
+guideDialog.addEventListener("close", () => { clearInterval(state.guideTimer); state.guideTimer = null; state.guideState = null; renderApp(); });
 planExerciseDialog.addEventListener("close", () => { state.planExerciseIndex = null; });
 planExerciseTagFilter.addEventListener("change", () => { state.planExerciseTag = planExerciseTagFilter.value; renderPlanExercisePicker(); });
 
