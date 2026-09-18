@@ -20,6 +20,7 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 - Seeds `seed-*` inmutables por `id` — sync por `id` en `js/state.js:211`; edición = clon `user-*` con `parentSeedId` y `candidateForCanon`. Ver [mejoras](/project/mejoras.md).
 - Backup v3 con customs (`exercises` filtrados `!seed-*`) y restore compatible v2/v3 (v2 avisa sin customs). Ver [arquitectura](/project/arquitectura.md).
 - Lote 1+2 UI (2026-09-18): paleta evolucionada sobria + gamificación sin migración; racha = días naturales consecutivos con sesión finalizada (hoy solo si finalizada, hueco rompe, vacío sin prefijo); progreso y resumen derivados sin storage nuevo; heatmap descartado y Lote 3 (XP/niveles/insignias) aparcado. Ver [módulos JS](/code/modulos-js.md).
+- Cues de audio de la guía (2026-09-18, release `ritmo-v37`): 5 audios m4a en `assets/` (una por fase, incluida `Preparacion`) reproducidos con Web Audio (`decodeAudioData` + `AudioBufferSourceNode` + `GainNode` con `state.data.guide.volume`); fallback al pitido sintetizado si falla el buffer; `service-worker.js:1,3` con `CACHE ritmo-v37` y los 5 `./assets/*.m4a` en `ASSETS`. Ver [módulos JS](/code/modulos-js.md) y [PWA y offline](/project/pwa-offline.md).
 
 ## Pitfalls aprendidos
 
@@ -28,6 +29,7 @@ Memoria viva del arnés de agentes. Actualizar al cierre de cada sesión con tra
 - Sync ya no es por `name` sino por `id` (`js/state.js:211`): antes `Object.assign` por nombre sobrescribía edits del usuario; ahora `seed-*` es inmutable y solo el clon `user-*` es editable. Ver [formato de la rutina](/project/rutina-formato.md).
 - Scroll-snap con sticky: `scroll-padding-top` (contenedor) y `scroll-margin-top` (objetivo) **se suman**, no se solapan; declarar ambos duplica el offset y el sticky tapa la tarjeta. Una sola fuente de offset = altura del sticky + `top` + hueco (`styles.css:64-68,102-107`). Ver [módulos JS](/code/modulos-js.md).
 - Progreso de Entrenar (`state.workout` efímero) solo se recalcula al re-renderizar: `start-guide` muta `completedSets` sin `renderApp()`, punto único de refresco el evento `close` de `#guide-dialog` en `js/app.js:405`. No añadir render por fase de guía. Ver [módulos JS](/code/modulos-js.md).
+- `playGuideCue()` es `async` (espera `loadCue()`) y `runGuidePhase()` no lo espera: hay que revalidar `state.guideState` tras cada `await` (`js/app.js:95-110`) o un cue tardío sonaría con la guía ya cancelada. Ver [módulos JS](/code/modulos-js.md).
 
 ## Pendientes (auditado 2026-09-17 — detalle en [mejoras](/project/mejoras.md) y [plan M1-M8](/project/plan-mejoras.md))
 

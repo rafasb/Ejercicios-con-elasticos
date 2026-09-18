@@ -1,4 +1,4 @@
-import { DEFAULT_GUIDE_SETTINGS, EXERCISE_DETAIL_FIELDS, GUIDE_FIELDS, MUSCLE_TAGS, ROUTINE_URL } from "./constants.js";
+import { DEFAULT_GUIDE_SETTINGS, EXERCISE_DETAIL_FIELDS, GUIDE_CUE_FALLBACK_HZ, GUIDE_CUE_FILES, GUIDE_CUE_PREPARATION, GUIDE_FIELDS, MUSCLE_TAGS, ROUTINE_URL } from "./constants.js";
 import { completedSets, escapeHtml, guideForExercise, listForForm, listForStorage, normaliseTags, repetitionsToCycles, seconds, tagsForForm, videosForStorage } from "./utils.js";
 import { state, save, configuredDays, createDays, downloadBackup, getExercise, getCurrentPlan, initialise, restoreBackup, setDayCount, sortedHistory, applyPreset, cloneSeedToUser, toggleCandidateForCanon } from "./state.js";
 import { renderApp, sessionSummaryHtml, setAppVersion } from "./render.js";
@@ -27,6 +27,8 @@ const summaryBody = document.querySelector("#summary-body");
 const viewOrder = ["train", "plan", "history", "exercises"];
 const swipeThreshold = 50;
 let swipeStart = null;
+const cueBuffers = new Map();
+const cuePromises = new Map();
 
 function toast(message) {
   const node = document.querySelector("#toast");
@@ -49,6 +51,7 @@ function updateVolumeLabel(value) {
 }
 
 function playCue(frequency) {
+  if (!Number.isFinite(frequency)) return;
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   if (!AudioContext) return;
   state.audioContext ||= new AudioContext();
@@ -63,17 +66,60 @@ function playCue(frequency) {
   oscillator.stop(state.audioContext.currentTime + .18);
 }
 
+async function loadCue(cue) {
+  if (cueBuffers.has(cue)) return cueBuffers.get(cue);
+  if (cuePromises.has(cue)) return cuePromises.get(cue);
+  const url = GUIDE_CUE_FILES[cue];
+  if (!url) return null;
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return null;
+  state.audioContext ||= new AudioContext();
+  const promise = (async () => {
+    try {
+      const response = await fetch(url);
+      const data = await response.arrayBuffer();
+      const buffer = await state.audioContext.decodeAudioData(data);
+      cueBuffers.set(cue, buffer);
+      return buffer;
+    } catch {
+      return null;
+    } finally {
+      cuePromises.delete(cue);
+    }
+  })();
+  cuePromises.set(cue, promise);
+  return promise;
+}
+
+async function playGuideCue(cue, fallbackFrequency) {
+  const buffer = await loadCue(cue);
+  if (!state.guideState) return;
+  if (!buffer) { playCue(fallbackFrequency); return; }
+  try {
+    state.audioContext.resume();
+    if (!state.guideState) return;
+    const source = state.audioContext.createBufferSource();
+    const gain = state.audioContext.createGain();
+    source.buffer = buffer;
+    gain.gain.value = state.data.guide.volume;
+    source.connect(gain).connect(state.audioContext.destination);
+    source.start();
+  } catch {
+    playCue(fallbackFrequency);
+  }
+}
+
 function updateGuide(phase, secondsLeft, cycle) {
   guidePhase.textContent = phase;
   guideCountdown.textContent = secondsLeft;
   guideCycle.textContent = cycle ? `Serie ${state.guideState.set} de ${state.guideState.sets} · Repetición ${cycle} de ${state.guideState.cycles}` : `Preparación: ${state.guideState.sets} series de ${state.guideState.cycles}`;
 }
 
-function runGuidePhase(phase, secondsLeft, cycle, frequency, next) {
+function runGuidePhase(phase, secondsLeft, cycle, cue, next) {
   if (secondsLeft === 0) { next(); return; }
   clearInterval(state.guideTimer);
   updateGuide(phase, secondsLeft, cycle);
-  playCue(frequency);
+  playGuideCue(cue, GUIDE_CUE_FALLBACK_HZ[cue]);
   let remaining = secondsLeft;
   state.guideTimer = setInterval(() => {
     remaining -= 1;
@@ -95,11 +141,11 @@ function finishGuide() {
 function runTensionCycle() {
   const cycle = state.guideState.cycle;
   const guide = state.guideState.guide;
-  runGuidePhase("Tensión", guide.tension, cycle, 660, () => {
-    runGuidePhase("Pausa", guide.pause, cycle, 523, () => {
-      runGuidePhase("Distensión", guide.distension, cycle, 392, () => {
+  runGuidePhase("Tensión", guide.tension, cycle, "Tension", () => {
+    runGuidePhase("Pausa", guide.pause, cycle, "Pausa", () => {
+      runGuidePhase("Distensión", guide.distension, cycle, "Distension", () => {
         if (cycle < state.guideState.cycles) { state.guideState.cycle += 1; runTensionCycle(); return; }
-        runGuidePhase("Descanso", guide.rest, cycle, 294, finishGuide);
+        runGuidePhase("Descanso", guide.rest, cycle, "Descanso", finishGuide);
       });
     });
   });
@@ -109,7 +155,8 @@ function startGuide(exercise, sets, repetitions, guide) {
   state.guideState = { sets: Math.max(1, Number.parseInt(sets, 10) || 1), set: 1, cycles: repetitionsToCycles(repetitions), cycle: 1, guide: { ...guideForExercise(exercise), ...guide, rest: state.data.guide.rest } };
   guideExerciseName.textContent = exercise.name;
   guideDialog.showModal();
-  runGuidePhase("Preparación", state.data.guide.preparation, 0, 523, runTensionCycle);
+  for (const cue of Object.keys(GUIDE_CUE_FILES)) loadCue(cue);
+  runGuidePhase("Preparación", state.data.guide.preparation, 0, GUIDE_CUE_PREPARATION, runTensionCycle);
 }
 
 function stopGuide() {

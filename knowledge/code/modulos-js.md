@@ -20,6 +20,7 @@ sources:
 # Módulos JS
 
 - `app.js`: todo el wiring (click/input/change, swipe, diálogos, guía con `AudioContext`, SW). No duplicar listeners.
+- Cues de audio de la guía (2026-09-18): `GUIDE_CUE_FILES`/`GUIDE_CUE_FALLBACK_HZ`/`GUIDE_CUE_PREPARATION` en `js/constants.js:11-15` (5 fases, `Preparacion` con m4a propio); `playGuideCue()` en `js/app.js:95-110` reproduce el m4a con `AudioBufferSourceNode`→`GainNode` (`state.data.guide.volume`) y cae a `playCue()` (oscilador) si falta el buffer o falla; `loadCue()` (`js/app.js:69-92`) cachea buffers en `cueBuffers` y deduplica cargas en vuelo con `cuePromises` (el preload de `startGuide` comparte una sola carga con la reproducción); `startGuide()` precarga los 5 cues tras `showModal()`. Pitfall: `playGuideCue()` es `async` y no se `await`ea desde `runGuidePhase`, así que revalida `state.guideState` tras cada `await` para no sonar con la guía ya cancelada.
 - `state.js`: único escritor de `localStorage`; llamar a `save()` tras mutar `state.data`.
 - `render.js`: sin mutación; usa `escapeHtml` / `formatInline` (`**bold**` solo) para todo input de usuario.
 - `utils.js`: `listForStorage` (guarda `- item`), `videosForStorage` (solo líneas `http(s)://`), `seconds()` (clamp ≥ 0).

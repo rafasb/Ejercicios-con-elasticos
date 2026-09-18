@@ -8,6 +8,12 @@ export const MUSCLE_TAGS = ["Abdominal", "Biceps", "Cuadriceps", "Espalda", "Glu
 // Display labels in Spanish; keys must stay in MUSCLE_TAGS.
 export const MUSCLE_TAG_LABELS = { Abdominal: "Abdominal", Biceps: "Bíceps", Cuadriceps: "Cuádriceps", Espalda: "Espalda", Gluteo: "Glúteo", Hombro: "Hombro", Lumbar: "Lumbar", Pectoral: "Pectoral", Triceps: "Tríceps" };
 export const DEFAULT_GUIDE_SETTINGS = { preparation: 10, tension: 3, distension: 2, rest: 120, volume: 0.6 };
+// Audio cue per guide phase; keys must match the guide phases (see `runTensionCycle()`/`startGuide()` in `js/app.js`).
+export const GUIDE_CUE_FILES = { Tension: "assets/Tension.m4a", Pausa: "assets/Pausa.m4a", Distension: "assets/Distension.m4a", Descanso: "assets/Descanso.m4a", Preparacion: "assets/Preparacion.m4a" };
+// Oscillator fallback (Hz) used only when the m4a buffer cannot be loaded or decoded.
+export const GUIDE_CUE_FALLBACK_HZ = { Tension: 660, Pausa: 523, Distension: 392, Descanso: 294, Preparacion: 523 };
+// "Preparación" cue played at the start of the guide; has its own m4a and a 523 Hz fallback.
+export const GUIDE_CUE_PREPARATION = "Preparacion";
 export const DEFAULT_EXERCISE_GUIDE = { tension: 0, pause: 0, distension: 0, rest: 120 };
 export const EXERCISE_DETAIL_FIELDS = ["primaryMuscles", "secondaryMuscles", "stabilizerMuscles", "resistance", "setsAndRepetitions", "technicalNotes"];
 export const GUIDE_FIELDS = ["tension", "pause", "distension", "rest"];
