@@ -27,4 +27,5 @@ sources:
 - Opcional 1 candidata a canon: botón `toggle-candidate` solo `user-*` en `js/render.js:56` [^render]; `render.js` solo render sin mutar, `app.js` solo wiring [^render][^app].
 - Guards `js/app.js:214` (clona `seed-*` antes de editar) y `js/app.js:221` (solo `user-*` alterna marca) [^app]; ids `js/app.js:415` (`user-UUID`) y `js/app.js:421` (`parentSeedId`, `candidateForCanon:false`) [^app].
 - `toggleCandidateForCanon()` en `js/state.js:48` solo `user-*`, invierte flag, `save()` y devuelve estado [^state]; badge `CANDIDATA` en `js/render.js:29` [^render] y filtro `candidates` en `js/render.js:38` [^render].
+- Entrenar solo lectura (decisión 2026-09-18): `renderTrain` en `js/render.js:19,23` sin `<input data-record>`, 2 `<button data-goto-plan="reps|resistance">` con `data-plan-index` que saltan a Plan y enfocan `input[data-plan]` del mismo ejercicio vía `handleGotoPlan()` en `js/app.js:202-218`; fuente única Plan con `save()`, `state.workout` ya no guarda edición.
 - Ver [arquitectura](/project/arquitectura.md) y [decisiones](/memory/decisiones.md).

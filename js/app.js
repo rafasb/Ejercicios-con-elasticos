@@ -199,6 +199,24 @@ function handleWorkoutRating(event) {
   return true;
 }
 
+function handleGotoPlan(event) {
+  const target = event.target.closest("[data-goto-plan]");
+  if (!target) return false;
+  const field = target.dataset.gotoPlan;
+  let planIndex = Number(target.dataset.planIndex);
+  if (!Number.isFinite(planIndex)) {
+    planIndex = getCurrentPlan().findIndex((item) => item.exerciseId === target.dataset.workoutId);
+  }
+  state.activeView = "plan";
+  renderApp();
+  const input = document.querySelector(`div.plan-row[data-plan-index="${planIndex}"] input[data-plan="${field}"]`);
+  if (input) {
+    input.focus();
+    input.scrollIntoView({ block: "center" });
+  }
+  return true;
+}
+
 function handleGeneralAction(event) {
   const action = event.target.closest("[data-action]");
   if (!action) return false;
@@ -352,6 +370,7 @@ document.addEventListener("click", (event) => {
   if (handleViewSwitch(event)) return;
   if (handleDaySwitch(event)) return;
   if (handleWorkoutRating(event)) return;
+  if (handleGotoPlan(event)) return;
   handleGeneralAction(event);
 });
 
@@ -378,7 +397,6 @@ planExerciseDialog.addEventListener("close", () => { state.planExerciseIndex = n
 planExerciseTagFilter.addEventListener("change", () => { state.planExerciseTag = planExerciseTagFilter.value; renderPlanExercisePicker(); });
 
 document.addEventListener("input", (event) => {
-  const card = event.target.closest("[data-workout-id]"); if (card && event.target.dataset.record) { const entry = state.workout[card.dataset.workoutId] ||= {}; entry[event.target.dataset.record] = event.target.value; }
   const row = event.target.closest("[data-plan-index]"); if (row && event.target.dataset.plan) { state.data.plans[state.activeDay][Number(row.dataset.planIndex)][event.target.dataset.plan] = event.target.value; save(); }
   if (row && event.target.dataset.planGuide) { state.data.plans[state.activeDay][Number(row.dataset.planIndex)].guide[event.target.dataset.planGuide] = seconds(event.target.value); save(); }
   if (event.target === guideSettingsForm.elements.volume) updateVolumeLabel(event.target.value);

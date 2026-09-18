@@ -51,6 +51,9 @@ main { max-width: 680px; margin: auto; padding: 20px 16px; }
 h2 { margin: 0; font-size: 1.45rem; }
 .session-heading p, .empty-state p { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
 .exercise-list { display: grid; gap: 10px; }
+/* Train view only: .exercise-list is rendered solely by renderTrain. */
+html:has(.exercise-list) { scroll-snap-type: y proximity; }
+.exercise-list .exercise-item { scroll-snap-align: start; scroll-margin-top: 12px; }
 .exercise-item { background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--sage); padding: 14px; }
 .exercise-title { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
 .exercise-title h3 { font-size: 1.05rem; margin: 0; }

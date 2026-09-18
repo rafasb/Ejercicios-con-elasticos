@@ -1,6 +1,7 @@
 # Knowledge Log
 
 ## 2026-09-18
+* **Entrenar solo lectura + salto a Plan**: `renderTrain` sin inputs en `js/render.js:19,23`, botones `data-goto-plan` + `handleGotoPlan()` en `js/app.js:202-218` (foco mismo `plan-index`); fuente única Plan, `Fácil` ya no pierde edición; `npm run check` + `lint` + `verificador` PASS 8/8 consola limpia. Ver `/code/modulos-js.md`.
 * **Cierre + pitfall pkill**: pitfall operativo en `/memory/decisiones.md` y regla en `.opencode/agents/verificador.md:27-29` (`pkill -f "http[.]server …"` o PID, nunca el patrón literal).
 * **Punto 2 (offline+lint)**: `offline.html` fallback ES + `CACHE ritmo-v35` y fallback solo-navigate en `service-worker.js:1,3,29-32`; `restore-input` con `aria-hidden/tabindex` en `index.html:23`; lint Biome a 0 (3 reglas relajadas con justificación en `biome.json`: `noMisleadingCharacterClass` por regex `normaliseTag`, `noAssignInExpressions` por `||=`, `noDelete` por contrato backup v3; resto `for...of`/template/`?.` mecánicos); `revisor` APRUEBA + `verificador` PASS (18 seeds, 4 vistas, offline real con fallback). Ver `/project/pwa-offline.md`.
 * **Release ritmo-v34 (a11y+PWA)**: bump `CACHE` en `service-worker.js:1` + PNGs 192/512 en `ASSETS`; manifest con 3 iconos (SVG+PNG); `#update-app-btn` 48px y `.primary-button` AA 6.03 en `styles.css:26,63`; H2 diálogos con `Cargando…` en `index.html:87,97`; `revisor` APRUEBA + `verificador` PASA (0 errores, 4 vistas, offline Train+Plan). Ver `/project/pwa-offline.md`.
