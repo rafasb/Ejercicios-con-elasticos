@@ -54,6 +54,7 @@ function updateVolumeLabel(value) {
 
 function playCue(frequency, volume = state.data.guide.volume) {
   if (!Number.isFinite(frequency)) return;
+  const safeVolume = Number.isFinite(Number(volume)) ? Math.min(1, Math.max(0, Number(volume))) : DEFAULT_GUIDE_SETTINGS.volume;
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   if (!AudioContext) return;
   state.audioContext ||= new AudioContext();
@@ -61,7 +62,7 @@ function playCue(frequency, volume = state.data.guide.volume) {
   const oscillator = state.audioContext.createOscillator();
   const gain = state.audioContext.createGain();
   oscillator.frequency.value = frequency;
-  gain.gain.setValueAtTime(volume, state.audioContext.currentTime);
+  gain.gain.setValueAtTime(safeVolume, state.audioContext.currentTime);
   gain.gain.exponentialRampToValueAtTime(.001, state.audioContext.currentTime + .18);
   oscillator.connect(gain).connect(state.audioContext.destination);
   oscillator.start();
@@ -130,11 +131,15 @@ function updateGuide(phase, secondsLeft, cycle) {
 }
 
 function runGuidePhase(phase, secondsLeft, cycle, cue, next) {
-  if (secondsLeft === 0) { next(); return; }
+  const duration = Number.isFinite(Number(secondsLeft)) ? Math.max(0, Math.floor(Number(secondsLeft))) : 0;
+  if (duration <= 0) {
+    queueMicrotask(() => { if (state.guideState) next(); });
+    return;
+  }
   clearInterval(state.guideTimer);
-  updateGuide(phase, secondsLeft, cycle);
+  updateGuide(phase, duration, cycle);
   playGuideCue(cue, GUIDE_CUE_FALLBACK_HZ[cue]);
-  let remaining = secondsLeft;
+  let remaining = duration;
   state.guideTimer = setInterval(() => {
     remaining -= 1;
     updateGuide(phase, remaining, cycle);
@@ -191,7 +196,7 @@ function renderPlanExercisePicker() {
   const currentExerciseId = state.data.plans[state.activeDay]?.[state.planExerciseIndex]?.exerciseId;
   const exercises = state.data.exercises.filter((exercise) => !state.planExerciseTag || exercise.tags?.includes(state.planExerciseTag));
   planExerciseTagFilter.innerHTML = `<option value="">Todos los grupos</option>${MUSCLE_TAGS.map((tag) => `<option value="${tag}" ${tag === state.planExerciseTag ? "selected" : ""}>#${tag}</option>`).join("")}`;
-  planExerciseList.innerHTML = exercises.length ? exercises.map((exercise) => `<button type="button" class="plan-exercise-option ${exercise.id === currentExerciseId ? "selected" : ""}" data-action="select-plan-exercise" data-exercise-id="${exercise.id}"><strong>${escapeHtml(exercise.name)}</strong>${exercise.tags?.length ? `<div class="tag-list">${exercise.tags.map((tag) => `<span class="tag-badge">#${escapeHtml(tag)}</span>`).join("")}</div>` : ""}</button>`).join("") : `<p class="empty-state">No hay ejercicios con esta etiqueta.</p>`;
+  planExerciseList.innerHTML = exercises.length ? exercises.map((exercise) => `<button type="button" class="plan-exercise-option ${exercise.id === currentExerciseId ? "selected" : ""}" data-action="select-plan-exercise" data-exercise-id="${escapeHtml(exercise.id)}"><strong>${escapeHtml(exercise.name)}</strong>${exercise.tags?.length ? `<div class="tag-list">${exercise.tags.map((tag) => `<span class="tag-badge">#${escapeHtml(tag)}</span>`).join("")}</div>` : ""}</button>`).join("") : `<p class="empty-state">No hay ejercicios con esta etiqueta.</p>`;
 }
 
 function openPlanExercisePicker(index) {
@@ -391,6 +396,7 @@ function handleGeneralAction(event) {
       break;
     case "add-plan": {
       const exercise = state.data.exercises[0];
+      if (!exercise) { toast("No hay ejercicios disponibles."); break; }
       getCurrentPlan().push({ exerciseId: exercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(exercise) });
       save();
       renderApp();
@@ -403,19 +409,19 @@ function handleGeneralAction(event) {
       break;
     }
     case "finish": {
-      const entries = getCurrentPlan().map((item) => {
-        const exercise = getExercise(item.exerciseId);
+      const entries = getCurrentPlan().flatMap((item) => {
+        const exercise = getExercise(item?.exerciseId);
+        if (!exercise) return [];
         const entry = state.workout[exercise.id] || {};
-        return { name: exercise.name, exerciseId: exercise.id, sets: completedSets(entry), reps: entry.reps || item.reps, resistance: entry.resistance || item.resistance, guide: { ...item.guide }, rating: entry.rating || "aceptable" };
+        return [{ name: exercise.name, exerciseId: exercise.id, sets: completedSets(entry), reps: entry.reps || item.reps, resistance: entry.resistance || item.resistance, guide: { ...item.guide }, rating: entry.rating || "aceptable" }];
       });
-      state.data.history = state.data.history.filter((session) => session.day !== state.activeDay);
       const completedAt = new Date();
-      state.data.history.unshift({ date: completedAt.toISOString(), weekday: completedAt.toLocaleDateString("es-ES", { weekday: "long" }), day: state.activeDay, entries });
+      const session = { date: completedAt.toISOString(), weekday: completedAt.toLocaleDateString("es-ES", { weekday: "long" }), day: state.activeDay, entries };
+      state.data.history.unshift(session);
       save();
       state.workout = {};
       toast("Sesión guardada en el historial.");
       renderApp();
-      const session = state.data.history[0];
       summaryTitle.textContent = `Resumen ${session.day.replace("DÍA ", "Día ")}`;
       summaryBody.innerHTML = sessionSummaryHtml(session, sortedHistory());
       summaryDialog.showModal();
@@ -423,6 +429,10 @@ function handleGeneralAction(event) {
     }
     case "reuse": {
       const session = sortedHistory()[Number(action.dataset.historyIndex)];
+      if (!session || !configuredDays().includes(session.day)) {
+        toast("Esa sesión no corresponde a un día configurado.");
+        break;
+      }
       state.data.plans[session.day] = session.entries.map((entry) => ({ exerciseId: entry.exerciseId, sets: "3", reps: entry.reps, resistance: entry.resistance, guide: { ...guideForExercise(getExercise(entry.exerciseId)), ...(entry.guide || {}) } }));
       save();
       state.activeDay = session.day;
@@ -494,7 +504,7 @@ guideSettingsForm.addEventListener("submit", (event) => {
   event.preventDefault();
   clearTimeout(volumePreviewTimer);
   const fields = new FormData(guideSettingsForm);
-  state.data.guide = { ...state.data.guide, preparation: Number(fields.get("preparation")), rest: Number(fields.get("rest")), volume: Number(fields.get("volume")) };
+  state.data.guide = { ...state.data.guide, preparation: seconds(fields.get("preparation")), rest: seconds(fields.get("rest")), volume: Math.min(1, Math.max(0, Number(fields.get("volume")) || 0)) };
   save();
   guideSettingsDialog.close();
   toast("Ajustes de guía guardados.");
@@ -541,7 +551,7 @@ if ("serviceWorker" in navigator) {
         const installing = reg.installing;
         installing?.addEventListener("statechange", () => { if (installing.state === "activated") toast("Ritmo se ha actualizado."); });
       });
-    });
+    }).catch(() => {});
   });
   navigator.serviceWorker.addEventListener("controllerchange", () => window.location.reload());
 }

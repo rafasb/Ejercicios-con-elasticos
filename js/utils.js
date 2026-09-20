@@ -1,4 +1,4 @@
-import { DEFAULT_EXERCISE_GUIDE, GUIDE_FIELDS, MUSCLE_TAGS } from "./constants.js";
+import { DEFAULT_EXERCISE_GUIDE, GUIDE_FIELDS, MAX_GUIDE_CYCLES, MAX_GUIDE_SECONDS, MUSCLE_TAGS } from "./constants.js";
 
 export function uid() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -13,8 +13,9 @@ export function formatInline(value = "") {
 }
 
 export function markdownList(markdown) {
-  const items = markdown.split("\n").map((line) => line.match(/^\s*[-*]\s+(.+)/)?.[1]).filter(Boolean);
-  return items.length ? `<ul>${items.map((item) => `<li>${formatInline(item)}</li>`).join("")}</ul>` : `<p>${formatInline(markdown)}</p>`;
+  const text = String(markdown ?? "");
+  const items = text.split("\n").map((line) => line.match(/^\s*[-*]\s+(.+)/)?.[1]).filter(Boolean);
+  return items.length ? `<ul>${items.map((item) => `<li>${formatInline(item)}</li>`).join("")}</ul>` : `<p>${formatInline(text)}</p>`;
 }
 
 export function technicalDetails(markdown) {
@@ -23,7 +24,7 @@ export function technicalDetails(markdown) {
 }
 
 export function seconds(value) {
-  return Math.max(0, Number.parseInt(value, 10) || 0);
+  return Math.min(MAX_GUIDE_SECONDS, Math.max(0, Number.parseInt(value, 10) || 0));
 }
 
 export function guideForExercise(exercise) {
@@ -60,7 +61,7 @@ export function exerciseFromTechnical(markdown) {
 }
 
 export function repetitionsToCycles(value) {
-  return Math.max(1, Number.parseInt(value, 10) || 1);
+  return Math.min(MAX_GUIDE_CYCLES, Math.max(1, Number.parseInt(value, 10) || 1));
 }
 
 export function completedSets(entry) {
@@ -68,15 +69,18 @@ export function completedSets(entry) {
 }
 
 export function listForStorage(value) {
-  return value.split("\n").map((line) => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean).map((line) => `- ${line}`).join("\n");
+  const text = String(value ?? "");
+  return text.split("\n").map((line) => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean).map((line) => `- ${line}`).join("\n");
 }
 
 export function listForForm(value = "") {
-  return value.split("\n").map((line) => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean).join("\n");
+  const text = String(value ?? "");
+  return text.split("\n").map((line) => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean).join("\n");
 }
 
 export function videosForStorage(value = "") {
-  return value.split("\n").map((line) => line.trim()).filter((line) => /^https?:\/\//i.test(line));
+  const text = String(value ?? "");
+  return text.split("\n").map((line) => line.trim()).filter((line) => /^https?:\/\//i.test(line));
 }
 
 export function normaliseTag(value) {
@@ -175,12 +179,39 @@ export function validateRoutineData(data) {
 }
 
 export function normaliseExercise(exercise) {
-  const legacy = exerciseFromTechnical(exercise.technical || "");
+  const legacy = exerciseFromTechnical(typeof exercise.technical === "string" ? exercise.technical : "");
   const detailFields = ["primaryMuscles", "secondaryMuscles", "stabilizerMuscles", "resistance", "setsAndRepetitions", "technicalNotes"];
   for (const field of detailFields) { exercise[field] = typeof exercise[field] === "string" ? exercise[field] : legacy[field]; }
   exercise.guide = exercise.guide ? { ...legacy.guide, ...guideForExercise(exercise) } : legacy.guide;
   exercise.tags = normaliseTags(exercise.tags ?? exercise.hashtags);
+  exercise.videos = videosForStorage(Array.isArray(exercise.videos) ? exercise.videos.join("\n") : exercise.videos);
+  exercise.id = String(exercise.id ?? "");
   return exercise;
+}
+
+export function normaliseHistory(history) {
+  if (!Array.isArray(history)) return [];
+  return history
+    .filter((session) => session && typeof session === "object" && !Array.isArray(session))
+    .map((session) => ({
+      date: String(session.date ?? ""),
+      weekday: String(session.weekday ?? ""),
+      day: /^DÍA [1-7]$/.test(String(session.day ?? "")) ? String(session.day) : "",
+      entries: (Array.isArray(session.entries) ? session.entries : [])
+        .filter((entry) => entry && typeof entry === "object" && !Array.isArray(entry))
+        .map((entry) => {
+          const guide = entry.guide && typeof entry.guide === "object" && !Array.isArray(entry.guide) ? entry.guide : {};
+          return {
+            name: String(entry.name ?? ""),
+            exerciseId: String(entry.exerciseId ?? ""),
+            sets: Number(entry.sets) || 0,
+            reps: String(entry.reps ?? ""),
+            resistance: String(entry.resistance ?? ""),
+            rating: String(entry.rating ?? ""),
+            guide: Object.fromEntries(GUIDE_FIELDS.map((field) => [field, guide[field] === undefined ? DEFAULT_EXERCISE_GUIDE[field] : seconds(guide[field])]))
+          };
+        })
+    }));
 }
 
 export function historyToggle(historyDisplay = "list") {
@@ -188,7 +219,7 @@ export function historyToggle(historyDisplay = "list") {
 }
 
 export function renderHistorySession(session, index) {
-  return `<article class="history-item"><div class="exercise-title"><div><h3>${session.day.replace("DÍA ", "Día ")}</h3><p class="history-meta">${escapeHtml(session.weekday || new Date(session.date).toLocaleDateString("es-ES", { weekday: "long" }))} · ${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${entry.sets ?? 0} series · ${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge" data-rating="${escapeHtml(entry.rating)}">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`;
+  return `<article class="history-item"><div class="exercise-title"><div><h3>${escapeHtml(String(session.day ?? "").replace("DÍA ", "Día "))}</h3><p class="history-meta">${escapeHtml(session.weekday || new Date(session.date).toLocaleDateString("es-ES", { weekday: "long" }))} · ${new Date(session.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</p></div><button class="outline-button" data-action="reuse" data-history-index="${index}">Usar en plan</button></div>${session.entries.map((entry) => `<div class="result-line"><span>${escapeHtml(entry.name)}</span><span>${escapeHtml(entry.sets ?? 0)} series · ${escapeHtml(entry.reps)} reps · ${escapeHtml(entry.resistance)} <b class="badge" data-rating="${escapeHtml(entry.rating)}">${escapeHtml(entry.rating)}</b></span></div>`).join("")}</article>`;
 }
 
 export function renderHistoryCalendar(sessions, historyMonth, selectedHistoryDate) {
@@ -218,7 +249,7 @@ export function renderHistoryCalendar(sessions, historyMonth, selectedHistoryDat
 export function tagSummary(items, label, getExercise) {
   const counts = new Map();
   for (const item of items) {
-    for (const tag of (getExercise(item.exerciseId)?.tags ?? [])) counts.set(tag, (counts.get(tag) || 0) + 1);
+    for (const tag of (getExercise(item?.exerciseId)?.tags ?? [])) counts.set(tag, (counts.get(tag) || 0) + 1);
   }
   return counts.size ? `<section class="tag-summary" aria-label="${label}"><h3>${label}</h3><p>${[...counts].map(([tag, count]) => `<span>#${tag}: ${count}</span>`).join(" | ")}</p></section>` : "";
 }

@@ -1,5 +1,5 @@
-import { DEFAULT_DAYS, DEFAULT_GUIDE_SETTINGS, MAX_DAYS, MIN_DAYS, ROUTINE_JSON_URL, ROUTINE_URL, STORAGE_KEY } from "./constants.js";
-import { guideForExercise, normaliseExercise, normaliseTags, parseRoutine, validateRoutineData, videosForStorage } from "./utils.js";
+import { DEFAULT_DAYS, DEFAULT_GUIDE_SETTINGS, MAX_DAYS, MAX_HISTORY, MIN_DAYS, ROUTINE_JSON_URL, ROUTINE_URL, STORAGE_KEY } from "./constants.js";
+import { guideForExercise, normaliseExercise, normaliseHistory, normaliseTags, parseRoutine, seconds, validateRoutineData, videosForStorage } from "./utils.js";
 
 export const state = {
   activeView: "train",
@@ -21,6 +21,11 @@ export const state = {
 };
 
 export function save() {
+  state.data.history = normaliseHistory(state.data.history);
+  const history = state.data.history;
+  if (history.length > MAX_HISTORY) {
+    state.data.history = [...history].sort((first, second) => (Date.parse(second.date) || 0) - (Date.parse(first.date) || 0)).slice(0, MAX_HISTORY);
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
 }
 
@@ -31,6 +36,30 @@ export function createDays(count = MIN_DAYS) {
 
 export function configuredDays() {
   return state.data.days;
+}
+
+function normaliseGuide(guide) {
+  const source = guide && typeof guide === "object" && !Array.isArray(guide) ? guide : {};
+  const numeric = (value, fallback) => (value === undefined ? fallback : seconds(value));
+  return {
+    preparation: numeric(source.preparation, DEFAULT_GUIDE_SETTINGS.preparation),
+    tension: numeric(source.tension, DEFAULT_GUIDE_SETTINGS.tension),
+    distension: numeric(source.distension, DEFAULT_GUIDE_SETTINGS.distension),
+    rest: numeric(source.rest, DEFAULT_GUIDE_SETTINGS.rest),
+    volume: Number.isFinite(Number(source.volume)) ? Math.min(1, Math.max(0, Number(source.volume))) : DEFAULT_GUIDE_SETTINGS.volume
+  };
+}
+
+function normalisePlans(plans, days) {
+  const source = plans && typeof plans === "object" && !Array.isArray(plans) ? plans : {};
+  const result = {};
+  for (const day of days) {
+    const items = Array.isArray(source[day]) ? source[day] : [];
+    result[day] = items
+      .filter((item) => item && typeof item === "object" && !Array.isArray(item))
+      .map((item) => ({ ...item, guide: guideForExercise({ guide: item.guide }) }));
+  }
+  return result;
 }
 
 export function getExercise(id) {
@@ -102,7 +131,7 @@ export function applyPreset(dayCount) {
 }
 
 export function downloadBackup() {
-  const customs = state.data.exercises.filter((exercise) => !exercise.id.startsWith("seed-"));
+  const customs = state.data.exercises.filter((exercise) => !String(exercise?.id ?? "").startsWith("seed-"));
   const backup = { version: 3, exportedAt: new Date().toISOString(), days: state.data.days, plans: state.data.plans, history: state.data.history, guide: state.data.guide, exercises: customs };
   const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
   const link = document.createElement("a");
@@ -132,11 +161,11 @@ export async function restoreBackup(file) {
     const backup = JSON.parse(await file.text());
     if (!isValidBackup(backup)) throw new Error("invalid backup");
     state.data.days = createDays(Array.isArray(backup.days) ? backup.days.length : MIN_DAYS);
-    state.data.plans = backup.plans;
+    state.data.plans = normalisePlans(backup.plans, state.data.days);
     state.data.history = backup.history;
-    if (backup.guide && typeof backup.guide === "object" && !Array.isArray(backup.guide)) state.data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...backup.guide };
+    if (backup.guide && typeof backup.guide === "object" && !Array.isArray(backup.guide)) state.data.guide = normaliseGuide(backup.guide);
     if (backup.version === 3 && Array.isArray(backup.exercises)) {
-      const seeds = state.data.exercises.filter((exercise) => exercise.id.startsWith("seed-"));
+      const seeds = state.data.exercises.filter((exercise) => String(exercise?.id ?? "").startsWith("seed-"));
       const customs = backup.exercises
         .filter((exercise) => exercise && typeof exercise.id === "string" && !exercise.id.startsWith("seed-") && typeof exercise.name === "string" && exercise.name.trim() !== "")
         .map((exercise) => {
@@ -195,6 +224,9 @@ export async function initialise({ forceRoutineSync = false } = {}) {
       }
     }
   }
+  state.data.exercises = Array.isArray(state.data.exercises)
+    ? state.data.exercises.filter((exercise) => exercise && typeof exercise === "object" && !Array.isArray(exercise))
+    : [];
   if (needsSeed) {
     const { exercises, fallback } = await loadRoutineExercises();
     state.data.exercises = exercises;
@@ -208,12 +240,12 @@ export async function initialise({ forceRoutineSync = false } = {}) {
   try {
     const { exercises: sourceExercises, fallback } = await loadRoutineExercises(forceRoutineSync ? `?sync=${Date.now()}` : "");
     let updatedExercises = false;
-    const seedExercises = state.data.exercises.filter((exercise) => exercise.id.startsWith("seed-"));
-    const highestSeedId = seedExercises.reduce((highest, exercise) => Math.max(highest, Number(exercise.id.slice(5)) || 0), 0);
+    const seedExercises = state.data.exercises.filter((exercise) => String(exercise?.id ?? "").startsWith("seed-"));
+    const highestSeedId = seedExercises.reduce((highest, exercise) => Math.max(highest, Number(String(exercise?.id ?? "").slice(5)) || 0), 0);
     let nextSeedId = highestSeedId + 1;
     for (const source of sourceExercises) {
       const exercise = state.data.exercises.find((item) => item.id === source.id);
-      if (exercise?.id.startsWith("seed-")) {
+      if (String(exercise?.id ?? "").startsWith("seed-")) {
         const index = state.data.exercises.indexOf(exercise);
         state.data.exercises[index] = { ...source, id: exercise.id };
         updatedExercises = true;
@@ -221,7 +253,7 @@ export async function initialise({ forceRoutineSync = false } = {}) {
       }
       const newExercise = { ...source, id: `seed-${nextSeedId++}` };
       state.data.exercises.push(newExercise);
-      if (state.data.plans[source.day]) state.data.plans[source.day].push({ exerciseId: newExercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(newExercise) });
+      if (state.data.plans?.[source.day]) state.data.plans[source.day].push({ exerciseId: newExercise.id, sets: "3", reps: "12", resistance: "Media", guide: guideForExercise(newExercise) });
       updatedExercises = true;
     }
     if (updatedExercises) save();
@@ -231,11 +263,10 @@ export async function initialise({ forceRoutineSync = false } = {}) {
     console.warn(state.routineError, error);
   }
 
-  state.data.guide = { ...DEFAULT_GUIDE_SETTINGS, ...state.data.guide };
+  state.data.guide = normaliseGuide(state.data.guide);
   for (const exercise of state.data.exercises) { normaliseExercise(exercise); }
   state.data.days = createDays(Array.isArray(state.data.days) ? state.data.days.length : MIN_DAYS);
-  state.data.plans ||= {};
-  for (const day of configuredDays()) { state.data.plans[day] ||= []; }
+  state.data.plans = normalisePlans(state.data.plans, configuredDays());
   for (const item of Object.values(state.data.plans).flat()) { item.guide = { ...guideForExercise(getExercise(item.exerciseId)), ...(item.guide || {}) }; }
   if (!configuredDays().includes(state.activeDay)) state.activeDay = configuredDays()[0];
   save();
