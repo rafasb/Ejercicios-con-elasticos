@@ -102,7 +102,7 @@ export function tagBadges(exercise) {
 }
 
 export function tagFilter(selectedTags = []) {
-  return `<div class="tag-filter"><label for="tag-filter">Filtrar por grupos musculares</label><select id="tag-filter" data-tag-filter multiple size="4">${MUSCLE_TAGS.map((tag) => `<option value="${tag}" ${selectedTags.includes(tag) ? "selected" : ""}>#${tag}</option>`).join("")}</select><button class="text-button" data-action="clear-tag-filter" ${selectedTags.length ? "" : "disabled"}>Limpiar filtros</button></div>`;
+  return `<details class="tag-filter" ${selectedTags.length ? "open" : ""}><summary>Filtrar por grupos musculares</summary><div class="tag-filter-body"><select id="tag-filter" data-tag-filter multiple size="4" aria-label="Filtrar por grupos musculares">${MUSCLE_TAGS.map((tag) => `<option value="${tag}" ${selectedTags.includes(tag) ? "selected" : ""}>#${tag}</option>`).join("")}</select><button class="text-button" data-action="clear-tag-filter" ${selectedTags.length ? "" : "disabled"}>Limpiar filtros</button></div></details>`;
 }
 
 export function matchesSelectedTags(exercise, selectedTags = []) {
@@ -230,6 +230,8 @@ export function renderHistoryCalendar(sessions, historyMonth, selectedHistoryDat
     const key = historyDateKey(session);
     if (key) sessionsByDate.set(key, [...(sessionsByDate.get(key) || []), { session, index }]);
   }
+  const today = new Date();
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const leadingDays = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const monthLabel = new Intl.DateTimeFormat("es-ES", { month: "long", year: "numeric" }).format(historyMonth);
@@ -240,7 +242,14 @@ export function renderHistoryCalendar(sessions, historyMonth, selectedHistoryDat
     const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     const records = sessionsByDate.get(key) || [];
     const selected = key === selectedHistoryDate;
-    return `<button class="calendar-day ${records.length ? "has-records" : ""} ${selected ? "selected" : ""}" data-action="select-history-date" data-history-date="${key}" ${records.length ? `aria-label="${day}, ${records.length} registro${records.length === 1 ? "" : "s"}"` : `aria-label="${day}, sin registros"`} ${records.length ? "" : "disabled"}><span>${day}</span>${records.length ? `<b>${records.length}</b>` : ""}</button>`;
+    const isToday = key === todayKey;
+    const orderedRecords = [...records].sort((first, second) => (Date.parse(first.session.date) || 0) - (Date.parse(second.session.date) || 0));
+    const dayNumbers = orderedRecords.map(({ session }) => String(session.day ?? "").match(/^DÍA ([1-7])$/)?.[1]).filter(Boolean);
+    const badge = records.length ? `<b>${dayNumbers.length ? dayNumbers.join("·") : records.length}</b>` : "";
+    const recordLabel = dayNumbers.length
+      ? (dayNumbers.length === 1 ? `Día ${dayNumbers[0]}` : `Días ${dayNumbers.slice(0, -1).join(", ")} y ${dayNumbers[dayNumbers.length - 1]}`)
+      : `${records.length} registro${records.length === 1 ? "" : "s"}`;
+    return `<button class="calendar-day ${records.length ? "has-records" : ""} ${selected ? "selected" : ""}${isToday ? " today" : ""}" data-action="select-history-date" data-history-date="${key}" ${records.length ? `aria-label="${day}, ${recordLabel}"` : `aria-label="${day}, sin registros"`} ${records.length ? "" : "disabled"}><span>${day}</span>${badge}</button>`;
   }).join("");
   const selectedSessions = sessionsByDate.get(selectedHistoryDate) || [];
   return `<section class="history-calendar" aria-label="Calendario de entrenamientos"><div class="calendar-header"><button class="icon-button" data-action="history-previous-month" aria-label="Mes anterior">&lsaquo;</button><h3>${monthLabel}</h3><button class="icon-button" data-action="history-next-month" aria-label="Mes siguiente" ${isCurrentMonth ? "disabled" : ""}>&rsaquo;</button></div><div class="calendar-weekdays" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div><div class="calendar-grid">${cells}</div></section>${selectedSessions.length ? `<section class="history-day-details" aria-live="polite"><h3>${historyDayLabel(selectedHistoryDate)}</h3>${selectedSessions.map(({ session, index }) => renderHistorySession(session, index)).join("")}</section>` : `<p class="calendar-hint">Selecciona un día marcado para consultar sus resultados.</p>`}`;

@@ -42,10 +42,13 @@ main { max-width: 680px; margin: auto; padding: 20px 16px; }
 .session-heading { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin: 4px 0 14px; }
 .heading-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .exercise-tools { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 18px; }
-.tag-filter { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; margin: 0 0 18px; padding: 12px; background: rgba(184,203,177,.2); border-left: 5px solid var(--sage); }
-.tag-filter select { grid-column: 1 / -1; min-height: 110px; }
-.tag-filter .text-button { justify-self: start; min-height: 36px; }
-.tag-filter .text-button:disabled { color: var(--muted); cursor: default; }
+.tag-filter { margin: 0 0 18px; padding: 12px; background: rgba(184,203,177,.2); border-left: 5px solid var(--sage); }
+.tag-filter summary { cursor: pointer; font-weight: bold; }
+.tag-filter summary:focus-visible { outline: 2px solid var(--pine); outline-offset: 2px; }
+.tag-filter-body { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; margin-top: 8px; }
+.tag-filter-body select { grid-column: 1 / -1; min-height: 110px; }
+.tag-filter-body .text-button { justify-self: start; min-height: 36px; }
+.tag-filter-body .text-button:disabled { color: var(--muted); cursor: default; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
 .tag-badge { padding: 3px 10px; border-radius: var(--radius-pill); background: rgba(241,202,102,.45); color: var(--ink); font-family: "Courier New", monospace; font-size: .72rem; font-weight: bold; }
 .badge-origen, .badge-candidata { display: inline-block; padding: 3px 6px; font-family: "Courier New", monospace; font-size: .72rem; font-weight: bold; line-height: 1.4; }
@@ -141,6 +144,7 @@ textarea { resize: vertical; }
 .calendar-day { position: relative; display: grid; min-width: 0; aspect-ratio: 1; place-items: center; border: 1px solid transparent; background: transparent; color: var(--muted); font-family: "Courier New", monospace; font-size: .84rem; font-weight: bold; }
 .calendar-day.empty { pointer-events: none; }
 .calendar-day.has-records { border-color: var(--coral); background: #fff2e7; color: var(--coral-dark); }
+.calendar-day.today { color: var(--pine); }
 .calendar-day.has-records.selected { background: var(--coral); color: white; }
 .calendar-day b { position: absolute; top: 2px; right: 2px; min-width: 13px; padding: 1px 2px; background: var(--ink); color: white; font-size: .58rem; line-height: 1; }
 .calendar-day.selected b { background: var(--paper); color: var(--ink); }
