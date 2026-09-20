@@ -10,7 +10,7 @@
   "main": "service-worker.js",
   "scripts": {
     "lint": "biome lint .",
-    "check": "node --check js/*.js",
+    "check": "node scripts/check-syntax.mjs",
     "test": "node --test",
     "format": "biome format ."
   },

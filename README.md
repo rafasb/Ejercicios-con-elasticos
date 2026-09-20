@@ -46,7 +46,7 @@ Abre [http://localhost:4173](http://localhost:4173).
 Requiere Node 22 LTS (`engines: 22.x` en `package.json`).
 
 ```bash
-npm run check   # node --check js/*.js (sintaxis)
+npm run check   # node scripts/check-syntax.mjs (sintaxis de todos los js/*.js)
 npm run lint    # Biome linter (solo dev)
 npm test        # tests Node built-in
 ```

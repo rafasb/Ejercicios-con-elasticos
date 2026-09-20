@@ -1,5 +1,5 @@
 import { RATING_OPTIONS, VIEW_COPY } from "./constants.js";
-import { escapeHtml, exerciseDetails, historyToggle, renderHistoryCalendar, renderHistorySession, tagBadges, tagFilter, tagSummary } from "./utils.js";
+import { completedSets, escapeHtml, exerciseDetails, historyToggle, renderHistoryCalendar, renderHistorySession, tagBadges, tagFilter, tagSummary } from "./utils.js";
 import { configuredDays, getCurrentPlan, getExercise, sortedHistory, state } from "./state.js";
 
 let appVersion = "…";
@@ -16,16 +16,15 @@ function daySwitcher() {
 function renderTrain() {
   const plan = getCurrentPlan();
   if (!plan.length) return `${daySwitcher()}<div class="empty-state"><h2>Sesión vacía</h2><p>Añade ejercicios desde Plan para preparar este día.</p></div>`;
-  const done = plan.filter((item) => {
-    const entry = state.workout[item.exerciseId];
-    if (!entry) return false;
-    const sets = Number.isFinite(entry.completedSets) ? entry.completedSets : 0;
-    return sets > 0 || Boolean(entry.rating);
-  }).length;
-  const percent = Math.round((done / plan.length) * 100);
-  const progressLabel = `${done} de ${plan.length} · ${percent}%`;
-  const finishState = done === plan.length ? "is-ready" : done > 0 ? "is-partial" : "";
-  return `${daySwitcher()}<div class="session-heading"><div><h2>${state.activeDay.replace("DÍA ", "Día ")}</h2><p>Personaliza cada ejercicio antes de empezar.</p></div><span class="target">${plan.length} ejercicios</span></div><div class="session-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}" aria-label="${escapeHtml("Progreso de la sesión")}"><div class="session-progress-bar" style="width: ${percent}%"></div></div><p class="session-progress-label">${escapeHtml(progressLabel)}</p><button class="primary-button sticky-action ${finishState}" data-action="finish">Finalizar ${state.activeDay.replace("DÍA ", "Día ")}</button><section class="exercise-list">${plan.map((item, planIndex) => {
+  const targets = plan.map((item) => Math.max(0, Number.parseInt(item.sets, 10) || 0));
+  const total = targets.reduce((sum, target) => sum + target, 0);
+  const done = plan.reduce((sum, item, index) => sum + Math.min(completedSets(state.workout[item.exerciseId]), targets[index]), 0);
+  const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+  const dayLabel = state.activeDay.replace("DÍA ", "Día ");
+  const finishText = `Finalizar ${dayLabel} · ${done} de ${total} · ${percent}%`;
+  const finishAria = `Finalizar ${dayLabel}. ${done} de ${total} series realizadas, ${percent} por ciento.`;
+  const finishState = total > 0 && done >= total ? "is-ready" : done > 0 ? "is-partial" : "";
+  return `${daySwitcher()}<div class="session-heading"><div><h2>${state.activeDay.replace("DÍA ", "Día ")}</h2><p>Personaliza cada ejercicio antes de empezar.</p></div><span class="target">${plan.length} ejercicios</span></div><button class="primary-button sticky-action ${finishState}" data-action="finish" aria-label="${escapeHtml(finishAria)}"><span class="finish-fill" style="width: ${percent}%" aria-hidden="true"></span><span class="finish-label">${escapeHtml(finishText)}</span></button><section class="exercise-list">${plan.map((item, planIndex) => {
     const exercise = getExercise(item.exerciseId); if (!exercise) return "";
     const entry = state.workout[item.exerciseId] || { reps: item.reps, resistance: item.resistance, rating: "aceptable" };
     const completed = Number.isFinite(state.workout[item.exerciseId]?.completedSets) ? state.workout[item.exerciseId].completedSets : 0;

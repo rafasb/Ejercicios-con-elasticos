@@ -100,12 +100,11 @@ textarea { resize: vertical; }
 .guide-play { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 8px 11px; border: 1px solid var(--coral); background: #fff2e7; color: var(--coral-dark); font-size: .86rem; font-weight: bold; }
 .guide-play span { font-size: .8rem; }
 .sticky-action { position: sticky; top: var(--space-sm); z-index: 1; margin-bottom: var(--space-lg); width: 100%; background-color: var(--surface); }
-.primary-button.sticky-action { border-radius: var(--radius-pill); background: var(--pine); box-shadow: var(--shadow); }
+.primary-button.sticky-action { border-radius: var(--radius-pill); background: var(--pine); box-shadow: var(--shadow); overflow: hidden; }
 .primary-button.sticky-action.is-partial { background: var(--clay); color: var(--ink); }
 .primary-button.sticky-action.is-ready { background: var(--pine); color: var(--paper); }
-.session-progress { height: 8px; overflow: hidden; border-radius: var(--radius-pill); background: var(--line); }
-.session-progress-bar { height: 100%; width: 0; background: var(--pine); transition: width .2s ease; }
-.session-progress-label { margin: 6px 0 12px; color: var(--muted); font-family: "Courier New", monospace; font-size: .8rem; font-weight: bold; }
+.finish-fill { position: absolute; inset: 0 auto 0 0; width: 0; background: rgba(29, 42, 49, 0.22); transition: width .2s ease; }
+.finish-label { position: relative; font-size: .8rem; white-space: nowrap; }
 .plan-row { display: grid; grid-template-columns: 68px 1fr 30px; gap: 7px; align-items: end; border-bottom: 1px solid var(--line); padding: 12px 0; }
 .plan-row select, .plan-row input { min-width: 0; }
 .plan-row label { overflow: hidden; }
